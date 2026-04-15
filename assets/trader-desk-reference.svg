@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 980" fill="none">
+  <rect width="1600" height="980" fill="#061019"/>
+  <rect x="18" y="18" width="1564" height="944" rx="28" fill="#08131D" stroke="#1A3145" stroke-width="2"/>
+  <rect x="40" y="40" width="1520" height="72" rx="10" fill="#09141E" stroke="#193043" stroke-width="2"/>
+  <text x="70" y="85" fill="#49B6FF" font-size="40" font-family="Menlo, Consolas, monospace" letter-spacing="6">KOLMO</text>
+  <text x="250" y="85" fill="#7E8FA1" font-size="24" font-family="Menlo, Consolas, monospace" letter-spacing="4">ENERGY MARKET ANALYSIS</text>
+  <rect x="540" y="53" width="420" height="44" rx="4" fill="#07111A" stroke="#1B344A" stroke-width="2"/>
+  <text x="570" y="84" fill="#657789" font-size="22" font-family="Menlo, Consolas, monospace">Go to...</text>
+  <text x="1310" y="85" fill="#7E8FA1" font-size="24" font-family="Menlo, Consolas, monospace">Apr 10, 2026 18:52</text>
+  <rect x="40" y="132" width="320" height="776" rx="10" fill="#07111A" stroke="#193043" stroke-width="2"/>
+  <rect x="380" y="132" width="700" height="776" rx="10" fill="#07111A" stroke="#193043" stroke-width="2"/>
+  <rect x="1100" y="132" width="460" height="776" rx="10" fill="#07111A" stroke="#193043" stroke-width="2"/>
+  <text x="70" y="172" fill="#A1B2C3" font-size="20" font-family="Menlo, Consolas, monospace" letter-spacing="5">PRICES</text>
+  <text x="410" y="172" fill="#A1B2C3" font-size="20" font-family="Menlo, Consolas, monospace" letter-spacing="5">HISTORICAL PRICES</text>
+  <text x="1130" y="172" fill="#A1B2C3" font-size="20" font-family="Menlo, Consolas, monospace" letter-spacing="5">TRADING FLOOR</text>
+  <g opacity="0.95">
+    <text x="72" y="228" fill="#6D7D8E" font-size="18" font-family="Menlo, Consolas, monospace">Brent Crude</text>
+    <text x="250" y="228" fill="#EAF3FA" font-size="18" font-family="Menlo, Consolas, monospace">$93.98</text>
+    <text x="72" y="270" fill="#6D7D8E" font-size="18" font-family="Menlo, Consolas, monospace">WTI Crude</text>
+    <text x="250" y="270" fill="#EAF3FA" font-size="18" font-family="Menlo, Consolas, monospace">$94.58</text>
+    <text x="72" y="312" fill="#6D7D8E" font-size="18" font-family="Menlo, Consolas, monospace">Diesel</text>
+    <text x="250" y="312" fill="#EAF3FA" font-size="18" font-family="Menlo, Consolas, monospace">$3.75</text>
+    <text x="72" y="354" fill="#6D7D8E" font-size="18" font-family="Menlo, Consolas, monospace">Dutch TTF</text>
+    <text x="250" y="354" fill="#EAF3FA" font-size="18" font-family="Menlo, Consolas, monospace">€45.48</text>
+    <text x="72" y="396" fill="#6D7D8E" font-size="18" font-family="Menlo, Consolas, monospace">Propane</text>
+    <text x="250" y="396" fill="#3FD16F" font-size="18" font-family="Menlo, Consolas, monospace">+15.28%</text>
+    <text x="72" y="438" fill="#6D7D8E" font-size="18" font-family="Menlo, Consolas, monospace">EU Carbon</text>
+    <text x="250" y="438" fill="#EAF3FA" font-size="18" font-family="Menlo, Consolas, monospace">€70.11</text>
+  </g>
+  <path d="M500 736H1010" stroke="#21384B" stroke-width="2" stroke-dasharray="8 12"/>
+  <path d="M510 646H1010" stroke="#21384B" stroke-width="2" stroke-dasharray="8 12"/>
+  <path d="M510 556H1010" stroke="#21384B" stroke-width="2" stroke-dasharray="8 12"/>
+  <path d="M510 466H1010" stroke="#21384B" stroke-width="2" stroke-dasharray="8 12"/>
+  <path d="M510 376H1010" stroke="#21384B" stroke-width="2" stroke-dasharray="8 12"/>
+  <path d="M520 720C580 630 640 650 700 590C740 548 780 562 820 528C862 492 900 516 940 430C970 364 992 328 1000 290" stroke="#49B6FF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M520 734C570 662 628 670 680 620C730 570 770 602 826 560C870 526 915 548 950 470C980 404 996 364 1006 334" stroke="#FFBE55" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="1170" y="220" width="150" height="72" rx="8" fill="#0D1924" stroke="#1B344A" stroke-width="2"/>
+  <text x="1196" y="264" fill="#EAF3FA" font-size="18" font-family="Menlo, Consolas, monospace"># General</text>
+  <rect x="1170" y="330" width="200" height="88" rx="8" fill="#0D1924" stroke="#1B344A" stroke-width="2"/>
+  <text x="1196" y="372" fill="#EAF3FA" font-size="18" font-family="Menlo, Consolas, monospace">doing good</text>
+  <text x="1196" y="398" fill="#617487" font-size="14" font-family="Menlo, Consolas, monospace">OILTRADER / 09:45</text>
+  <rect x="1170" y="460" width="270" height="88" rx="8" fill="#0D1924" stroke="#1B344A" stroke-width="2"/>
+  <text x="1196" y="502" fill="#EAF3FA" font-size="18" font-family="Menlo, Consolas, monospace">test from backend</text>
+  <text x="1196" y="528" fill="#617487" font-size="14" font-family="Menlo, Consolas, monospace">TEST_USER / 15:25</text>
+  <rect x="56" y="760" width="1488" height="132" rx="10" fill="#061019" stroke="#193043" stroke-width="2"/>
+  <text x="74" y="808" fill="#A1B2C3" font-size="20" font-family="Menlo, Consolas, monospace" letter-spacing="4">ASK KOLMO</text>
+  <text x="546" y="860" fill="#EAF3FA" font-size="34" font-family="Menlo, Consolas, monospace" letter-spacing="4">START A CONVERSATION</text>
+  <text x="424" y="904" fill="#708193" font-size="24" font-family="Menlo, Consolas, monospace">Ask for market analysis, predictions, or insights</text>
+</svg>
