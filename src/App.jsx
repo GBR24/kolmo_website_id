@@ -5,6 +5,7 @@ import kolmoMark from "../assets/kolmo-mark.svg";
 import { getAnalyticsConsent, initGoogleAnalytics, persistAnalyticsConsent } from "./analytics";
 
 const NEWSLETTER_DISMISSED_KEY = "kolmo-newsletter-dismissed";
+const NEWSLETTER_EMBED_URL = "https://embeds.beehiiv.com/4c0fb0be-6b2c-4eb2-a78c-0b9b7eaf734b";
 
 const audienceTags = [
   "Traders",
@@ -137,7 +138,7 @@ const networkLinks = [
 function NewsletterEmbed({ compact = false }) {
   return (
     <iframe
-      src="https://embeds.beehiiv.com/4c0fb0be-6b2c-4eb2-a78c-0b9b7eaf734b"
+      src={NEWSLETTER_EMBED_URL}
       data-test-id="beehiiv-embed"
       title="Kolmo newsletter signup"
       width="100%"
@@ -151,6 +152,32 @@ function NewsletterEmbed({ compact = false }) {
         backgroundColor: "transparent",
       }}
     />
+  );
+}
+
+function NewsletterFallback({ compact = false }) {
+  return (
+    <div
+      className={`rounded-[1.5rem] border border-white/8 bg-[rgba(255,255,255,0.02)] ${
+        compact ? "p-4" : "p-5 sm:p-6"
+      }`}
+    >
+      <div className="text-[0.72rem] uppercase tracking-[0.22em] text-textSecondary">Newsletter signup</div>
+      <p className={`mt-3 text-textSecondary ${compact ? "text-sm leading-7" : "text-base leading-8"}`}>
+        Some mobile browsers block the embedded form. Open the secure subscribe page in a new tab to join the Kolmo
+        newsletter.
+      </p>
+      <div className="mt-5">
+        <a
+          href={NEWSLETTER_EMBED_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 text-sm tracking-[0.12em] text-textPrimary transition hover:border-white/18 hover:bg-white/[0.09]"
+        >
+          Open Subscribe Form
+        </a>
+      </div>
+    </div>
   );
 }
 
@@ -510,6 +537,7 @@ export default function App() {
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const [analyticsConsent, setAnalyticsConsent] = useState(() => getAnalyticsConsent());
   const [isCookieBannerVisible, setIsCookieBannerVisible] = useState(() => getAnalyticsConsent() === null);
+  const [isMobileNewsletterFallback, setIsMobileNewsletterFallback] = useState(false);
 
   useEffect(() => {
     const hasDismissed = window.localStorage.getItem(NEWSLETTER_DISMISSED_KEY) === "true";
@@ -538,6 +566,29 @@ export default function App() {
       initGoogleAnalytics();
     }
   }, [analyticsConsent]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    const mediaQuery = window.matchMedia("(max-width: 640px)");
+    const updateMobileNewsletterFallback = (event) => {
+      setIsMobileNewsletterFallback(event.matches);
+    };
+
+    setIsMobileNewsletterFallback(mediaQuery.matches);
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updateMobileNewsletterFallback);
+
+      return () => mediaQuery.removeEventListener("change", updateMobileNewsletterFallback);
+    }
+
+    mediaQuery.addListener(updateMobileNewsletterFallback);
+
+    return () => mediaQuery.removeListener(updateMobileNewsletterFallback);
+  }, []);
 
   const openNewsletter = () => {
     setIsNewsletterOpen(true);
@@ -862,8 +913,14 @@ export default function App() {
           <div className="overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.84),rgba(7,12,18,0.96))] shadow-panel">
             <div className="px-6 py-5 sm:px-8 sm:py-6 lg:px-10">
               <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">Newsletter</span>
-              <div className="mt-4 rounded-[1.5rem] border border-white/8 bg-[rgba(255,255,255,0.02)] p-2 sm:p-3">
-                <NewsletterEmbed />
+              <div className="mt-4">
+                {isMobileNewsletterFallback ? (
+                  <NewsletterFallback />
+                ) : (
+                  <div className="rounded-[1.5rem] border border-white/8 bg-[rgba(255,255,255,0.02)] p-2 sm:p-3">
+                    <NewsletterEmbed />
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -953,8 +1010,14 @@ export default function App() {
               </p>
             </div>
 
-            <div className="mt-6 rounded-[1.5rem] border border-white/8 bg-[rgba(255,255,255,0.02)] p-3 sm:p-4">
-              <NewsletterEmbed compact />
+            <div className="mt-6">
+              {isMobileNewsletterFallback ? (
+                <NewsletterFallback compact />
+              ) : (
+                <div className="rounded-[1.5rem] border border-white/8 bg-[rgba(255,255,255,0.02)] p-3 sm:p-4">
+                  <NewsletterEmbed compact />
+                </div>
+              )}
             </div>
 
             <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
