@@ -895,7 +895,6 @@ export default function App() {
           <div className="rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.82),rgba(7,12,18,0.94))] px-6 py-10 text-center shadow-panel sm:px-8 lg:px-10 lg:py-14">
             <SectionHeading
               align="center"
-              eyebrow="Final CTA"
               title="The intelligence layer for energy markets."
               body="Kolmo helps market participants map complexity, generate insight, and make better risk decisions in oil and gas."
             />
