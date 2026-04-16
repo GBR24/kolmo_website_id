@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import platformPreview from "../assets/trader-desk-reference.svg";
 import kolmoMark from "../assets/kolmo-mark.svg";
+import { getAnalyticsConsent, initGoogleAnalytics, persistAnalyticsConsent } from "./analytics";
 
 const NEWSLETTER_DISMISSED_KEY = "kolmo-newsletter-dismissed";
 
@@ -507,6 +508,8 @@ function UseCaseCard({ title, body }) {
 
 export default function App() {
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
+  const [analyticsConsent, setAnalyticsConsent] = useState(() => getAnalyticsConsent());
+  const [isCookieBannerVisible, setIsCookieBannerVisible] = useState(() => getAnalyticsConsent() === null);
 
   useEffect(() => {
     const hasDismissed = window.localStorage.getItem(NEWSLETTER_DISMISSED_KEY) === "true";
@@ -530,6 +533,12 @@ export default function App() {
     };
   }, [isNewsletterOpen]);
 
+  useEffect(() => {
+    if (analyticsConsent === "granted") {
+      initGoogleAnalytics();
+    }
+  }, [analyticsConsent]);
+
   const openNewsletter = () => {
     setIsNewsletterOpen(true);
   };
@@ -537,6 +546,22 @@ export default function App() {
   const dismissNewsletter = () => {
     window.localStorage.setItem(NEWSLETTER_DISMISSED_KEY, "true");
     setIsNewsletterOpen(false);
+  };
+
+  const acceptAnalytics = () => {
+    persistAnalyticsConsent("granted");
+    setAnalyticsConsent("granted");
+    setIsCookieBannerVisible(false);
+  };
+
+  const declineAnalytics = () => {
+    persistAnalyticsConsent("denied");
+    setAnalyticsConsent("denied");
+    setIsCookieBannerVisible(false);
+  };
+
+  const openCookieSettings = () => {
+    setIsCookieBannerVisible(true);
   };
 
   return (
@@ -591,7 +616,7 @@ export default function App() {
 
           <a
             href="#contact"
-            className="hidden rounded-full border border-white/10 px-4 py-2 text-[0.72rem] uppercase tracking-[0.18em] text-textSecondary transition hover:border-white/16 hover:text-textPrimary sm:inline-flex"
+            className="inline-flex rounded-full border border-white/10 px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-textSecondary transition hover:border-white/16 hover:text-textPrimary sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
           >
             Request Access
           </a>
@@ -865,11 +890,46 @@ export default function App() {
             <a href="#contact" className="transition hover:text-textPrimary">
               Access
             </a>
+            <button type="button" onClick={openCookieSettings} className="transition hover:text-textPrimary">
+              Cookie Settings
+            </button>
           </div>
 
           <div className="text-[0.72rem] uppercase tracking-[0.18em] text-textSecondary/80">© 2026 Kolmo. All rights reserved.</div>
         </div>
       </footer>
+
+      {isCookieBannerVisible ? (
+        <div className="fixed inset-x-4 bottom-4 z-[65] mx-auto w-full max-w-[980px] rounded-[1.5rem] border border-white/10 bg-[rgba(7,12,18,0.94)] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.34)] backdrop-blur-xl sm:inset-x-6 sm:p-5">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <div className="text-[0.72rem] uppercase tracking-[0.22em] text-textSecondary">Privacy notice</div>
+              <p className="mt-2 text-sm leading-7 text-textSecondary">
+                We use optional Google Analytics cookies to understand visits, countries, referral sources, and the pages
+                people engage with. You can accept or decline analytics cookies, and you can change this choice later from
+                the footer.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={declineAnalytics}
+                className="inline-flex items-center justify-center rounded-full border border-white/10 px-5 py-3 text-sm tracking-[0.12em] text-textSecondary transition hover:border-white/16 hover:text-textPrimary"
+              >
+                Decline
+              </button>
+              <button
+                type="button"
+                onClick={acceptAnalytics}
+                className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 text-sm tracking-[0.12em] text-textPrimary transition hover:border-white/18 hover:bg-white/[0.09]"
+              >
+                Accept Analytics
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {isNewsletterOpen ? (
         <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[rgba(3,7,11,0.72)] px-4 py-6 backdrop-blur-md">
