@@ -527,7 +527,7 @@ function CapabilityCard({ title, body }) {
 
 function WorkflowCard({ step, title, body }) {
   return (
-    <div className="rounded-[0.85rem] border border-white/8 bg-[rgba(8,15,22,0.76)] p-6">
+    <div className="rounded-[0.85rem] bg-[rgba(8,15,22,0.76)] p-6">
       <div className="text-[0.72rem] uppercase tracking-[0.24em] text-textSecondary">{step}</div>
       <h3 className="mt-4 text-lg font-medium text-textPrimary">{title}</h3>
       <p className="mt-3 text-sm leading-7 text-textSecondary">{body}</p>
