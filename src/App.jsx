@@ -6,6 +6,7 @@ import { getAnalyticsConsent, initGoogleAnalytics, persistAnalyticsConsent } fro
 
 const NEWSLETTER_DISMISSED_KEY = "kolmo-newsletter-dismissed";
 const NEWSLETTER_EMBED_URL = "https://embeds.beehiiv.com/4c0fb0be-6b2c-4eb2-a78c-0b9b7eaf734b";
+const CALENDLY_URL = "https://calendly.com/kolmolabs/30min";
 
 const audienceTags = [
   "Traders",
@@ -195,10 +196,12 @@ function SectionHeading({ eyebrow, title, body, align = "left" }) {
   );
 }
 
-function PrimaryButton({ children, href = "#contact" }) {
+function PrimaryButton({ children, href = CALENDLY_URL }) {
   return (
     <a
       href={href}
+      target="_blank"
+      rel="noreferrer"
       className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.06] px-6 py-3 text-sm font-medium tracking-[0.14em] text-textPrimary transition duration-300 hover:border-white/18 hover:bg-white/[0.09]"
     >
       {children}
@@ -661,10 +664,12 @@ export default function App() {
           </nav>
 
           <a
-            href="#contact"
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noreferrer"
             className="inline-flex rounded-full border border-white/10 px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-textSecondary transition hover:border-white/16 hover:text-textPrimary sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
           >
-            Request Access
+            Contact Us
           </a>
         </div>
       </header>
@@ -682,7 +687,7 @@ export default function App() {
                 </h1>
 
                 <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-                  <PrimaryButton>Request Access</PrimaryButton>
+                  <PrimaryButton>Contact Us</PrimaryButton>
                   <SecondaryButton href="#platform">View Platform</SecondaryButton>
                 </div>
 
@@ -896,7 +901,7 @@ export default function App() {
             />
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <PrimaryButton>Request Access</PrimaryButton>
+              <PrimaryButton>Contact Us</PrimaryButton>
               <SecondaryButton href="#newsletter">Subscribe</SecondaryButton>
             </div>
 
