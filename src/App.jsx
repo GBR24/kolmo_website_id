@@ -412,7 +412,7 @@ function NetworkVisual() {
     <div className="network-shell relative min-h-[41rem] overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(9,15,22,0.92),rgba(7,12,18,0.78))] shadow-panel">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(85,134,164,0.12),transparent_26%)]" />
       <div className="pointer-events-none absolute inset-0 bg-grid bg-[size:76px_76px] opacity-[0.16]" />
-      <div className="pointer-events-none absolute inset-x-8 top-8 flex items-center justify-between text-[0.65rem] uppercase tracking-[0.26em] text-textSecondary/80">
+      <div className="pointer-events-none absolute inset-x-6 top-6 z-20 flex items-center justify-between rounded-full border border-white/8 bg-[rgba(8,15,22,0.68)] px-4 py-2 text-[0.62rem] uppercase tracking-[0.24em] text-textSecondary/85 backdrop-blur">
         <span>Global Energy Map</span>
         <span>Command Layer</span>
       </div>
@@ -448,15 +448,15 @@ function NetworkVisual() {
             key={`node-${node.label}`}
             cx={node.x}
             cy={node.y}
-            r={node.size === "large" ? 10 : 8}
-            fill="rgba(158,195,216,0.85)"
+            r={node.size === "large" ? 6.5 : 5}
+            fill="rgba(158,195,216,0.88)"
             stroke="rgba(255,255,255,0.14)"
-            strokeWidth="2"
+            strokeWidth="1.4"
           />
         ))}
       </svg>
 
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-10">
         {networkNodes.map((node, index) => (
           <div
             key={node.label}
@@ -467,11 +467,6 @@ function NetworkVisual() {
               transform: "translate(-50%, -50%)",
             }}
           >
-            <div
-              className={`mx-auto rounded-full border border-white/10 bg-[#9ec3d8]/70 shadow-[0_0_24px_rgba(119,163,191,0.22)] ${
-                node.size === "large" ? "h-5 w-5" : "h-4 w-4"
-              } animate-pulseSoft`}
-            />
             <div
               className="absolute animate-floatLabel rounded-full border border-white/8 bg-[rgba(8,15,22,0.8)] px-3 py-1.5 text-[0.68rem] tracking-[0.14em] text-textPrimary shadow-[0_16px_40px_rgba(0,0,0,0.18)] backdrop-blur"
               style={{
@@ -720,15 +715,16 @@ export default function App() {
                 title="Built for Intelligence and Risk"
                 body="A connected market map across price, policy, logistics, refining, storage, and exposure."
               />
-            </div>
 
-            <div className="space-y-4">
-              <NetworkVisual />
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
                 {overviewCards.map((card) => (
                   <OverviewCard key={card.title} title={card.title} />
                 ))}
               </div>
+            </div>
+
+            <div>
+              <NetworkVisual />
             </div>
           </div>
         </section>
