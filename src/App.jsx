@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import platformPreview from "../assets/trader-desk-reference.svg";
 import kolmoMark from "../assets/kolmo-mark.svg";
@@ -22,6 +22,29 @@ const overviewCards = [
   { title: "Unified Data Layer" },
   { title: "AI Energy Analyst" },
   { title: "Portfolio & Risk Engine" },
+];
+
+const platformShowcaseSlides = [
+  {
+    title: "Agent workspace",
+    body: "A command-first view for monitoring the market, querying drivers, and producing desk-ready analysis.",
+    image: platformPreview,
+  },
+  {
+    title: "Risk dashboard",
+    body: "Connect market structure to exposure with a sharper portfolio and scenario surface.",
+    image: platformPreview,
+  },
+  {
+    title: "Scenario explorer",
+    body: "Stress key books against logistics shocks, policy moves, outages, and freight repricing.",
+    image: platformPreview,
+  },
+  {
+    title: "Decision feed",
+    body: "Turn raw signal flow into a curated stream of actionable intelligence for traders and risk teams.",
+    image: platformPreview,
+  },
 ];
 
 const capabilityCards = [
@@ -111,9 +134,9 @@ const terminalAlerts = [
 const commandLog = ["> show brent drivers", "> compare book vs freight shock", "> run refinery outage scenario"];
 
 const networkNodes = [
-  { label: "Brent", x: 170, y: 190, dx: -8, dy: -50, size: "large" },
-  { label: "OPEC Policy", x: 430, y: 180, dx: -38, dy: -54 },
-  { label: "Refinery Margins", x: 690, y: 235, dx: -28, dy: -52 },
+  { label: "Brent", x: 170, y: 190, dx: -8, dy: -50, mobileDx: -18, mobileDy: 14, size: "large" },
+  { label: "OPEC Policy", x: 430, y: 180, dx: -38, dy: -54, mobileDx: -34, mobileDy: 14 },
+  { label: "Refinery Margins", x: 690, y: 235, dx: -28, dy: -52, mobileDx: -46, mobileDy: 14 },
   { label: "WTI Spread", x: 280, y: 255, dx: -26, dy: -50 },
   { label: "Inventories", x: 360, y: 365, dx: -26, dy: -50 },
   { label: "Crack Spreads", x: 770, y: 330, dx: -24, dy: -52 },
@@ -148,6 +171,8 @@ const networkLinks = [
   [690, 235, 770, 330],
   [770, 330, 770, 605],
 ];
+
+const compactHiddenNodeLabels = new Set(["WTI Spread", "Shipping Lanes", "Sanctions Risk", "Weather Models"]);
 
 function NewsletterEmbed({ compact = false }) {
   return (
@@ -423,12 +448,119 @@ function HeroAtmosphere() {
   );
 }
 
-function NetworkVisual() {
+function ShowcaseCarousel() {
+  const scrollerRef = useRef(null);
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const handleShowcaseScroll = () => {
+    const scroller = scrollerRef.current;
+
+    if (!scroller) {
+      return;
+    }
+
+    const nextIndex = Math.round(scroller.scrollLeft / scroller.clientWidth);
+    setActiveSlide(nextIndex);
+  };
+
+  const scrollToSlide = (index) => {
+    const scroller = scrollerRef.current;
+
+    if (!scroller) {
+      return;
+    }
+
+    scroller.scrollTo({
+      left: scroller.clientWidth * index,
+      behavior: "smooth",
+    });
+  };
+
   return (
-    <div className="network-shell relative min-h-[41rem] overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(9,15,22,0.92),rgba(7,12,18,0.78))] shadow-panel">
+    <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(10,16,23,0.94)] shadow-[0_30px_80px_rgba(0,0,0,0.34)]">
+      <div className="pointer-events-none absolute -left-8 top-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(152,195,220,0.18),transparent_68%)] blur-2xl" />
+      <div className="pointer-events-none absolute bottom-10 right-8 h-28 w-28 rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(159,195,215,0.18),rgba(104,145,170,0.02))] shadow-[0_0_40px_rgba(121,163,190,0.12)]" />
+      <div className="pointer-events-none absolute right-16 top-16 h-16 w-16 rounded-[1.4rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.02))] shadow-[0_18px_40px_rgba(0,0,0,0.16)] backdrop-blur-sm" />
+
+      <div className="relative flex items-center justify-between border-b border-white/8 px-5 py-3">
+        <div className="flex items-center gap-2">
+          <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+          <span className="h-2.5 w-2.5 rounded-full bg-white/12" />
+          <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
+          <span className="ml-4 text-[0.68rem] uppercase tracking-[0.22em] text-textSecondary">Kolmo platform preview</span>
+        </div>
+
+        <div className="hidden items-center gap-2 sm:flex">
+          <button
+            type="button"
+            onClick={() => scrollToSlide(Math.max(activeSlide - 1, 0))}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-sm text-textSecondary transition hover:border-white/18 hover:text-textPrimary"
+            aria-label="Previous platform image"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSlide(Math.min(activeSlide + 1, platformShowcaseSlides.length - 1))}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-sm text-textSecondary transition hover:border-white/18 hover:text-textPrimary"
+            aria-label="Next platform image"
+          >
+            →
+          </button>
+        </div>
+      </div>
+
+      <div
+        ref={scrollerRef}
+        onScroll={handleShowcaseScroll}
+        className="showcase-scroller relative flex snap-x snap-mandatory overflow-x-auto scroll-smooth"
+      >
+        {platformShowcaseSlides.map((slide) => (
+          <div key={slide.title} className="min-w-full snap-center p-4 sm:p-5">
+            <div className="overflow-hidden rounded-[1.4rem] border border-white/6 bg-[rgba(7,12,18,0.88)]">
+              <img src={slide.image} alt={slide.title} className="aspect-[16/10] w-full object-cover" />
+              <div className="border-t border-white/6 px-4 py-4">
+                <div className="text-[0.68rem] uppercase tracking-[0.22em] text-textSecondary">{slide.title}</div>
+                <p className="mt-3 text-sm leading-7 text-textSecondary">{slide.body}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="relative flex items-center justify-center gap-2 px-5 pb-5 pt-1">
+        {platformShowcaseSlides.map((slide, index) => (
+          <button
+            key={slide.title}
+            type="button"
+            onClick={() => scrollToSlide(index)}
+            className={`h-2.5 rounded-full transition ${
+              index === activeSlide ? "w-8 bg-[#b5cfdd]" : "w-2.5 bg-white/18 hover:bg-white/28"
+            }`}
+            aria-label={`Go to platform image ${index + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function NetworkVisual({ isCompact = false }) {
+  return (
+    <div
+      className={`network-shell relative overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(9,15,22,0.92),rgba(7,12,18,0.78))] shadow-panel ${
+        isCompact ? "min-h-[31rem]" : "min-h-[41rem]"
+      }`}
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(85,134,164,0.12),transparent_26%)]" />
       <div className="pointer-events-none absolute inset-0 bg-grid bg-[size:76px_76px] opacity-[0.16]" />
-      <div className="pointer-events-none absolute inset-x-6 top-5 z-20 flex items-center justify-between rounded-full border border-white/8 bg-[rgba(8,15,22,0.68)] px-4 py-2 text-[0.62rem] uppercase tracking-[0.24em] text-textSecondary/85 backdrop-blur">
+      <div
+        className={`pointer-events-none absolute z-20 flex items-center justify-between rounded-full border border-white/8 bg-[rgba(8,15,22,0.68)] uppercase text-textSecondary/85 backdrop-blur ${
+          isCompact
+            ? "inset-x-4 top-4 px-3 py-2 text-[0.55rem] tracking-[0.18em]"
+            : "inset-x-6 top-5 px-4 py-2 text-[0.62rem] tracking-[0.24em]"
+        }`}
+      >
         <span>Global Energy Map</span>
         <span>Command Layer</span>
       </div>
@@ -483,22 +615,30 @@ function NetworkVisual() {
               transform: "translate(-50%, -50%)",
             }}
           >
-            <div
-              className="absolute animate-floatLabel rounded-full border border-white/8 bg-[rgba(8,15,22,0.8)] px-3 py-1.5 text-[0.68rem] tracking-[0.14em] text-textPrimary shadow-[0_16px_40px_rgba(0,0,0,0.18)] backdrop-blur"
-              style={{
-                left: `${node.dx}px`,
-                top: `${node.dy}px`,
-                animationDelay: `${index * 0.35}s`,
-              }}
-            >
-              {node.label}
-            </div>
+            {!(isCompact && compactHiddenNodeLabels.has(node.label)) ? (
+              <div
+                className={`absolute animate-floatLabel rounded-full border border-white/8 bg-[rgba(8,15,22,0.8)] text-textPrimary shadow-[0_16px_40px_rgba(0,0,0,0.18)] backdrop-blur ${
+                  isCompact ? "px-2.5 py-1 text-[0.56rem] tracking-[0.1em]" : "px-3 py-1.5 text-[0.68rem] tracking-[0.14em]"
+                }`}
+                style={{
+                  left: `${isCompact ? node.mobileDx ?? node.dx : node.dx}px`,
+                  top: `${isCompact ? node.mobileDy ?? node.dy : node.dy}px`,
+                  animationDelay: `${index * 0.35}s`,
+                }}
+              >
+                {node.label}
+              </div>
+            ) : null}
           </div>
         ))}
       </div>
 
       <div className="absolute inset-x-[22%] top-[24%] h-[48%] rounded-full border border-white/5 bg-[radial-gradient(circle,rgba(102,135,157,0.08),transparent_65%)] blur-2xl" />
-      <div className="absolute bottom-6 left-6 flex items-center gap-3 rounded-full border border-white/8 bg-[rgba(8,15,22,0.72)] px-4 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-textSecondary backdrop-blur">
+      <div
+        className={`absolute flex items-center gap-3 rounded-full border border-white/8 bg-[rgba(8,15,22,0.72)] uppercase text-textSecondary backdrop-blur ${
+          isCompact ? "bottom-4 left-4 px-3 py-2 text-[0.56rem] tracking-[0.12em]" : "bottom-6 left-6 px-4 py-2 text-[0.68rem] tracking-[0.18em]"
+        }`}
+      >
         <img src={kolmoMark} alt="" className="h-4 w-4 opacity-80" />
         <span>Systemic market intelligence</span>
       </div>
@@ -549,6 +689,7 @@ export default function App() {
   const [analyticsConsent, setAnalyticsConsent] = useState(() => getAnalyticsConsent());
   const [isCookieBannerVisible, setIsCookieBannerVisible] = useState(() => getAnalyticsConsent() === null);
   const [isMobileNewsletterFallback, setIsMobileNewsletterFallback] = useState(false);
+  const [isCompactViewport, setIsCompactViewport] = useState(false);
 
   useEffect(() => {
     const hasDismissed = window.localStorage.getItem(NEWSLETTER_DISMISSED_KEY) === "true";
@@ -601,6 +742,29 @@ export default function App() {
     return () => mediaQuery.removeListener(updateMobileNewsletterFallback);
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    const mediaQuery = window.matchMedia("(max-width: 900px)");
+    const updateCompactViewport = (event) => {
+      setIsCompactViewport(event.matches);
+    };
+
+    setIsCompactViewport(mediaQuery.matches);
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updateCompactViewport);
+
+      return () => mediaQuery.removeEventListener("change", updateCompactViewport);
+    }
+
+    mediaQuery.addListener(updateCompactViewport);
+
+    return () => mediaQuery.removeListener(updateCompactViewport);
+  }, []);
+
   const openNewsletter = () => {
     setIsNewsletterOpen(true);
   };
@@ -650,8 +814,7 @@ export default function App() {
                 className="inline-flex items-center gap-2 transition hover:text-textPrimary focus:outline-none focus:text-textPrimary"
                 aria-label="Open audience menu"
               >
-                <span>Audience</span>
-                <span className="text-[0.65rem]">+</span>
+                <span>AUDIENCE</span>
               </button>
               <div className="pointer-events-none absolute left-1/2 top-full z-50 mt-4 w-64 -translate-x-1/2 rounded-[1.1rem] border border-white/8 bg-[rgba(8,15,22,0.96)] p-2 opacity-0 shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl transition duration-200 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
                 {audienceTags.map((tag) => (
@@ -742,7 +905,7 @@ export default function App() {
             </div>
 
             <div>
-              <NetworkVisual />
+              <NetworkVisual isCompact={isCompactViewport} />
             </div>
           </div>
         </section>
@@ -776,37 +939,23 @@ export default function App() {
 
         <section id="showcase" className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-6 lg:px-8 lg:py-12">
           <div className="overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.88),rgba(7,12,18,0.94))] shadow-panel">
-            <div className="grid gap-10 px-6 py-8 sm:px-8 sm:py-10 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:gap-12 lg:px-10 lg:py-12">
-              <div className="max-w-xl">
+            <div className="grid gap-10 px-6 py-8 sm:px-8 sm:py-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,0.88fr)] lg:items-center lg:gap-12 lg:px-10 lg:py-12">
+              <div className="order-2 max-w-xl lg:order-2">
                 <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">Platform showcase</span>
                 <h2 className="mt-5 font-serif-display text-3xl leading-[0.98] text-textPrimary sm:text-4xl lg:text-[3rem]">
                   From market complexity to actionable clarity.
                 </h2>
                 <p className="mt-5 text-base leading-8 text-textSecondary">
-                  One interface for market intelligence, custom analysis, and risk visibility.
+                  Scroll through the Kolmo workspace to move from market monitoring to scenario analysis and portfolio context.
                 </p>
-                <p className="mt-8 text-[0.78rem] uppercase tracking-[0.22em] text-textSecondary">
-                  Replace this placeholder with the production Kolmo platform screenshot.
-                </p>
+                <div className="mt-8 space-y-4 text-sm leading-7 text-textSecondary">
+                  <p>The carousel is ready for 3 to 4 real platform screenshots whenever you send them over.</p>
+                  <p>A subtle 3D layer adds depth so the section feels more like a product moment than a static image block.</p>
+                </div>
               </div>
 
-              <div className="relative">
-                <div className="absolute inset-x-10 bottom-0 h-20 rounded-full bg-[rgba(103,138,161,0.1)] blur-3xl" />
-                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/10 bg-[rgba(10,16,23,0.94)] shadow-[0_30px_80px_rgba(0,0,0,0.34)]">
-                  <div className="flex items-center gap-2 border-b border-white/8 px-5 py-3">
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/12" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
-                    <span className="ml-4 text-[0.68rem] uppercase tracking-[0.22em] text-textSecondary">Kolmo platform preview</span>
-                  </div>
-
-                  {/* Replace the image below with an actual Kolmo platform screenshot when available. */}
-                  <img
-                    src={platformPreview}
-                    alt="Kolmo platform placeholder preview"
-                    className="w-full border-t border-white/6 object-cover"
-                  />
-                </div>
+              <div className="order-1 lg:order-1">
+                <ShowcaseCarousel />
               </div>
             </div>
           </div>
@@ -1012,12 +1161,11 @@ export default function App() {
               ×
             </button>
 
-            <div className="pr-12">
-              <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">Stay close to the market</span>
-              <h3 className="mt-4 max-w-[14ch] font-serif-display text-3xl leading-[0.98] text-textPrimary sm:text-[2.5rem]">
+            <div className="mx-auto max-w-2xl px-4 text-center">
+              <h3 className="font-serif-display text-3xl leading-[0.98] text-textPrimary sm:text-[2.5rem]">
                 Subscribe to the Kolmo newsletter.
               </h3>
-              <p className="mt-4 max-w-2xl text-base leading-8 text-textSecondary">
+              <p className="mt-4 text-base leading-8 text-textSecondary">
                 Receive periodic notes on oil and gas market structure, risk, and what Kolmo is building.
               </p>
             </div>
@@ -1032,7 +1180,7 @@ export default function App() {
               )}
             </div>
 
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-4 flex flex-col items-center gap-3 text-center">
               <span className="text-sm leading-7 text-textSecondary">Dismiss once and it will not appear automatically again on this browser.</span>
               <button
                 type="button"

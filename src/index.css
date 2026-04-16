@@ -54,6 +54,14 @@ a {
 }
 
 @layer components {
+  .showcase-scroller {
+    scrollbar-width: none;
+  }
+
+  .showcase-scroller::-webkit-scrollbar {
+    display: none;
+  }
+
   .hero-stage {
     background:
       linear-gradient(180deg, rgba(8, 14, 21, 0.94) 0%, rgba(7, 12, 18, 0.82) 56%, rgba(5, 11, 17, 0.28) 100%),
