@@ -736,8 +736,7 @@ export default function App() {
         <section id="capabilities" className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-6 lg:px-8 lg:py-12">
           <SectionHeading
             eyebrow="Core capabilities"
-            title="The operating system for market intelligence, exposure, and scenarios."
-            body="Built for serious energy workflows with less dashboard sprawl and more decision context."
+            title="Built for serious energy workflows with less dashboard sprawl and more decision context."
           />
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
