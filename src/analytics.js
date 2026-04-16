@@ -1,4 +1,4 @@
-const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim();
+const measurementId = (import.meta.env.VITE_GA_MEASUREMENT_ID || "G-ZKN1FN7SBH").trim();
 
 function injectGoogleAnalyticsScript() {
   if (document.getElementById("ga4-script")) {
