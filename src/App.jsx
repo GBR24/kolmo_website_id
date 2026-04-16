@@ -111,29 +111,42 @@ const terminalAlerts = [
 const commandLog = ["> show brent drivers", "> compare book vs freight shock", "> run refinery outage scenario"];
 
 const networkNodes = [
-  { label: "Brent", x: 160, y: 130, dx: -10, dy: -48, size: "large" },
-  { label: "OPEC Policy", x: 430, y: 120, dx: -38, dy: -52 },
-  { label: "Refinery Margins", x: 670, y: 185, dx: -22, dy: -50 },
-  { label: "Inventories", x: 330, y: 330, dx: -26, dy: -50 },
-  { label: "Crack Spreads", x: 760, y: 300, dx: -20, dy: -52 },
-  { label: "Freight Rates", x: 170, y: 430, dx: -16, dy: -50 },
-  { label: "Storage Levels", x: 560, y: 515, dx: -22, dy: -54 },
-  { label: "LNG Flows", x: 760, y: 585, dx: -10, dy: -50 },
-  { label: "Pipeline Constraints", x: 345, y: 650, dx: -64, dy: -50 },
-  { label: "Power Demand", x: 555, y: 760, dx: -18, dy: -52 },
+  { label: "Brent", x: 170, y: 190, dx: -8, dy: -50, size: "large" },
+  { label: "OPEC Policy", x: 430, y: 180, dx: -38, dy: -54 },
+  { label: "Refinery Margins", x: 690, y: 235, dx: -28, dy: -52 },
+  { label: "WTI Spread", x: 280, y: 255, dx: -26, dy: -50 },
+  { label: "Inventories", x: 360, y: 365, dx: -26, dy: -50 },
+  { label: "Crack Spreads", x: 770, y: 330, dx: -24, dy: -52 },
+  { label: "Freight Rates", x: 160, y: 470, dx: -16, dy: -52 },
+  { label: "Shipping Lanes", x: 305, y: 505, dx: -34, dy: -52 },
+  { label: "Storage Levels", x: 565, y: 540, dx: -22, dy: -54 },
+  { label: "LNG Flows", x: 770, y: 605, dx: -12, dy: -50 },
+  { label: "Sanctions Risk", x: 470, y: 610, dx: -30, dy: -52 },
+  { label: "Pipeline Constraints", x: 330, y: 690, dx: -64, dy: -50 },
+  { label: "Weather Models", x: 660, y: 715, dx: -30, dy: -52 },
+  { label: "Power Demand", x: 545, y: 790, dx: -18, dy: -52 },
 ];
 
 const networkLinks = [
-  [160, 130, 430, 120],
-  [430, 120, 670, 185],
-  [160, 130, 330, 330],
-  [330, 330, 760, 300],
-  [330, 330, 170, 430],
-  [330, 330, 560, 515],
-  [560, 515, 760, 585],
-  [560, 515, 345, 650],
-  [560, 515, 555, 760],
-  [670, 185, 760, 300],
+  [170, 190, 430, 180],
+  [170, 190, 280, 255],
+  [430, 180, 690, 235],
+  [430, 180, 360, 365],
+  [280, 255, 360, 365],
+  [280, 255, 160, 470],
+  [360, 365, 770, 330],
+  [360, 365, 160, 470],
+  [360, 365, 565, 540],
+  [160, 470, 305, 505],
+  [305, 505, 565, 540],
+  [565, 540, 770, 605],
+  [565, 540, 470, 610],
+  [470, 610, 330, 690],
+  [470, 610, 660, 715],
+  [330, 690, 545, 790],
+  [660, 715, 545, 790],
+  [690, 235, 770, 330],
+  [770, 330, 770, 605],
 ];
 
 function NewsletterEmbed({ compact = false }) {
@@ -415,7 +428,7 @@ function NetworkVisual() {
     <div className="network-shell relative min-h-[41rem] overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(9,15,22,0.92),rgba(7,12,18,0.78))] shadow-panel">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(85,134,164,0.12),transparent_26%)]" />
       <div className="pointer-events-none absolute inset-0 bg-grid bg-[size:76px_76px] opacity-[0.16]" />
-      <div className="pointer-events-none absolute inset-x-6 top-6 z-20 flex items-center justify-between rounded-full border border-white/8 bg-[rgba(8,15,22,0.68)] px-4 py-2 text-[0.62rem] uppercase tracking-[0.24em] text-textSecondary/85 backdrop-blur">
+      <div className="pointer-events-none absolute inset-x-6 top-5 z-20 flex items-center justify-between rounded-full border border-white/8 bg-[rgba(8,15,22,0.68)] px-4 py-2 text-[0.62rem] uppercase tracking-[0.24em] text-textSecondary/85 backdrop-blur">
         <span>Global Energy Map</span>
         <span>Command Layer</span>
       </div>
@@ -434,12 +447,12 @@ function NetworkVisual() {
           />
         ))}
 
-        {networkLinks.slice(0, 4).map(([x1, y1], index) => (
+        {networkLinks.slice(0, 6).map(([x1, y1], index) => (
           <circle
             key={`flow-${index}`}
             cx={x1}
             cy={y1}
-            r="4.5"
+            r="3.6"
             fill="rgba(158,195,216,0.8)"
             className="flow-dot-svg"
             style={{ animationDelay: `${index * 1.7}s` }}
