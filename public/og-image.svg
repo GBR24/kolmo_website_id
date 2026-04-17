@@ -1,0 +1,42 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#050B11"/>
+  <rect x="44" y="44" width="1112" height="542" rx="32" fill="url(#panel)" stroke="rgba(255,255,255,0.1)"/>
+  <g opacity="0.35">
+    <path d="M92 478C232 420 346 402 470 420C616 442 736 498 878 486C982 478 1062 434 1112 392" stroke="url(#lineA)" stroke-width="2" stroke-dasharray="10 12"/>
+    <path d="M94 178C214 146 318 158 424 206C552 266 658 320 802 306C914 296 996 244 1102 198" stroke="url(#lineB)" stroke-width="2" stroke-dasharray="10 12"/>
+    <circle cx="424" cy="206" r="7" fill="#B9D2E0"/>
+    <circle cx="802" cy="306" r="7" fill="#B9D2E0"/>
+    <circle cx="878" cy="486" r="7" fill="#B9D2E0"/>
+  </g>
+  <rect x="92" y="92" width="246" height="34" rx="17" fill="#0C151E" stroke="rgba(255,255,255,0.08)"/>
+  <text x="116" y="114" fill="#A9BCC8" font-size="13" font-family="Inter, Arial, sans-serif" letter-spacing="4">KOLMO</text>
+  <text x="92" y="248" fill="#EDF3F8" font-size="72" font-weight="700" font-family="Inter, Arial, sans-serif">AI-Powered</text>
+  <text x="92" y="324" fill="#EDF3F8" font-size="72" font-weight="700" font-family="Inter, Arial, sans-serif">Energy Risk</text>
+  <text x="92" y="400" fill="#EDF3F8" font-size="72" font-weight="700" font-family="Inter, Arial, sans-serif">Intelligence</text>
+  <text x="92" y="470" fill="#9BB0BE" font-size="28" font-family="Inter, Arial, sans-serif">
+    Market monitoring, scenario analysis, and desk-ready briefings
+  </text>
+  <rect x="772" y="140" width="304" height="330" rx="26" fill="#0A131C" stroke="rgba(255,255,255,0.08)"/>
+  <rect x="804" y="184" width="240" height="18" rx="9" fill="#163243"/>
+  <rect x="804" y="228" width="164" height="10" rx="5" fill="#90A7B6" fill-opacity="0.55"/>
+  <rect x="804" y="258" width="220" height="10" rx="5" fill="#90A7B6" fill-opacity="0.24"/>
+  <rect x="804" y="288" width="198" height="10" rx="5" fill="#90A7B6" fill-opacity="0.24"/>
+  <path d="M812 395L854 364L902 372L950 308L1002 292L1042 232" stroke="#B8D3E2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M812 410L856 398L898 384L948 354L998 360L1042 330" stroke="#698BA0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs>
+    <linearGradient id="panel" x1="600" y1="44" x2="600" y2="586" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#08111A"/>
+      <stop offset="1" stop-color="#071018"/>
+    </linearGradient>
+    <linearGradient id="lineA" x1="92" y1="392" x2="1112" y2="392" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5B7E92" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#7FA0B4"/>
+      <stop offset="1" stop-color="#5B7E92" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="lineB" x1="94" y1="198" x2="1102" y2="198" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7997AA" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#A2C0D2"/>
+      <stop offset="1" stop-color="#7997AA" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
