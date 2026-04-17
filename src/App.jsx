@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-import platformPreview from "../assets/trader-desk-reference.svg";
 import kolmoMark from "../assets/kolmo-mark.svg";
+import showcaseAiAnalyst from "../assets/showcase-ai-analyst.png";
+import showcaseAiSummary from "../assets/showcase-ai-summary.png";
+import showcaseCorrelationShocks from "../assets/showcase-correlation-shocks.png";
+import showcaseEnergyTerminal from "../assets/showcase-energy-terminal.png";
 import { getAnalyticsConsent, initGoogleAnalytics, persistAnalyticsConsent } from "./analytics";
 
 const NEWSLETTER_DISMISSED_KEY = "kolmo-newsletter-dismissed";
@@ -26,74 +29,74 @@ const overviewCards = [
 
 const platformShowcaseSlides = [
   {
-    title: "Agent workspace",
-    body: "A command-first view for monitoring the market, querying drivers, and producing desk-ready analysis.",
-    image: platformPreview,
+    title: "Live Energy Terminal",
+    body: "Track benchmarks, products, headlines, prompts, and desk context from a single market surface.",
+    image: showcaseEnergyTerminal,
   },
   {
-    title: "Risk dashboard",
-    body: "Connect market structure to exposure with a sharper portfolio and scenario surface.",
-    image: platformPreview,
+    title: "Correlation Shock Matrix",
+    body: "Test where commodity relationships hold, where they fracture, and how shocks transmit across the complex.",
+    image: showcaseCorrelationShocks,
   },
   {
-    title: "Scenario explorer",
-    body: "Stress key books against logistics shocks, policy moves, outages, and freight repricing.",
-    image: platformPreview,
+    title: "AI Briefs for Market Docs",
+    body: "Turn dense industry documents into executive summaries and key findings that teams can act on quickly.",
+    image: showcaseAiSummary,
   },
   {
-    title: "Decision feed",
-    body: "Turn raw signal flow into a curated stream of actionable intelligence for traders and risk teams.",
-    image: platformPreview,
+    title: "AI Energy Analyst",
+    body: "Move from open-ended market questions to faster analysis workflows for desks, analysts, and risk teams.",
+    image: showcaseAiAnalyst,
   },
 ];
 
 const capabilityCards = [
   {
-    title: "Market Data Access",
-    body: "Core benchmarks, products, curves, and spreads in one operating layer.",
+    title: "Live Terminal Layer",
+    body: "Monitor benchmarks, curves, news flow, and prompts without hopping across tools.",
   },
   {
-    title: "Macro & Alternative Data",
-    body: "Storage, logistics, policy, and demand signals layered onto price action.",
+    title: "Correlation Shocks",
+    body: "See where relationships hold, where they fail, and what that means for the book.",
   },
   {
-    title: "AI Reports",
-    body: "Generate market briefs and desk-ready analysis for real workflows.",
+    title: "AI Briefs",
+    body: "Convert dense energy documentation into concise decision-ready summaries.",
   },
   {
-    title: "Risk Monitoring",
-    body: "Watch exposure shift as market structure changes.",
+    title: "Prompted Analysis",
+    body: "Ask Kolmo for a market view, a prediction, or a rapid interpretation of the tape.",
   },
   {
-    title: "Scenario Analysis",
-    body: "Test policy, freight, outage, and supply shocks before they hit the book.",
+    title: "Event Windows",
+    body: "Frame market episodes like wars, outages, and post-shock recoveries with context.",
   },
   {
-    title: "Stress Testing",
-    body: "See where downside concentrates across portfolios and books.",
+    title: "Portfolio Context",
+    body: "Connect exposure to the signal that matters before volatility forces the answer.",
   },
 ];
 
 const workflowSteps = [
   {
     step: "01",
-    title: "Ingest the market",
-    body: "Capture prices, physical signals, and macro context.",
+    title: "Read the market",
+    body: "Pull prices, documents, and signal flow into one surface.",
   },
   {
     step: "02",
-    title: "Connect to exposure",
-    body: "Map market drivers directly to books and portfolios.",
+    title: "Trace the driver",
+    body: "See what is actually moving the market and what is noise.",
   },
   {
     step: "03",
-    title: "Generate intelligence",
-    body: "Turn fragmented signals into structured analysis.",
+    title: "Brief the desk",
+    body: "Turn raw information into a usable market view quickly.",
   },
   {
     step: "04",
-    title: "Simulate risk",
-    body: "Run forward scenarios across policy, supply, and logistics.",
+    title: "Stress the path",
+    body: "Run scenarios before the market forces the answer.",
   },
 ];
 
@@ -102,20 +105,27 @@ const shockChips = ["OPEC cut", "Refinery outage", "Freight spike", "Storage bui
 const useCases = [
   {
     title: "Traders",
-    body: "Track connected drivers and act faster on dislocations.",
+    body: "For desks that need the signal before the move becomes consensus.",
   },
   {
     title: "Analysts",
-    body: "Build deeper market views from structured and alternative data.",
+    body: "For teams building sharper views from price, documents, and event context.",
   },
   {
     title: "Risk Managers",
-    body: "Monitor exposure and simulate downside across complex books.",
+    body: "For risk teams watching concentration, regime shifts, and downside paths.",
   },
   {
     title: "Banks & Hedge Funds",
-    body: "Understand oil and gas risk with intelligence-first tooling.",
+    body: "For institutions that want faster answers across energy and macro exposure.",
   },
+];
+
+const capabilityChips = ["Live market layer", "AI brief generation", "Correlation shocks", "Scenario windows"];
+const riskStats = [
+  { value: "24/7", label: "Market watch" },
+  { value: "Event-led", label: "Scenario framing" },
+  { value: "Desk-ready", label: "AI brief output" },
 ];
 
 const marketRows = [
@@ -448,7 +458,7 @@ function HeroAtmosphere() {
   );
 }
 
-function ShowcaseCarousel() {
+function ShowcaseCarousel({ onSlideChange = () => {} }) {
   const scrollerRef = useRef(null);
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -459,8 +469,9 @@ function ShowcaseCarousel() {
       return;
     }
 
-    const nextIndex = Math.round(scroller.scrollLeft / scroller.clientWidth);
+    const nextIndex = Math.max(0, Math.min(platformShowcaseSlides.length - 1, Math.round(scroller.scrollLeft / scroller.clientWidth)));
     setActiveSlide(nextIndex);
+    onSlideChange(nextIndex);
   };
 
   const scrollToSlide = (index) => {
@@ -475,6 +486,10 @@ function ShowcaseCarousel() {
       behavior: "smooth",
     });
   };
+
+  useEffect(() => {
+    onSlideChange(activeSlide);
+  }, [activeSlide, onSlideChange]);
 
   return (
     <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(10,16,23,0.94)] shadow-[0_30px_80px_rgba(0,0,0,0.34)]">
@@ -518,10 +533,13 @@ function ShowcaseCarousel() {
         {platformShowcaseSlides.map((slide) => (
           <div key={slide.title} className="min-w-full snap-center p-4 sm:p-5">
             <div className="overflow-hidden rounded-[1.4rem] border border-white/6 bg-[rgba(7,12,18,0.88)]">
-              <img src={slide.image} alt={slide.title} className="aspect-[16/10] w-full object-cover" />
-              <div className="border-t border-white/6 px-4 py-4">
-                <div className="text-[0.68rem] uppercase tracking-[0.22em] text-textSecondary">{slide.title}</div>
-                <p className="mt-3 text-sm leading-7 text-textSecondary">{slide.body}</p>
+              <div className="relative">
+                <img src={slide.image} alt={slide.title} className="aspect-[16/10] w-full object-cover" />
+                <div className="pointer-events-none absolute inset-x-4 bottom-4 flex justify-start">
+                  <div className="rounded-full border border-white/10 bg-[rgba(8,15,22,0.74)] px-3 py-2 text-[0.62rem] uppercase tracking-[0.2em] text-textPrimary backdrop-blur">
+                    {slide.title}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -657,27 +675,35 @@ function OverviewCard({ title }) {
 
 function CapabilityCard({ title, body }) {
   return (
-    <div className="group rounded-[1.5rem] border border-white/8 bg-[rgba(8,15,22,0.78)] p-5 transition duration-300 hover:border-white/12 hover:bg-[rgba(9,16,23,0.88)]">
-      <div className="mb-4 h-px w-10 bg-gradient-to-r from-[#8ab1c6]/70 to-transparent" />
-      <h3 className="text-base font-medium text-textPrimary">{title}</h3>
-      <p className="mt-2 text-sm leading-7 text-textSecondary">{body}</p>
+    <div className="group rounded-[1.5rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.82),rgba(7,12,18,0.9))] p-5 transition duration-300 hover:-translate-y-1 hover:border-white/12 hover:bg-[rgba(9,16,23,0.94)]">
+      <div className="flex items-center justify-between">
+        <div className="h-px w-10 bg-gradient-to-r from-[#8ab1c6]/70 to-transparent" />
+        <span className="text-[0.62rem] uppercase tracking-[0.22em] text-textSecondary">Kolmo</span>
+      </div>
+      <h3 className="mt-5 text-lg font-medium text-textPrimary">{title}</h3>
+      <p className="mt-3 text-sm leading-7 text-textSecondary">{body}</p>
     </div>
   );
 }
 
-function WorkflowCard({ step, title, body }) {
+function WorkflowCard({ step, title, body, index }) {
   return (
-    <div className="rounded-[0.85rem] bg-[rgba(8,15,22,0.76)] p-6">
+    <div
+      className={`rounded-[1rem] border border-white/6 bg-[linear-gradient(180deg,rgba(8,15,22,0.72),rgba(7,12,18,0.92))] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.14)] ${
+        index % 2 === 1 ? "lg:translate-y-8" : ""
+      }`}
+    >
       <div className="text-[0.72rem] uppercase tracking-[0.24em] text-textSecondary">{step}</div>
       <h3 className="mt-4 text-lg font-medium text-textPrimary">{title}</h3>
-      <p className="mt-3 text-sm leading-7 text-textSecondary">{body}</p>
+      <p className="mt-3 max-w-[26ch] text-sm leading-7 text-textSecondary">{body}</p>
     </div>
   );
 }
 
 function UseCaseCard({ title, body }) {
   return (
-    <div className="rounded-[1.5rem] border border-white/8 bg-[rgba(8,15,22,0.74)] p-6">
+    <div className="rounded-[1.5rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.74),rgba(7,12,18,0.92))] p-6 transition duration-300 hover:border-white/12 hover:bg-[rgba(9,16,23,0.9)]">
+      <div className="text-[0.66rem] uppercase tracking-[0.22em] text-textSecondary">Built for</div>
       <h3 className="text-lg font-medium text-textPrimary">{title}</h3>
       <p className="mt-3 text-sm leading-7 text-textSecondary">{body}</p>
     </div>
@@ -690,6 +716,7 @@ export default function App() {
   const [isCookieBannerVisible, setIsCookieBannerVisible] = useState(() => getAnalyticsConsent() === null);
   const [isMobileNewsletterFallback, setIsMobileNewsletterFallback] = useState(false);
   const [isCompactViewport, setIsCompactViewport] = useState(false);
+  const [activeShowcaseSlide, setActiveShowcaseSlide] = useState(0);
 
   useEffect(() => {
     const hasDismissed = window.localStorage.getItem(NEWSLETTER_DISMISSED_KEY) === "true";
@@ -913,8 +940,20 @@ export default function App() {
         <section id="capabilities" className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-6 lg:px-8 lg:py-12">
           <SectionHeading
             eyebrow="Core capabilities"
-            title="Built for serious energy workflows with less dashboard sprawl and more decision context."
+            title="The product surface is tighter, faster, and more decisive than a dashboard stack."
+            body="Kolmo compresses monitoring, analysis, and briefing into a sharper operating layer."
           />
+
+          <div className="mt-8 flex flex-wrap gap-2.5">
+            {capabilityChips.map((chip) => (
+              <span
+                key={chip}
+                className="rounded-full border border-white/8 bg-white/[0.03] px-3 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-textSecondary"
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {capabilityCards.map((card) => (
@@ -926,13 +965,13 @@ export default function App() {
         <section className="mx-auto w-full max-w-[1280px] px-5 py-24 sm:px-6 lg:px-8 lg:py-30">
           <SectionHeading
             eyebrow="How it works"
-            title="A direct workflow from market ingestion to risk simulation."
-            body="Kolmo is designed to move from fragmented signals to usable intelligence with portfolio context."
+            title="A clean path from raw signal to market conviction."
+            body="No dashboard maze. One tighter loop from question to answer."
           />
 
-          <div className="mt-12 grid gap-4 lg:grid-cols-4">
-            {workflowSteps.map((item) => (
-              <WorkflowCard key={item.step} step={item.step} title={item.title} body={item.body} />
+          <div className="relative mt-12 grid gap-4 lg:grid-cols-4 lg:before:absolute lg:before:left-0 lg:before:right-0 lg:before:top-1/2 lg:before:h-px lg:before:-translate-y-1/2 lg:before:bg-white/6">
+            {workflowSteps.map((item, index) => (
+              <WorkflowCard key={item.step} step={item.step} title={item.title} body={item.body} index={index} />
             ))}
           </div>
         </section>
@@ -943,19 +982,25 @@ export default function App() {
               <div className="order-2 max-w-xl lg:order-2">
                 <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">Platform showcase</span>
                 <h2 className="mt-5 font-serif-display text-3xl leading-[0.98] text-textPrimary sm:text-4xl lg:text-[3rem]">
-                  From market complexity to actionable clarity.
+                  {platformShowcaseSlides[activeShowcaseSlide].title}
                 </h2>
                 <p className="mt-5 text-base leading-8 text-textSecondary">
-                  Scroll through the Kolmo workspace to move from market monitoring to scenario analysis and portfolio context.
+                  {platformShowcaseSlides[activeShowcaseSlide].body}
                 </p>
-                <div className="mt-8 space-y-4 text-sm leading-7 text-textSecondary">
-                  <p>The carousel is ready for 3 to 4 real platform screenshots whenever you send them over.</p>
-                  <p>A subtle 3D layer adds depth so the section feels more like a product moment than a static image block.</p>
+                <div className="mt-8 flex flex-wrap gap-2.5">
+                  {["Live interface", "Decision speed", "Desk-ready intelligence"].map((chip) => (
+                    <span
+                      key={chip}
+                      className="rounded-full border border-white/8 bg-white/[0.03] px-3 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-textSecondary"
+                    >
+                      {chip}
+                    </span>
+                  ))}
                 </div>
               </div>
 
               <div className="order-1 lg:order-1">
-                <ShowcaseCarousel />
+                <ShowcaseCarousel onSlideChange={setActiveShowcaseSlide} />
               </div>
             </div>
           </div>
@@ -966,9 +1011,18 @@ export default function App() {
             <div className="max-w-xl">
               <SectionHeading
                 eyebrow="Risk intelligence"
-                title="See risk before the market prices it."
-                body="Run simulations across supply, freight, storage, policy, and cross-market dislocation."
+                title="See the shock path before the market prices it in."
+                body="Built for scenario framing, correlation breaks, and desk briefings around stress events."
               />
+
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                {riskStats.map((stat) => (
+                  <div key={stat.label} className="rounded-[1rem] border border-white/8 bg-white/[0.03] px-4 py-4">
+                    <div className="text-xl font-medium text-textPrimary">{stat.value}</div>
+                    <div className="mt-2 text-[0.68rem] uppercase tracking-[0.18em] text-textSecondary">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
 
               <div className="mt-8 flex flex-wrap gap-2.5">
                 {shockChips.map((chip) => (
@@ -1042,8 +1096,8 @@ export default function App() {
         <section id="target-users" className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-6 lg:px-8 lg:py-12">
           <SectionHeading
             eyebrow="Target users"
-            title="Designed for institutions operating in complex energy markets."
-            body="One platform for intelligence, exposure awareness, and scenario depth."
+            title="Built for teams that need a market read before the rest of the street catches up."
+            body="Different users. One shared operating layer."
           />
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -1057,8 +1111,8 @@ export default function App() {
           <div className="rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.82),rgba(7,12,18,0.94))] px-6 py-10 text-center shadow-panel sm:px-8 lg:px-10 lg:py-14">
             <SectionHeading
               align="center"
-              title="The intelligence layer for energy markets."
-              body="Kolmo helps market participants map complexity, generate insight, and make better risk decisions in oil and gas."
+              title="Book a live walkthrough with Kolmo."
+              body="See the terminal, the shock engine, the AI brief workflow, and how the product supports desk decisions in practice."
             />
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -1106,7 +1160,7 @@ export default function App() {
               Product
             </a>
             <a href="#contact" className="transition hover:text-textPrimary">
-              Access
+              Contact
             </a>
             <button type="button" onClick={openCookieSettings} className="transition hover:text-textPrimary">
               Cookie Settings
