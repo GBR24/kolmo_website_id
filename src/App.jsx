@@ -1109,15 +1109,10 @@ export default function App() {
 
         <section id="contact" className="mx-auto w-full max-w-[1280px] px-5 py-24 sm:px-6 lg:px-8 lg:py-30">
           <div className="rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.82),rgba(7,12,18,0.94))] px-6 py-10 text-center shadow-panel sm:px-8 lg:px-10 lg:py-14">
-            <SectionHeading
-              align="center"
-              title="Book a live walkthrough with Kolmo."
-              body="See the terminal, the shock engine, the AI brief workflow, and how the product supports desk decisions in practice."
-            />
+            <SectionHeading align="center" title="Book a live walkthrough with Kolmo." />
 
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <div className="mt-10 flex items-center justify-center">
               <PrimaryButton>Contact Us</PrimaryButton>
-              <SecondaryButton href="#newsletter">Subscribe</SecondaryButton>
             </div>
 
             {/* Optional analytics and demo-request integration can be added here. */}
