@@ -534,7 +534,13 @@ function ShowcaseCarousel({ onSlideChange = () => {} }) {
           <div key={slide.title} className="min-w-full snap-center p-4 sm:p-5">
             <div className="overflow-hidden rounded-[1.4rem] border border-white/6 bg-[rgba(7,12,18,0.88)]">
               <div className="relative">
-                <img src={slide.image} alt={slide.title} className="aspect-[16/10] w-full object-cover" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(151,190,211,0.08),transparent_42%)]" />
+                <img
+                  src={slide.image}
+                  alt={slide.title}
+                  loading="lazy"
+                  className="relative h-[18rem] w-full bg-[#060c12] object-contain p-2 sm:h-[22rem] sm:p-3 lg:h-[26rem]"
+                />
                 <div className="pointer-events-none absolute inset-x-4 bottom-4 flex justify-start">
                   <div className="rounded-full border border-white/10 bg-[rgba(8,15,22,0.74)] px-3 py-2 text-[0.62rem] uppercase tracking-[0.2em] text-textPrimary backdrop-blur">
                     {slide.title}
@@ -832,7 +838,7 @@ export default function App() {
           </a>
 
           <nav className="hidden items-center gap-8 text-[0.74rem] uppercase tracking-[0.2em] text-textSecondary md:flex">
-            <a href="#platform" className="transition hover:text-textPrimary">
+            <a href="/platform/" className="transition hover:text-textPrimary">
               Platform
             </a>
             <div className="group relative">
@@ -891,7 +897,7 @@ export default function App() {
 
                 <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                   <PrimaryButton>Contact Us</PrimaryButton>
-                  <SecondaryButton href="#platform">View Platform</SecondaryButton>
+                  <SecondaryButton href="/platform/">View Platform</SecondaryButton>
                 </div>
 
                 <div className="mt-12 grid max-w-2xl grid-cols-1 gap-4 border-t border-white/8 pt-8 sm:grid-cols-3">
@@ -1145,7 +1151,7 @@ export default function App() {
           </div>
 
           <div className="flex flex-wrap items-center gap-5 text-[0.72rem] uppercase tracking-[0.18em]">
-            <a href="#platform" className="transition hover:text-textPrimary">
+            <a href="/platform/" className="transition hover:text-textPrimary">
               Platform
             </a>
             <a href="#capabilities" className="transition hover:text-textPrimary">
