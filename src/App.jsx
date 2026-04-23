@@ -250,7 +250,7 @@ function PrimaryButton({ children, href = CALENDLY_URL }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.06] px-6 py-3 text-sm font-medium tracking-[0.14em] text-textPrimary transition duration-300 hover:border-white/18 hover:bg-white/[0.09]"
+      className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/[0.08] px-6 py-3 text-sm font-medium tracking-[0.14em] text-textPrimary transition duration-300 hover:border-white/22 hover:bg-white/[0.12]"
     >
       {children}
     </a>
@@ -261,7 +261,7 @@ function SecondaryButton({ children, href = "#showcase" }) {
   return (
     <a
       href={href}
-      className="inline-flex items-center justify-center rounded-full border border-white/10 px-6 py-3 text-sm font-medium tracking-[0.14em] text-textSecondary transition duration-300 hover:border-white/16 hover:text-textPrimary"
+      className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/[0.02] px-6 py-3 text-sm font-medium tracking-[0.14em] text-[rgba(237,243,248,0.84)] transition duration-300 hover:border-white/20 hover:bg-white/[0.05] hover:text-textPrimary"
     >
       {children}
     </a>
@@ -826,10 +826,10 @@ export default function App() {
   return (
     <div className="min-h-screen bg-ink text-textPrimary">
       <div className="fixed inset-0 -z-10 bg-vignette" />
-      <div className="fixed inset-0 -z-10 bg-grid bg-[size:72px_72px] opacity-[0.08]" />
-      <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(5,11,17,0.5),rgba(5,11,17,0.92))]" />
+      <div className="fixed inset-0 -z-10 bg-grid bg-[size:72px_72px] opacity-[0.1]" />
+      <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(4,10,16,0.44),rgba(4,9,15,0.94))]" />
 
-      <header className="sticky top-0 z-50 border-b border-white/6 bg-[rgba(5,11,17,0.72)] backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[rgba(4,10,16,0.82)] shadow-[0_12px_36px_rgba(0,0,0,0.18)] backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-[1280px] items-center justify-between px-5 py-4 sm:px-6 lg:px-8">
           <a href="#top" className="flex items-center gap-3 text-sm font-semibold tracking-[0.34em] text-textPrimary">
             {/* Replace with production logo asset if needed */}
@@ -837,37 +837,37 @@ export default function App() {
             <span>KOLMO</span>
           </a>
 
-          <nav className="hidden items-center gap-8 text-[0.74rem] uppercase tracking-[0.2em] text-textSecondary md:flex">
-            <a href="/platform/" className="transition hover:text-textPrimary">
+          <nav className="hidden items-center gap-8 text-[0.74rem] uppercase tracking-[0.2em] text-[rgba(237,243,248,0.82)] md:flex">
+            <a href="/platform/" className="transition hover:text-white">
               Platform
             </a>
             <div className="group relative">
               <button
                 type="button"
-                className="inline-flex items-center gap-2 transition hover:text-textPrimary focus:outline-none focus:text-textPrimary"
+                className="inline-flex items-center gap-2 transition hover:text-white focus:outline-none focus:text-white"
                 aria-label="Open audience menu"
               >
                 <span>AUDIENCE</span>
               </button>
-              <div className="pointer-events-none absolute left-1/2 top-full z-50 mt-4 w-64 -translate-x-1/2 rounded-[1.1rem] border border-white/8 bg-[rgba(8,15,22,0.96)] p-2 opacity-0 shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl transition duration-200 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
+              <div className="pointer-events-none absolute left-1/2 top-full z-50 mt-4 w-64 -translate-x-1/2 rounded-[1.1rem] border border-white/10 bg-[rgba(7,14,21,0.98)] p-2 opacity-0 shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl transition duration-200 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
                 {audienceTags.map((tag) => (
                   <a
                     key={tag}
                     href="#target-users"
-                    className="block rounded-[0.9rem] px-3 py-2.5 text-[0.68rem] uppercase tracking-[0.18em] text-textSecondary transition hover:bg-white/[0.04] hover:text-textPrimary"
+                    className="block rounded-[0.9rem] px-3 py-2.5 text-[0.68rem] uppercase tracking-[0.18em] text-[rgba(237,243,248,0.76)] transition hover:bg-white/[0.06] hover:text-white"
                   >
                     {tag}
                   </a>
                 ))}
               </div>
             </div>
-            <a href="#capabilities" className="transition hover:text-textPrimary">
+            <a href="#capabilities" className="transition hover:text-white">
               Capabilities
             </a>
-            <a href="#showcase" className="transition hover:text-textPrimary">
+            <a href="#showcase" className="transition hover:text-white">
               Product
             </a>
-            <a href="#contact" className="transition hover:text-textPrimary">
+            <a href="#contact" className="transition hover:text-white">
               Contact
             </a>
           </nav>
@@ -876,7 +876,7 @@ export default function App() {
             href={CALENDLY_URL}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex rounded-full border border-white/10 px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-textSecondary transition hover:border-white/16 hover:text-textPrimary sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
+            className="inline-flex rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-[rgba(237,243,248,0.9)] transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
           >
             Contact Us
           </a>
@@ -1143,27 +1143,27 @@ export default function App() {
         </section>
       </main>
 
-      <footer className="border-t border-white/6 bg-[rgba(5,11,17,0.82)]">
-        <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-5 px-5 py-8 text-sm text-textSecondary sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+      <footer className="border-t border-white/10 bg-[rgba(4,10,16,0.88)]">
+        <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-5 px-5 py-8 text-sm text-[rgba(237,243,248,0.74)] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <div className="flex items-center gap-3 tracking-[0.28em] text-textPrimary">
             <img src={kolmoMark} alt="" className="h-5 w-5 opacity-90" />
             <span>KOLMO</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-5 text-[0.72rem] uppercase tracking-[0.18em]">
-            <a href="/platform/" className="transition hover:text-textPrimary">
+            <a href="/platform/" className="transition hover:text-white">
               Platform
             </a>
-            <a href="#capabilities" className="transition hover:text-textPrimary">
+            <a href="#capabilities" className="transition hover:text-white">
               Capabilities
             </a>
-            <a href="#showcase" className="transition hover:text-textPrimary">
+            <a href="#showcase" className="transition hover:text-white">
               Product
             </a>
-            <a href="#contact" className="transition hover:text-textPrimary">
+            <a href="#contact" className="transition hover:text-white">
               Contact
             </a>
-            <button type="button" onClick={openCookieSettings} className="transition hover:text-textPrimary">
+            <button type="button" onClick={openCookieSettings} className="transition hover:text-white">
               Cookie Settings
             </button>
           </div>

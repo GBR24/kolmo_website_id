@@ -17,7 +17,9 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: #050b11;
+  background:
+    radial-gradient(circle at top, rgba(86, 132, 159, 0.1), transparent 26%),
+    linear-gradient(180deg, #06101a 0%, #04090f 100%);
   color: #edf3f8;
   font-family: "Inter", "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -64,9 +66,9 @@ a {
 
   .hero-stage {
     background:
-      linear-gradient(180deg, rgba(8, 14, 21, 0.94) 0%, rgba(7, 12, 18, 0.82) 56%, rgba(5, 11, 17, 0.28) 100%),
-      radial-gradient(circle at 16% 20%, rgba(100, 133, 154, 0.12), transparent 22%),
-      radial-gradient(circle at 82% 24%, rgba(130, 156, 174, 0.08), transparent 18%);
+      linear-gradient(180deg, rgba(7, 14, 22, 0.96) 0%, rgba(7, 12, 18, 0.84) 56%, rgba(5, 10, 16, 0.32) 100%),
+      radial-gradient(circle at 16% 20%, rgba(117, 155, 179, 0.15), transparent 22%),
+      radial-gradient(circle at 82% 24%, rgba(143, 173, 194, 0.1), transparent 18%);
   }
 
   .hero-stage::before {
@@ -103,8 +105,8 @@ a {
   .hero-atmosphere__grid {
     inset: 0;
     background-image:
-      linear-gradient(rgba(124, 153, 173, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(124, 153, 173, 0.05) 1px, transparent 1px);
+      linear-gradient(rgba(145, 173, 192, 0.065) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(145, 173, 192, 0.065) 1px, transparent 1px);
     background-size: 72px 72px;
     mask-image: radial-gradient(circle at 50% 36%, black 0%, rgba(0, 0, 0, 0.88) 42%, transparent 82%);
     opacity: 0.35;

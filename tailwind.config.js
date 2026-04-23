@@ -4,12 +4,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: "#050b11",
-        inkSoft: "#08131d",
+        ink: "#04090f",
+        inkSoft: "#08111a",
         textPrimary: "#edf3f8",
-        textSecondary: "#97acbd",
-        line: "rgba(72, 142, 177, 0.28)",
-        cyanSoft: "rgba(107, 178, 206, 0.12)",
+        textSecondary: "#b2c2ce",
+        line: "rgba(103, 168, 200, 0.34)",
+        cyanSoft: "rgba(125, 191, 218, 0.15)",
       },
       boxShadow: {
         panel: "0 24px 70px rgba(0, 0, 0, 0.28)",
