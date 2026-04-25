@@ -22,9 +22,24 @@ const audienceTags = [
 ];
 
 const overviewCards = [
-  { title: "Unified Data Layer" },
-  { title: "AI Energy Analyst" },
-  { title: "Portfolio & Risk Engine" },
+  { title: "Unified Data Layer", detail: "Price, flow, policy, and physical context." },
+  { title: "AI Energy Analyst", detail: "Ask, trace, and brief from one surface." },
+  { title: "Portfolio & Risk Engine", detail: "Map shocks into downside before the move." },
+];
+
+const heroSignals = [
+  { label: "Brent", tone: "up" },
+  { label: "WTI", tone: "down" },
+  { label: "TTF", tone: "up" },
+  { label: "Freight", tone: "neutral" },
+  { label: "Outages", tone: "up" },
+  { label: "Flows", tone: "neutral" },
+];
+
+const heroMetrics = [
+  { value: "Cross-market", label: "signal layer" },
+  { value: "Event-led", label: "scenario logic" },
+  { value: "Desk-ready", label: "AI output" },
 ];
 
 const platformShowcaseSlides = [
@@ -81,22 +96,22 @@ const workflowSteps = [
   {
     step: "01",
     title: "Read the market",
-    body: "Pull prices, documents, and signal flow into one surface.",
+    body: "Pull the market into one surface.",
   },
   {
     step: "02",
     title: "Trace the driver",
-    body: "See what is actually moving the market and what is noise.",
+    body: "Separate the driver from the noise.",
   },
   {
     step: "03",
     title: "Brief the desk",
-    body: "Turn raw information into a usable market view quickly.",
+    body: "Turn signal into a clear market read.",
   },
   {
     step: "04",
     title: "Stress the path",
-    body: "Run scenarios before the market forces the answer.",
+    body: "Run the shock path before the tape does.",
   },
 ];
 
@@ -105,19 +120,19 @@ const shockChips = ["OPEC cut", "Refinery outage", "Freight spike", "Storage bui
 const useCases = [
   {
     title: "Traders",
-    body: "For desks that need the signal before the move becomes consensus.",
+    body: "See the move before it becomes consensus.",
   },
   {
     title: "Analysts",
-    body: "For teams building sharper views from price, documents, and event context.",
+    body: "Build faster views from price, docs, and events.",
   },
   {
     title: "Risk Managers",
-    body: "For risk teams watching concentration, regime shifts, and downside paths.",
+    body: "Track concentration, regime breaks, and downside paths.",
   },
   {
     title: "Banks & Hedge Funds",
-    body: "For institutions that want faster answers across energy and macro exposure.",
+    body: "Get faster answers across energy and macro exposure.",
   },
 ];
 
@@ -183,6 +198,97 @@ const networkLinks = [
 ];
 
 const compactHiddenNodeLabels = new Set(["WTI Spread", "Shipping Lanes", "Sanctions Risk", "Weather Models"]);
+
+function useDepthMotion() {
+  const panelRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    const node = panelRef.current;
+
+    if (!node || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return undefined;
+    }
+
+    let frameId = 0;
+    const state = {
+      currentRotateX: 0,
+      currentRotateY: 0,
+      targetRotateX: 0,
+      targetRotateY: 0,
+      currentGlowX: 50,
+      currentGlowY: 50,
+      targetGlowX: 50,
+      targetGlowY: 50,
+    };
+
+    const render = () => {
+      state.currentRotateX += (state.targetRotateX - state.currentRotateX) * 0.12;
+      state.currentRotateY += (state.targetRotateY - state.currentRotateY) * 0.12;
+      state.currentGlowX += (state.targetGlowX - state.currentGlowX) * 0.14;
+      state.currentGlowY += (state.targetGlowY - state.currentGlowY) * 0.14;
+
+      node.style.setProperty("--depth-rotate-x", `${state.currentRotateX.toFixed(2)}deg`);
+      node.style.setProperty("--depth-rotate-y", `${state.currentRotateY.toFixed(2)}deg`);
+      node.style.setProperty("--depth-glow-x", `${state.currentGlowX.toFixed(2)}%`);
+      node.style.setProperty("--depth-glow-y", `${state.currentGlowY.toFixed(2)}%`);
+
+      const stillMoving =
+        Math.abs(state.targetRotateX - state.currentRotateX) > 0.01 ||
+        Math.abs(state.targetRotateY - state.currentRotateY) > 0.01 ||
+        Math.abs(state.targetGlowX - state.currentGlowX) > 0.02 ||
+        Math.abs(state.targetGlowY - state.currentGlowY) > 0.02;
+
+      if (stillMoving) {
+        frameId = window.requestAnimationFrame(render);
+      } else {
+        frameId = 0;
+      }
+    };
+
+    const schedule = () => {
+      if (!frameId) {
+        frameId = window.requestAnimationFrame(render);
+      }
+    };
+
+    const handleMove = (event) => {
+      const rect = node.getBoundingClientRect();
+      const offsetX = (event.clientX - rect.left) / rect.width;
+      const offsetY = (event.clientY - rect.top) / rect.height;
+
+      state.targetRotateY = (offsetX - 0.5) * 8;
+      state.targetRotateX = (0.5 - offsetY) * 7;
+      state.targetGlowX = offsetX * 100;
+      state.targetGlowY = offsetY * 100;
+      schedule();
+    };
+
+    const handleLeave = () => {
+      state.targetRotateX = 0;
+      state.targetRotateY = 0;
+      state.targetGlowX = 50;
+      state.targetGlowY = 50;
+      schedule();
+    };
+
+    node.addEventListener("pointermove", handleMove);
+    node.addEventListener("pointerleave", handleLeave);
+
+    return () => {
+      node.removeEventListener("pointermove", handleMove);
+      node.removeEventListener("pointerleave", handleLeave);
+      if (frameId) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
+  }, []);
+
+  return panelRef;
+}
 
 function NewsletterEmbed({ compact = false }) {
   return (
@@ -269,8 +375,14 @@ function SecondaryButton({ children, href = "#showcase" }) {
 }
 
 function HeroTerminalVisual() {
+  const panelRef = useDepthMotion();
+
   return (
-    <div className="overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.94),rgba(7,12,18,0.82))] shadow-panel">
+    <div
+      ref={panelRef}
+      className="depth-panel relative overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.94),rgba(7,12,18,0.82))] shadow-panel"
+    >
+      <div className="depth-panel__glow" />
       <div className="border-b border-white/8 bg-[rgba(8,15,22,0.95)]">
         <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-[0.64rem] uppercase tracking-[0.24em] text-textSecondary">
           <div className="flex items-center gap-4">
@@ -459,6 +571,7 @@ function HeroAtmosphere() {
 }
 
 function ShowcaseCarousel({ onSlideChange = () => {} }) {
+  const panelRef = useDepthMotion();
   const scrollerRef = useRef(null);
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -492,7 +605,11 @@ function ShowcaseCarousel({ onSlideChange = () => {} }) {
   }, [activeSlide, onSlideChange]);
 
   return (
-    <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(10,16,23,0.94)] shadow-[0_30px_80px_rgba(0,0,0,0.34)]">
+    <div
+      ref={panelRef}
+      className="depth-panel relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(10,16,23,0.94)] shadow-[0_30px_80px_rgba(0,0,0,0.34)]"
+    >
+      <div className="depth-panel__glow" />
       <div className="pointer-events-none absolute -left-8 top-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(152,195,220,0.18),transparent_68%)] blur-2xl" />
       <div className="pointer-events-none absolute bottom-10 right-8 h-28 w-28 rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(159,195,215,0.18),rgba(104,145,170,0.02))] shadow-[0_0_40px_rgba(121,163,190,0.12)]" />
       <div className="pointer-events-none absolute right-16 top-16 h-16 w-16 rounded-[1.4rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.02))] shadow-[0_18px_40px_rgba(0,0,0,0.16)] backdrop-blur-sm" />
@@ -670,11 +787,12 @@ function NetworkVisual({ isCompact = false }) {
   );
 }
 
-function OverviewCard({ title }) {
+function OverviewCard({ title, detail }) {
   return (
     <div className="group rounded-[1.35rem] border border-white/8 bg-[rgba(8,15,22,0.78)] px-5 py-5 shadow-panel transition duration-300 hover:border-white/12 hover:bg-[rgba(9,16,23,0.88)]">
       <div className="mb-4 h-px w-12 bg-gradient-to-r from-[#8ab1c6]/70 to-transparent" />
       <h3 className="text-sm font-medium uppercase tracking-[0.16em] text-textPrimary sm:text-[0.92rem]">{title}</h3>
+      <p className="mt-3 text-sm leading-7 text-textSecondary">{detail}</p>
     </div>
   );
 }
@@ -891,9 +1009,33 @@ export default function App() {
             <div className="relative mx-auto grid w-full max-w-[1280px] gap-12 lg:min-h-[calc(100vh-10rem)] lg:grid-cols-[minmax(0,0.95fr)_minmax(560px,1.05fr)] lg:items-center lg:gap-16">
               <div className="max-w-[38rem]">
                 <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">Oil & gas market intelligence</span>
-                <h1 className="mt-6 max-w-[11ch] font-serif-display text-5xl leading-[0.94] text-textPrimary sm:text-6xl lg:text-[5.15rem]">
-                  AI-Powered Energy Risk Intelligence
+                <h1 className="mt-6 max-w-[10ch] font-serif-display text-5xl leading-[0.94] text-textPrimary sm:text-6xl lg:text-[5.15rem]">
+                  See the shock path before the street does.
                 </h1>
+                <p className="mt-6 max-w-[34rem] text-lg leading-8 text-textSecondary">
+                  Kolmo turns market structure, event risk, and cross-market signals into a faster operating layer for
+                  energy desks.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-2.5">
+                  {heroSignals.map((signal) => (
+                    <span
+                      key={signal.label}
+                      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-[rgba(237,243,248,0.82)]"
+                    >
+                      <span
+                        className={`h-2 w-2 rounded-full ${
+                          signal.tone === "up"
+                            ? "bg-[#8fd3b2]"
+                            : signal.tone === "down"
+                              ? "bg-[#d19a9a]"
+                              : "bg-[#9bb3c0]"
+                        }`}
+                      />
+                      {signal.label}
+                    </span>
+                  ))}
+                </div>
 
                 <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                   <PrimaryButton>Contact Us</PrimaryButton>
@@ -901,18 +1043,12 @@ export default function App() {
                 </div>
 
                 <div className="mt-12 grid max-w-2xl grid-cols-1 gap-4 border-t border-white/8 pt-8 sm:grid-cols-3">
-                  <div>
-                    <div className="text-[0.72rem] uppercase tracking-[0.2em] text-textSecondary">Coverage</div>
-                    <div className="mt-3 text-base text-textPrimary">Oil, gas, logistics, storage, and macro context.</div>
-                  </div>
-                  <div>
-                    <div className="text-[0.72rem] uppercase tracking-[0.2em] text-textSecondary">Workflows</div>
-                    <div className="mt-3 text-base text-textPrimary">Analysis, monitoring, and scenario work.</div>
-                  </div>
-                  <div>
-                    <div className="text-[0.72rem] uppercase tracking-[0.2em] text-textSecondary">Positioning</div>
-                    <div className="mt-3 text-base text-textPrimary">A terminal for intelligence and risk.</div>
-                  </div>
+                  {heroMetrics.map((item) => (
+                    <div key={item.value} className="rounded-[1.15rem] border border-white/8 bg-white/[0.02] px-4 py-4">
+                      <div className="text-lg font-medium text-textPrimary">{item.value}</div>
+                      <div className="mt-2 text-[0.7rem] uppercase tracking-[0.18em] text-textSecondary">{item.label}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -926,13 +1062,13 @@ export default function App() {
             <div className="space-y-8">
               <SectionHeading
                 eyebrow="Knowledge Web"
-                title="Built for Intelligence and Risk"
-                body="A connected market map across price, policy, logistics, refining, storage, and exposure."
+                title="One market map. Fewer blind spots."
+                body="Price, policy, refining, freight, storage, and exposure in one connected field."
               />
 
               <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
                 {overviewCards.map((card) => (
-                  <OverviewCard key={card.title} title={card.title} />
+                  <OverviewCard key={card.title} title={card.title} detail={card.detail} />
                 ))}
               </div>
             </div>
@@ -946,8 +1082,8 @@ export default function App() {
         <section id="capabilities" className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-6 lg:px-8 lg:py-12">
           <SectionHeading
             eyebrow="Core capabilities"
-            title="The product surface is tighter, faster, and more decisive than a dashboard stack."
-            body="Kolmo compresses monitoring, analysis, and briefing into a sharper operating layer."
+            title="Built for fast reads, sharp scenarios, and cleaner conviction."
+            body="Less dashboard sprawl. More signal."
           />
 
           <div className="mt-8 flex flex-wrap gap-2.5">
@@ -971,8 +1107,8 @@ export default function App() {
         <section className="mx-auto w-full max-w-[1280px] px-5 py-24 sm:px-6 lg:px-8 lg:py-30">
           <SectionHeading
             eyebrow="How it works"
-            title="A clean path from raw signal to market conviction."
-            body="No dashboard maze. One tighter loop from question to answer."
+            title="From signal to conviction."
+            body="Read. Trace. Brief. Stress."
           />
 
           <div className="relative mt-12 grid gap-4 lg:grid-cols-4 lg:before:absolute lg:before:left-0 lg:before:right-0 lg:before:top-1/2 lg:before:h-px lg:before:-translate-y-1/2 lg:before:bg-white/6">
@@ -1017,8 +1153,8 @@ export default function App() {
             <div className="max-w-xl">
               <SectionHeading
                 eyebrow="Risk intelligence"
-                title="See the shock path before the market prices it in."
-                body="Built for scenario framing, correlation breaks, and desk briefings around stress events."
+                title="See how a shock travels before it reprices the book."
+                body="Scenario framing for volatile energy markets."
               />
 
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
@@ -1102,8 +1238,8 @@ export default function App() {
         <section id="target-users" className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-6 lg:px-8 lg:py-12">
           <SectionHeading
             eyebrow="Target users"
-            title="Built for teams that need a market read before the rest of the street catches up."
-            body="Different users. One shared operating layer."
+            title="Built for real market decisions."
+            body="One operating layer for desks, risk, and research."
           />
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">

@@ -56,6 +56,24 @@ a {
 }
 
 @layer components {
+  .depth-panel {
+    transform: perspective(1600px) rotateX(var(--depth-rotate-x, 0deg)) rotateY(var(--depth-rotate-y, 0deg));
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .depth-panel__glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at var(--depth-glow-x, 50%) var(--depth-glow-y, 50%),
+      rgba(177, 210, 228, 0.12),
+      transparent 30%
+    );
+    opacity: 0.9;
+  }
+
   .showcase-scroller {
     scrollbar-width: none;
   }
@@ -319,6 +337,16 @@ a {
   .flow-dot-svg {
     animation: pulseSoft 5.2s ease-in-out infinite;
     transform-origin: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .depth-panel {
+    transform: none;
+  }
+
+  .depth-panel__glow {
+    display: none;
   }
 }
 
