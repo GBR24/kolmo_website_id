@@ -17,11 +17,17 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at top, rgba(86, 132, 159, 0.1), transparent 26%),
     linear-gradient(180deg, #06101a 0%, #04090f 100%);
   color: #edf3f8;
   font-family: "Inter", "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+#root {
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 a {
@@ -31,6 +37,7 @@ a {
 
 * {
   box-sizing: border-box;
+  min-width: 0;
 }
 
 ::selection {
@@ -114,7 +121,6 @@ a {
   .hero-atmosphere__contours,
   .hero-atmosphere__datafield,
   .hero-atmosphere__beam,
-  .hero-atmosphere__orb,
   .hero-atmosphere__ring,
   .hero-atmosphere__scan {
     position: absolute;
@@ -259,36 +265,6 @@ a {
     animation-delay: -8s;
   }
 
-  .hero-atmosphere__orb {
-    border-radius: 999px;
-    filter: blur(0.5px);
-    background: radial-gradient(circle, rgba(215, 231, 239, 0.42) 0%, rgba(138, 171, 191, 0.18) 38%, transparent 72%);
-    animation: heroFloat 14s ease-in-out infinite;
-  }
-
-  .hero-atmosphere__orb--one {
-    top: 12%;
-    left: 48%;
-    width: 10rem;
-    height: 10rem;
-  }
-
-  .hero-atmosphere__orb--two {
-    top: 46%;
-    left: 62%;
-    width: 7rem;
-    height: 7rem;
-    animation-delay: -4s;
-  }
-
-  .hero-atmosphere__orb--three {
-    bottom: 12%;
-    left: 22%;
-    width: 8rem;
-    height: 8rem;
-    animation-delay: -9s;
-  }
-
   .hero-atmosphere__ring {
     border-radius: 999px;
     border: 1px solid rgba(142, 171, 189, 0.1);
@@ -338,6 +314,27 @@ a {
     animation: pulseSoft 5.2s ease-in-out infinite;
     transform-origin: center;
   }
+
+  .network-link {
+    transition: stroke 240ms ease, stroke-width 240ms ease, opacity 240ms ease;
+  }
+
+  .network-link--active {
+    stroke-dasharray: 16 10;
+    animation: shockTravel 2.6s linear infinite;
+    filter: drop-shadow(0 0 8px rgba(180, 216, 234, 0.34));
+  }
+
+  .network-node {
+    transition: fill 240ms ease, r 240ms ease, stroke 240ms ease;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .network-node--active {
+    animation: nodeCharge 2.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px rgba(188, 222, 238, 0.42));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -348,6 +345,11 @@ a {
   .depth-panel__glow {
     display: none;
   }
+
+  .network-link--active,
+  .network-node--active {
+    animation: none;
+  }
 }
 
 @keyframes heroDrift {
@@ -357,18 +359,6 @@ a {
   }
   50% {
     transform: translate3d(18px, -12px, 0) scale(1.05);
-  }
-}
-
-@keyframes heroFloat {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-    opacity: 0.24;
-  }
-  50% {
-    transform: translate3d(0, -10px, 0);
-    opacity: 0.38;
   }
 }
 
@@ -423,5 +413,26 @@ a {
   50% {
     transform: translateY(18%);
     opacity: 0.36;
+  }
+}
+
+@keyframes shockTravel {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -52;
+  }
+}
+
+@keyframes nodeCharge {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.18);
   }
 }

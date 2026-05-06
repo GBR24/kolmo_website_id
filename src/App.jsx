@@ -22,9 +22,9 @@ const audienceTags = [
 ];
 
 const overviewCards = [
-  { title: "Unified Data Layer", detail: "Price, flow, policy, and physical context." },
-  { title: "AI Energy Analyst", detail: "Ask, trace, and brief from one surface." },
-  { title: "Portfolio & Risk Engine", detail: "Map shocks into downside before the move." },
+  { title: "Market Map", detail: "Price, flow, policy, and exposure." },
+  { title: "AI Analyst", detail: "Ask, trace, brief." },
+  { title: "Risk Path", detail: "Map shocks before the move." },
 ];
 
 const heroSignals = [
@@ -36,59 +36,45 @@ const heroSignals = [
   { label: "Flows", tone: "neutral" },
 ];
 
-const heroMetrics = [
-  { value: "Cross-market", label: "signal layer" },
-  { value: "Event-led", label: "scenario logic" },
-  { value: "Desk-ready", label: "AI output" },
-];
-
 const platformShowcaseSlides = [
   {
     title: "Live Energy Terminal",
-    body: "Track benchmarks, products, headlines, prompts, and desk context from a single market surface.",
+    body: "Prices, news, prompts, and desk context.",
     image: showcaseEnergyTerminal,
   },
   {
     title: "Correlation Shock Matrix",
-    body: "Test where commodity relationships hold, where they fracture, and how shocks transmit across the complex.",
+    body: "Where relationships hold, break, and transmit.",
     image: showcaseCorrelationShocks,
   },
   {
     title: "AI Briefs for Market Docs",
-    body: "Turn dense industry documents into executive summaries and key findings that teams can act on quickly.",
+    body: "Dense documents into desk-ready findings.",
     image: showcaseAiSummary,
   },
   {
     title: "AI Energy Analyst",
-    body: "Move from open-ended market questions to faster analysis workflows for desks, analysts, and risk teams.",
+    body: "Ask a market question. Get a usable read.",
     image: showcaseAiAnalyst,
   },
 ];
 
 const capabilityCards = [
   {
-    title: "Live Terminal Layer",
-    body: "Monitor benchmarks, curves, news flow, and prompts without hopping across tools.",
+    title: "Live Market Layer",
+    body: "Benchmarks, news, prompts, and context.",
   },
   {
-    title: "Correlation Shocks",
-    body: "See where relationships hold, where they fail, and what that means for the book.",
+    title: "Shock Mapping",
+    body: "See where risk travels next.",
   },
   {
     title: "AI Briefs",
-    body: "Convert dense energy documentation into concise decision-ready summaries.",
+    body: "Turn documents into decisions.",
   },
   {
-    title: "Prompted Analysis",
-    body: "Ask Kolmo for a market view, a prediction, or a rapid interpretation of the tape.",
-  },
-  {
-    title: "Event Windows",
-    body: "Frame market episodes like wars, outages, and post-shock recoveries with context.",
-  },
-  {
-    title: "Portfolio Context",
-    body: "Connect exposure to the signal that matters before volatility forces the answer.",
+    title: "Scenario Engine",
+    body: "Stress the path before the tape does.",
   },
 ];
 
@@ -115,32 +101,26 @@ const workflowSteps = [
   },
 ];
 
-const shockChips = ["OPEC cut", "Refinery outage", "Freight spike", "Storage build", "Demand slowdown"];
-
-const useCases = [
-  {
-    title: "Traders",
-    body: "See the move before it becomes consensus.",
-  },
-  {
-    title: "Analysts",
-    body: "Build faster views from price, docs, and events.",
-  },
-  {
-    title: "Risk Managers",
-    body: "Track concentration, regime breaks, and downside paths.",
-  },
-  {
-    title: "Banks & Hedge Funds",
-    body: "Get faster answers across energy and macro exposure.",
-  },
+const shockScenarios = [
+  { label: "OPEC cut", nodes: ["OPEC Policy", "Brent", "WTI Spread", "Inventories"] },
+  { label: "Refinery outage", nodes: ["Refinery Margins", "Crack Spreads", "Freight Rates", "Brent"] },
+  { label: "Freight spike", nodes: ["Freight Rates", "Shipping Lanes", "LNG Flows", "Storage Levels"] },
+  { label: "Storage build", nodes: ["Inventories", "Storage Levels", "WTI Spread", "Brent"] },
 ];
 
-const capabilityChips = ["Live market layer", "AI brief generation", "Correlation shocks", "Scenario windows"];
+const audienceGroups = ["Traders", "Analysts", "Risk teams", "Banks", "Hedge funds", "Commodity firms"];
+
 const riskStats = [
-  { value: "24/7", label: "Market watch" },
-  { value: "Event-led", label: "Scenario framing" },
-  { value: "Desk-ready", label: "AI brief output" },
+  { value: "Live", label: "Watch" },
+  { value: "Event", label: "Frame" },
+  { value: "Brief", label: "Act" },
+];
+
+const riskPathRows = [
+  { label: "Supply", value: "72%" },
+  { label: "Margins", value: "61%" },
+  { label: "Freight", value: "48%" },
+  { label: "Storage", value: "84%" },
 ];
 
 const marketRows = [
@@ -363,24 +343,13 @@ function PrimaryButton({ children, href = CALENDLY_URL }) {
   );
 }
 
-function SecondaryButton({ children, href = "#showcase" }) {
-  return (
-    <a
-      href={href}
-      className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/[0.02] px-6 py-3 text-sm font-medium tracking-[0.14em] text-[rgba(237,243,248,0.84)] transition duration-300 hover:border-white/20 hover:bg-white/[0.05] hover:text-textPrimary"
-    >
-      {children}
-    </a>
-  );
-}
-
 function HeroTerminalVisual() {
   const panelRef = useDepthMotion();
 
   return (
     <div
       ref={panelRef}
-      className="depth-panel relative overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.94),rgba(7,12,18,0.82))] shadow-panel"
+      className="depth-panel relative w-full min-w-0 max-w-[calc(100vw-2.5rem)] overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.94),rgba(7,12,18,0.82))] shadow-panel lg:max-w-none"
     >
       <div className="depth-panel__glow" />
       <div className="border-b border-white/8 bg-[rgba(8,15,22,0.95)]">
@@ -435,12 +404,12 @@ function HeroTerminalVisual() {
         <div className="grid gap-px bg-white/8 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="bg-[rgba(8,15,22,0.92)]">
             <div className="border-b border-white/8 px-4 py-3">
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                 <div>
                   <div className="text-[0.64rem] uppercase tracking-[0.22em] text-textSecondary">Chart</div>
                   <div className="mt-2 font-serif-display text-2xl text-textPrimary">Historical Prices</div>
                 </div>
-                <div className="flex gap-2 text-[0.64rem] uppercase tracking-[0.18em] text-textSecondary">
+                <div className="flex flex-wrap gap-2 text-[0.64rem] uppercase tracking-[0.18em] text-textSecondary">
                   {["1M", "3M", "6M", "1Y"].map((range) => (
                     <span
                       key={range}
@@ -524,6 +493,47 @@ function HeroTerminalVisual() {
   );
 }
 
+function HeroMobileSignalVisual() {
+  return (
+    <div className="relative w-full max-w-[22rem] overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(8,15,22,0.94),rgba(7,12,18,0.86))] shadow-panel">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(151,190,211,0.12),transparent_38%)]" />
+      <div className="relative border-b border-white/8 px-4 py-3">
+        <div className="flex items-center justify-between gap-4 text-[0.62rem] uppercase tracking-[0.22em] text-textSecondary">
+          <span className="text-textPrimary">Kolmo</span>
+          <span>Live layer</span>
+        </div>
+      </div>
+
+      <div className="relative grid gap-px bg-white/8">
+        <div className="bg-[rgba(8,15,22,0.9)] p-4">
+          <div className="mb-4 text-[0.62rem] uppercase tracking-[0.22em] text-textSecondary">Market pulse</div>
+          <div className="space-y-2">
+            {marketRows.slice(0, 3).map((row) => (
+              <div key={row.name} className="grid grid-cols-[1fr_auto_auto] items-center gap-3 border-b border-white/6 py-2 text-sm">
+                <span className="text-textPrimary">{row.name}</span>
+                <span className="text-textSecondary">{row.price}</span>
+                <span className={row.tone}>{row.change}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-[rgba(8,15,22,0.9)] p-4">
+          <div className="text-[0.62rem] uppercase tracking-[0.22em] text-textSecondary">Active read</div>
+          <p className="mt-3 text-sm leading-7 text-textPrimary">{terminalAlerts[0]}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {commandLog.slice(0, 2).map((line) => (
+              <span key={line} className="rounded-full border border-white/8 bg-white/[0.03] px-3 py-2 text-[0.6rem] uppercase tracking-[0.16em] text-textSecondary">
+                {line.replace("> ", "")}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HeroAtmosphere() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2.2rem]" aria-hidden="true">
@@ -560,9 +570,6 @@ function HeroAtmosphere() {
       </div>
       <div className="hero-atmosphere__beam hero-atmosphere__beam--left" />
       <div className="hero-atmosphere__beam hero-atmosphere__beam--right" />
-      <div className="hero-atmosphere__orb hero-atmosphere__orb--one" />
-      <div className="hero-atmosphere__orb hero-atmosphere__orb--two" />
-      <div className="hero-atmosphere__orb hero-atmosphere__orb--three" />
       <div className="hero-atmosphere__ring hero-atmosphere__ring--one" />
       <div className="hero-atmosphere__ring hero-atmosphere__ring--two" />
       <div className="hero-atmosphere__scan" />
@@ -607,7 +614,7 @@ function ShowcaseCarousel({ onSlideChange = () => {} }) {
   return (
     <div
       ref={panelRef}
-      className="depth-panel relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(10,16,23,0.94)] shadow-[0_30px_80px_rgba(0,0,0,0.34)]"
+      className="depth-panel relative w-full min-w-0 max-w-[calc(100vw-2.5rem)] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(10,16,23,0.94)] shadow-[0_30px_80px_rgba(0,0,0,0.34)] lg:max-w-none"
     >
       <div className="depth-panel__glow" />
       <div className="pointer-events-none absolute -left-8 top-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(152,195,220,0.18),transparent_68%)] blur-2xl" />
@@ -656,7 +663,7 @@ function ShowcaseCarousel({ onSlideChange = () => {} }) {
                   src={slide.image}
                   alt={slide.title}
                   loading="lazy"
-                  className="relative h-[18rem] w-full bg-[#060c12] object-contain p-2 sm:h-[22rem] sm:p-3 lg:h-[26rem]"
+                  className="relative h-[18rem] w-full bg-[#060c12] object-contain p-2 sm:h-[22rem] sm:p-3 lg:h-[30rem]"
                 />
                 <div className="pointer-events-none absolute inset-x-4 bottom-4 flex justify-start">
                   <div className="rounded-full border border-white/10 bg-[rgba(8,15,22,0.74)] px-3 py-2 text-[0.62rem] uppercase tracking-[0.2em] text-textPrimary backdrop-blur">
@@ -686,10 +693,20 @@ function ShowcaseCarousel({ onSlideChange = () => {} }) {
   );
 }
 
-function NetworkVisual({ isCompact = false }) {
+function NetworkVisual({ activeShock = 0, isCompact = false, onShockChange = () => {} }) {
+  const shock = shockScenarios[activeShock] ?? shockScenarios[0];
+  const activeNodeLabels = new Set(shock.nodes);
+  const labelByCoordinate = new Map(networkNodes.map((node) => [`${node.x}-${node.y}`, node.label]));
+  const isLinkActive = ([x1, y1, x2, y2]) => {
+    const from = labelByCoordinate.get(`${x1}-${y1}`);
+    const to = labelByCoordinate.get(`${x2}-${y2}`);
+
+    return activeNodeLabels.has(from) && activeNodeLabels.has(to);
+  };
+
   return (
     <div
-      className={`network-shell relative overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(9,15,22,0.92),rgba(7,12,18,0.78))] shadow-panel ${
+      className={`network-shell relative w-full min-w-0 max-w-[calc(100vw-2.5rem)] overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(9,15,22,0.92),rgba(7,12,18,0.78))] shadow-panel lg:max-w-none ${
         isCompact ? "min-h-[31rem]" : "min-h-[41rem]"
       }`}
     >
@@ -707,18 +724,23 @@ function NetworkVisual({ isCompact = false }) {
       </div>
 
       <svg className="absolute inset-0 h-full w-full" viewBox="0 0 900 900" aria-hidden="true">
-        {networkLinks.map(([x1, y1, x2, y2], index) => (
+        {networkLinks.map(([x1, y1, x2, y2], index) => {
+          const active = isLinkActive([x1, y1, x2, y2]);
+
+          return (
           <line
             key={index}
             x1={x1}
             y1={y1}
             x2={x2}
             y2={y2}
-            stroke="rgba(133,162,182,0.34)"
-            strokeWidth="1.5"
+            className={active ? "network-link network-link--active" : "network-link"}
+            stroke={active ? "rgba(191,222,236,0.78)" : "rgba(133,162,182,0.28)"}
+            strokeWidth={active ? "2.4" : "1.3"}
             strokeLinecap="round"
           />
-        ))}
+          );
+        })}
 
         {networkLinks.slice(0, 6).map(([x1, y1], index) => (
           <circle
@@ -732,17 +754,22 @@ function NetworkVisual({ isCompact = false }) {
           />
         ))}
 
-        {networkNodes.map((node) => (
+        {networkNodes.map((node) => {
+          const active = activeNodeLabels.has(node.label);
+
+          return (
           <circle
             key={`node-${node.label}`}
             cx={node.x}
             cy={node.y}
-            r={node.size === "large" ? 6.5 : 5}
-            fill="rgba(158,195,216,0.88)"
-            stroke="rgba(255,255,255,0.14)"
-            strokeWidth="1.4"
+            r={active ? (node.size === "large" ? 9 : 7.4) : node.size === "large" ? 6.5 : 5}
+            className={active ? "network-node network-node--active" : "network-node"}
+            fill={active ? "rgba(211,234,244,0.96)" : "rgba(158,195,216,0.8)"}
+            stroke={active ? "rgba(255,255,255,0.34)" : "rgba(255,255,255,0.12)"}
+            strokeWidth={active ? "2" : "1.2"}
           />
-        ))}
+          );
+        })}
       </svg>
 
       <div className="absolute inset-0 z-10">
@@ -758,7 +785,9 @@ function NetworkVisual({ isCompact = false }) {
           >
             {!(isCompact && compactHiddenNodeLabels.has(node.label)) ? (
               <div
-                className={`absolute animate-floatLabel rounded-full border border-white/8 bg-[rgba(8,15,22,0.8)] text-textPrimary shadow-[0_16px_40px_rgba(0,0,0,0.18)] backdrop-blur ${
+                className={`absolute animate-floatLabel rounded-full border bg-[rgba(8,15,22,0.8)] shadow-[0_16px_40px_rgba(0,0,0,0.18)] backdrop-blur ${
+                  activeNodeLabels.has(node.label) ? "border-white/18 text-white" : "border-white/8 text-textPrimary"
+                } ${
                   isCompact ? "px-2.5 py-1 text-[0.56rem] tracking-[0.1em]" : "px-3 py-1.5 text-[0.68rem] tracking-[0.14em]"
                 }`}
                 style={{
@@ -782,6 +811,27 @@ function NetworkVisual({ isCompact = false }) {
       >
         <img src={kolmoMark} alt="" className="h-4 w-4 opacity-80" />
         <span>Systemic market intelligence</span>
+      </div>
+
+      <div
+        className={`absolute z-20 flex flex-wrap gap-2 ${
+          isCompact ? "inset-x-4 bottom-14" : "bottom-6 right-6 max-w-[26rem] justify-end"
+        }`}
+      >
+        {shockScenarios.map((item, index) => (
+          <button
+            key={item.label}
+            type="button"
+            onClick={() => onShockChange(index)}
+            className={`rounded-full border px-3 py-2 text-[0.62rem] uppercase tracking-[0.16em] transition ${
+              index === activeShock
+                ? "border-white/22 bg-white/[0.11] text-white"
+                : "border-white/8 bg-white/[0.03] text-textSecondary hover:border-white/14 hover:text-white"
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -824,12 +874,17 @@ function WorkflowCard({ step, title, body, index }) {
   );
 }
 
-function UseCaseCard({ title, body }) {
+function AudienceStrip() {
   return (
-    <div className="rounded-[1.5rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.74),rgba(7,12,18,0.92))] p-6 transition duration-300 hover:border-white/12 hover:bg-[rgba(9,16,23,0.9)]">
-      <div className="text-[0.66rem] uppercase tracking-[0.22em] text-textSecondary">Built for</div>
-      <h3 className="text-lg font-medium text-textPrimary">{title}</h3>
-      <p className="mt-3 text-sm leading-7 text-textSecondary">{body}</p>
+    <div className="flex flex-wrap gap-2.5">
+      {audienceGroups.map((group) => (
+        <span
+          key={group}
+          className="rounded-full border border-white/8 bg-white/[0.03] px-4 py-3 text-[0.72rem] uppercase tracking-[0.18em] text-textSecondary"
+        >
+          {group}
+        </span>
+      ))}
     </div>
   );
 }
@@ -841,6 +896,7 @@ export default function App() {
   const [isMobileNewsletterFallback, setIsMobileNewsletterFallback] = useState(false);
   const [isCompactViewport, setIsCompactViewport] = useState(false);
   const [activeShowcaseSlide, setActiveShowcaseSlide] = useState(0);
+  const [activeShock, setActiveShock] = useState(0);
 
   useEffect(() => {
     const hasDismissed = window.localStorage.getItem(NEWSLETTER_DISMISSED_KEY) === "true";
@@ -942,13 +998,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-ink text-textPrimary">
+    <div className="min-h-screen overflow-x-hidden bg-ink text-textPrimary">
       <div className="fixed inset-0 -z-10 bg-vignette" />
       <div className="fixed inset-0 -z-10 bg-grid bg-[size:72px_72px] opacity-[0.1]" />
       <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(4,10,16,0.44),rgba(4,9,15,0.94))]" />
 
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[rgba(4,10,16,0.82)] shadow-[0_12px_36px_rgba(0,0,0,0.18)] backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-[1280px] items-center justify-between px-5 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full min-w-0 max-w-[100vw] items-center justify-between px-5 py-4 sm:px-6 lg:max-w-[1280px] lg:px-8">
           <a href="#top" className="flex items-center gap-3 text-sm font-semibold tracking-[0.34em] text-textPrimary">
             {/* Replace with production logo asset if needed */}
             <img src={kolmoMark} alt="" className="h-6 w-6 opacity-90" />
@@ -994,7 +1050,7 @@ export default function App() {
             href={CALENDLY_URL}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-[rgba(237,243,248,0.9)] transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
+            className="hidden rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-[rgba(237,243,248,0.9)] transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white sm:inline-flex sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
           >
             Contact Us
           </a>
@@ -1003,16 +1059,16 @@ export default function App() {
 
       <main id="top">
         <section className="hero-stage relative overflow-hidden border-b border-white/6">
-          <div className="mx-auto w-full max-w-[1440px] px-5 pb-18 pt-14 sm:px-6 lg:px-8 lg:pb-24 lg:pt-20">
+          <div className="mx-auto w-full max-w-[100vw] px-5 pb-18 pt-14 sm:px-6 lg:max-w-[1440px] lg:px-8 lg:pb-24 lg:pt-20">
             <HeroAtmosphere />
 
-            <div className="relative mx-auto grid w-full max-w-[1280px] gap-12 lg:min-h-[calc(100vh-10rem)] lg:grid-cols-[minmax(0,0.95fr)_minmax(560px,1.05fr)] lg:items-center lg:gap-16">
-              <div className="max-w-[38rem]">
+            <div className="relative mx-auto grid w-full max-w-[100vw] gap-12 lg:min-h-[calc(100vh-10rem)] lg:max-w-[1280px] lg:grid-cols-[minmax(0,0.95fr)_minmax(560px,1.05fr)] lg:items-center lg:gap-16">
+              <div className="w-full min-w-0 max-w-[22rem] sm:max-w-[38rem]">
                 <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">Oil & gas market intelligence</span>
                 <h1 className="mt-6 max-w-[10ch] font-serif-display text-5xl leading-[0.94] text-textPrimary sm:text-6xl lg:text-[5.15rem]">
                   See the shock path before the street does.
                 </h1>
-                <p className="mt-6 max-w-[34rem] text-lg leading-8 text-textSecondary">
+                <p className="mt-6 max-w-[21rem] text-base leading-7 text-textSecondary sm:max-w-[34rem] sm:text-lg sm:leading-8">
                   Kolmo turns market structure, event risk, and cross-market signals into a faster operating layer for
                   energy desks.
                 </p>
@@ -1037,22 +1093,17 @@ export default function App() {
                   ))}
                 </div>
 
-                <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+                <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row">
                   <PrimaryButton>Contact Us</PrimaryButton>
-                  <SecondaryButton href="/platform/">View Platform</SecondaryButton>
-                </div>
-
-                <div className="mt-12 grid max-w-2xl grid-cols-1 gap-4 border-t border-white/8 pt-8 sm:grid-cols-3">
-                  {heroMetrics.map((item) => (
-                    <div key={item.value} className="rounded-[1.15rem] border border-white/8 bg-white/[0.02] px-4 py-4">
-                      <div className="text-lg font-medium text-textPrimary">{item.value}</div>
-                      <div className="mt-2 text-[0.7rem] uppercase tracking-[0.18em] text-textSecondary">{item.label}</div>
-                    </div>
-                  ))}
                 </div>
               </div>
 
-              <HeroTerminalVisual />
+              <div className="md:hidden">
+                <HeroMobileSignalVisual />
+              </div>
+              <div className="hidden md:block">
+                <HeroTerminalVisual />
+              </div>
             </div>
           </div>
         </section>
@@ -1074,7 +1125,7 @@ export default function App() {
             </div>
 
             <div>
-              <NetworkVisual isCompact={isCompactViewport} />
+              <NetworkVisual activeShock={activeShock} isCompact={isCompactViewport} onShockChange={setActiveShock} />
             </div>
           </div>
         </section>
@@ -1086,18 +1137,7 @@ export default function App() {
             body="Less dashboard sprawl. More signal."
           />
 
-          <div className="mt-8 flex flex-wrap gap-2.5">
-            {capabilityChips.map((chip) => (
-              <span
-                key={chip}
-                className="rounded-full border border-white/8 bg-white/[0.03] px-3 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-textSecondary"
-              >
-                {chip}
-              </span>
-            ))}
-          </div>
-
-          <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {capabilityCards.map((card) => (
               <CapabilityCard key={card.title} title={card.title} body={card.body} />
             ))}
@@ -1120,7 +1160,7 @@ export default function App() {
 
         <section id="showcase" className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-6 lg:px-8 lg:py-12">
           <div className="overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.88),rgba(7,12,18,0.94))] shadow-panel">
-            <div className="grid gap-10 px-6 py-8 sm:px-8 sm:py-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,0.88fr)] lg:items-center lg:gap-12 lg:px-10 lg:py-12">
+            <div className="grid gap-10 px-6 py-8 sm:px-8 sm:py-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(300px,0.65fr)] lg:items-center lg:gap-12 lg:px-10 lg:py-12">
               <div className="order-2 max-w-xl lg:order-2">
                 <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">Platform showcase</span>
                 <h2 className="mt-5 font-serif-display text-3xl leading-[0.98] text-textPrimary sm:text-4xl lg:text-[3rem]">
@@ -1129,16 +1169,6 @@ export default function App() {
                 <p className="mt-5 text-base leading-8 text-textSecondary">
                   {platformShowcaseSlides[activeShowcaseSlide].body}
                 </p>
-                <div className="mt-8 flex flex-wrap gap-2.5">
-                  {["Live interface", "Decision speed", "Desk-ready intelligence"].map((chip) => (
-                    <span
-                      key={chip}
-                      className="rounded-full border border-white/8 bg-white/[0.03] px-3 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-textSecondary"
-                    >
-                      {chip}
-                    </span>
-                  ))}
-                </div>
               </div>
 
               <div className="order-1 lg:order-1">
@@ -1149,87 +1179,50 @@ export default function App() {
         </section>
 
         <section className="mx-auto w-full max-w-[1280px] px-5 py-24 sm:px-6 lg:px-8 lg:py-30">
-          <div className="grid gap-10 overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.84),rgba(7,12,18,0.94))] p-6 shadow-panel sm:p-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-12 lg:p-10">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-center lg:gap-16">
             <div className="max-w-xl">
               <SectionHeading
                 eyebrow="Risk intelligence"
                 title="See how a shock travels before it reprices the book."
-                body="Scenario framing for volatile energy markets."
+                body="Watch. Frame. Act."
               />
 
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
                 {riskStats.map((stat) => (
-                  <div key={stat.label} className="rounded-[1rem] border border-white/8 bg-white/[0.03] px-4 py-4">
-                    <div className="text-xl font-medium text-textPrimary">{stat.value}</div>
+                  <div key={stat.label} className="border-t border-white/10 pt-4">
+                    <div className="text-2xl font-medium text-textPrimary">{stat.value}</div>
                     <div className="mt-2 text-[0.68rem] uppercase tracking-[0.18em] text-textSecondary">{stat.label}</div>
                   </div>
                 ))}
               </div>
-
-              <div className="mt-8 flex flex-wrap gap-2.5">
-                {shockChips.map((chip) => (
-                  <span
-                    key={chip}
-                    className="rounded-full border border-white/8 bg-white/[0.03] px-3 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-textSecondary"
-                  >
-                    {chip}
-                  </span>
-                ))}
-              </div>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-              <div className="rounded-[1.5rem] border border-white/8 bg-white/[0.03] p-5">
-                <div className="text-[0.72rem] uppercase tracking-[0.22em] text-textSecondary">Scenario surface</div>
-                <div className="mt-6 space-y-4">
-                  <div className="rounded-2xl border border-white/8 bg-[rgba(255,255,255,0.02)] p-4">
-                    <div className="flex items-center justify-between text-sm text-textPrimary">
-                      <span>Base case</span>
-                      <span className="text-textSecondary">Stable balances</span>
-                    </div>
-                    <div className="mt-4 h-1.5 rounded-full bg-white/6">
-                      <div className="h-full w-[38%] rounded-full bg-[#7da7c0]" />
-                    </div>
-                  </div>
-                  <div className="rounded-2xl border border-white/8 bg-[rgba(255,255,255,0.02)] p-4">
-                    <div className="flex items-center justify-between text-sm text-textPrimary">
-                      <span>Stress case</span>
-                      <span className="text-textSecondary">Freight + outage shock</span>
-                    </div>
-                    <div className="mt-4 h-1.5 rounded-full bg-white/6">
-                      <div className="h-full w-[72%] rounded-full bg-[#a4bac7]" />
-                    </div>
-                  </div>
-                  <div className="rounded-2xl border border-white/8 bg-[rgba(255,255,255,0.02)] p-4">
-                    <div className="flex items-center justify-between text-sm text-textPrimary">
-                      <span>Tail case</span>
-                      <span className="text-textSecondary">Policy + storage dislocation</span>
-                    </div>
-                    <div className="mt-4 h-1.5 rounded-full bg-white/6">
-                      <div className="h-full w-[86%] rounded-full bg-[#c3ced5]" />
-                    </div>
-                  </div>
-                </div>
+            <div className="rounded-[1.5rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.78),rgba(7,12,18,0.92))] p-5 shadow-panel">
+              <div className="flex items-center justify-between text-[0.72rem] uppercase tracking-[0.22em] text-textSecondary">
+                <span>Shock path</span>
+                <span>Stress view</span>
               </div>
 
-              <div className="rounded-[1.5rem] border border-white/8 bg-white/[0.03] p-5">
-                <div className="flex items-center justify-between text-[0.72rem] uppercase tracking-[0.22em] text-textSecondary">
-                  <span>Shock transmission</span>
-                  <span>Portfolio view</span>
-                </div>
-                <div className="mt-8 space-y-6">
-                  {[
-                    ["Supply risk", "Higher crude support under constrained availability."],
-                    ["Margin pressure", "Refinery stress feeds through product balances."],
-                    ["Freight sensitivity", "Logistics shifts regional clearing dynamics."],
-                    ["Inventory exposure", "Storage imbalance amplifies downside asymmetry."],
-                  ].map(([title, description]) => (
-                    <div key={title} className="border-l border-white/10 pl-4">
-                      <div className="text-sm font-medium text-textPrimary">{title}</div>
-                      <div className="mt-2 text-sm leading-7 text-textSecondary">{description}</div>
+              <div className="mt-8 space-y-5">
+                {riskPathRows.map((row) => (
+                  <div key={row.label}>
+                    <div className="flex items-center justify-between text-sm text-textPrimary">
+                      <span>{row.label}</span>
+                      <span className="text-textSecondary">{row.value}</span>
                     </div>
-                  ))}
-                </div>
+                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/6">
+                      <div className="h-full rounded-full bg-[linear-gradient(90deg,#789eb5,#d3e4ee)]" style={{ width: row.value }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                {["Outage", "Freight", "Storage"].map((item) => (
+                  <div key={item} className="rounded-[0.9rem] border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-textPrimary">
+                    {item}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -1239,13 +1232,10 @@ export default function App() {
           <SectionHeading
             eyebrow="Target users"
             title="Built for real market decisions."
-            body="One operating layer for desks, risk, and research."
           />
 
-          <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {useCases.map((useCase) => (
-              <UseCaseCard key={useCase.title} title={useCase.title} body={useCase.body} />
-            ))}
+          <div className="mt-10">
+            <AudienceStrip />
           </div>
         </section>
 
