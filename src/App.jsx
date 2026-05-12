@@ -10,6 +10,9 @@ import { getAnalyticsConsent, initGoogleAnalytics, persistAnalyticsConsent } fro
 const NEWSLETTER_DISMISSED_KEY = "kolmo-newsletter-dismissed";
 const NEWSLETTER_EMBED_URL = "https://embeds.beehiiv.com/4c0fb0be-6b2c-4eb2-a78c-0b9b7eaf734b";
 const CALENDLY_URL = "https://calendly.com/kolmolabs/30min";
+const TERMINAL_URL = "https://kolmo.netlify.app/terminal";
+const GITHUB_REPO_URL = "https://github.com/GBR24/kolmo_stats";
+const GITHUB_REPO_API_URL = "https://api.github.com/repos/GBR24/kolmo_stats";
 
 const audienceTags = [
   "Traders",
@@ -339,6 +342,54 @@ function PrimaryButton({ children, href = CALENDLY_URL }) {
       className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/[0.08] px-6 py-3 text-sm font-medium tracking-[0.14em] text-textPrimary transition duration-300 hover:border-white/22 hover:bg-white/[0.12]"
     >
       {children}
+    </a>
+  );
+}
+
+function formatStarCount(stars) {
+  if (typeof stars !== "number") {
+    return null;
+  }
+
+  if (stars >= 1000) {
+    const value = stars / 1000;
+    return `${Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1)}k`;
+  }
+
+  return stars.toLocaleString("en-US");
+}
+
+function GitHubIcon({ className = "" }) {
+  return (
+    <svg aria-hidden="true" className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.38-3.37-1.38-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.35 1.12 2.92.85.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.95c.85 0 1.7.12 2.5.35 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.95.68 1.91 0 1.38-.01 2.49-.01 2.83 0 .27.18.59.69.49A10.13 10.13 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"
+      />
+    </svg>
+  );
+}
+
+function GitHubStarsLink({ stars }) {
+  const formattedStars = formatStarCount(stars);
+
+  return (
+    <a
+      href={GITHUB_REPO_URL}
+      target="_blank"
+      rel="noreferrer"
+      aria-label="View Kolmo Stats on GitHub"
+      className="hidden items-center overflow-hidden rounded-full border border-white/12 bg-white/[0.04] text-[0.68rem] font-medium uppercase tracking-[0.14em] text-[rgba(237,243,248,0.9)] transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white md:inline-flex"
+    >
+      <span className="inline-flex items-center gap-1.5 px-3 py-2">
+        <GitHubIcon className="h-4 w-4" />
+        <span>GitHub</span>
+      </span>
+      <span className="inline-flex items-center gap-1.5 border-l border-white/10 px-2.5 py-2">
+        <span aria-hidden="true">{"\u2605"}</span>
+        <span>{formattedStars ?? "Stars"}</span>
+      </span>
     </a>
   );
 }
@@ -897,6 +948,28 @@ export default function App() {
   const [isCompactViewport, setIsCompactViewport] = useState(false);
   const [activeShowcaseSlide, setActiveShowcaseSlide] = useState(0);
   const [activeShock, setActiveShock] = useState(0);
+  const [githubStars, setGithubStars] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetch(GITHUB_REPO_API_URL, {
+      headers: {
+        Accept: "application/vnd.github+json",
+      },
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (isMounted && typeof data?.stargazers_count === "number") {
+          setGithubStars(data.stargazers_count);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const hasDismissed = window.localStorage.getItem(NEWSLETTER_DISMISSED_KEY) === "true";
@@ -1011,9 +1084,9 @@ export default function App() {
             <span>KOLMO</span>
           </a>
 
-          <nav className="hidden items-center gap-8 text-[0.74rem] uppercase tracking-[0.2em] text-[rgba(237,243,248,0.82)] md:flex">
-            <a href="/platform/" className="transition hover:text-white">
-              Platform
+          <nav className="hidden items-center gap-6 text-[0.74rem] uppercase tracking-[0.2em] text-[rgba(237,243,248,0.82)] lg:flex">
+            <a href={TERMINAL_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">
+              TERMINAL
             </a>
             <div className="group relative">
               <button
@@ -1041,19 +1114,22 @@ export default function App() {
             <a href="#showcase" className="transition hover:text-white">
               Product
             </a>
-            <a href="#contact" className="transition hover:text-white">
-              Contact
+            <a href="/stats-api/" className="transition hover:text-white">
+              API
             </a>
           </nav>
 
-          <a
-            href={CALENDLY_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="hidden rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-[rgba(237,243,248,0.9)] transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white sm:inline-flex sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
-          >
-            Contact Us
-          </a>
+          <div className="hidden items-center gap-3 sm:flex">
+            <GitHubStarsLink stars={githubStars} />
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-[rgba(237,243,248,0.9)] transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
+            >
+              Contact Us
+            </a>
+          </div>
         </div>
       </header>
 
@@ -1277,14 +1353,17 @@ export default function App() {
           </div>
 
           <div className="flex flex-wrap items-center gap-5 text-[0.72rem] uppercase tracking-[0.18em]">
-            <a href="/platform/" className="transition hover:text-white">
-              Platform
+            <a href={TERMINAL_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">
+              TERMINAL
             </a>
             <a href="#capabilities" className="transition hover:text-white">
               Capabilities
             </a>
             <a href="#showcase" className="transition hover:text-white">
               Product
+            </a>
+            <a href="/stats-api/" className="transition hover:text-white">
+              API
             </a>
             <a href="#contact" className="transition hover:text-white">
               Contact

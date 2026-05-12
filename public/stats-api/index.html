@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+    <meta
+      name="description"
+      content="Kolmo API documentation for using kolmo-stats in Python, with small JAX and CVXPY examples."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href="https://kolmolabs.com/stats-api/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Kolmo" />
+    <meta property="og:url" content="https://kolmolabs.com/stats-api/" />
+    <meta property="og:title" content="Kolmo API" />
+    <meta
+      property="og:description"
+      content="Simple Python examples for curves, spreads, risk, JAX simulation, and CVXPY optimization."
+    />
+    <meta property="og:image" content="https://kolmolabs.com/og-image.svg" />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Kolmo API" />
+    <meta
+      name="twitter:description"
+      content="Small examples and notes for using the Kolmo Stats Python API."
+    />
+    <meta name="twitter:image" content="https://kolmolabs.com/og-image.svg" />
+    <title>Kolmo API</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "url": "https://kolmolabs.com/stats-api/",
+        "headline": "Kolmo API",
+        "description": "Documentation for using kolmo-stats in Python.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Kolmo",
+          "url": "https://kolmolabs.com/"
+        },
+        "inLanguage": "en"
+      }
+    </script>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #ffffff;
+        --text: #1f2328;
+        --muted: #57606a;
+        --line: #d8dee4;
+        --soft: #f6f8fa;
+        --code: #f6f8fa;
+        --link: #0969da;
+        --accent: #8250df;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      * {
+        box-sizing: border-box;
+        min-width: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      a {
+        color: var(--link);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .topbar {
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        width: min(100% - 2rem, 1180px);
+        margin: 0 auto;
+        padding: 0.85rem 0;
+      }
+
+      .brand {
+        color: var(--text);
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: 0.94rem;
+      }
+
+      .page {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 780px);
+        gap: 3rem;
+        width: min(100% - 2rem, 1180px);
+        margin: 0 auto;
+        padding: 2.5rem 0 4rem;
+      }
+
+      .toc {
+        position: sticky;
+        top: 1rem;
+        align-self: start;
+        border-right: 1px solid var(--line);
+        padding-right: 1.25rem;
+        color: var(--muted);
+        font-size: 0.94rem;
+      }
+
+      .toc-title {
+        margin-bottom: 0.6rem;
+        color: var(--text);
+        font-weight: 700;
+      }
+
+      .toc a {
+        display: block;
+        padding: 0.18rem 0;
+      }
+
+      main {
+        max-width: 780px;
+      }
+
+      h1 {
+        margin: 0 0 0.75rem;
+        font-size: clamp(2.4rem, 8vw, 4.4rem);
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      h2 {
+        margin: 2.7rem 0 0.7rem;
+        padding-top: 0.9rem;
+        border-top: 1px solid var(--line);
+        font-size: 1.85rem;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+      }
+
+      h3 {
+        margin: 1.7rem 0 0.45rem;
+        font-size: 1.15rem;
+      }
+
+      p {
+        margin: 0.7rem 0 0;
+      }
+
+      .lead {
+        max-width: 42rem;
+        color: var(--muted);
+        font-size: 1.08rem;
+      }
+
+      .note {
+        border-left: 4px solid var(--accent);
+        margin: 1rem 0 0;
+        padding: 0.65rem 0 0.65rem 1rem;
+        color: var(--muted);
+        background: #fbfbfd;
+      }
+
+      pre {
+        margin: 0.8rem 0 0;
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--code);
+      }
+
+      code {
+        display: block;
+        width: max-content;
+        min-width: 100%;
+        padding: 0.85rem 1rem;
+        color: var(--text);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.9rem;
+        line-height: 1.55;
+        white-space: pre;
+      }
+
+      .inline-code {
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: var(--soft);
+        padding: 0.08rem 0.25rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 1rem;
+        background: #fff;
+      }
+
+      .card h3 {
+        margin-top: 0;
+      }
+
+      .functions {
+        columns: 2;
+        margin: 0.8rem 0 0;
+        padding-left: 1.2rem;
+      }
+
+      .functions li {
+        break-inside: avoid;
+        margin: 0.18rem 0;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.9rem;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .footer-inner {
+        width: min(100% - 2rem, 1180px);
+        margin: 0 auto;
+        padding: 1.25rem 0;
+      }
+
+      @media (max-width: 760px) {
+        .topbar-inner {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .page {
+          grid-template-columns: 1fr;
+          gap: 1.4rem;
+          padding-top: 1.5rem;
+        }
+
+        .toc {
+          position: static;
+          border: 1px solid var(--line);
+          border-radius: 6px;
+          padding: 0.9rem;
+          background: var(--soft);
+        }
+
+        .toc a {
+          display: inline-block;
+          margin-right: 0.8rem;
+        }
+
+        .cards {
+          grid-template-columns: 1fr;
+        }
+
+        .functions {
+          columns: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="/">Kolmo</a>
+        <nav class="nav" aria-label="Primary navigation">
+          <a href="/">Home</a>
+          <a href="https://kolmo.netlify.app/terminal" target="_blank" rel="noreferrer">TERMINAL</a>
+          <a href="#install">Install</a>
+          <a href="#jax">JAX</a>
+          <a href="#cvxpy">CVXPY</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="page">
+      <aside class="toc" aria-label="Contents">
+        <div class="toc-title">Contents</div>
+        <a href="#overview">Overview</a>
+        <a href="#install">Install</a>
+        <a href="#core">Core API</a>
+        <a href="#jax">JAX example</a>
+        <a href="#cvxpy">CVXPY example</a>
+        <a href="#reference">Reference</a>
+      </aside>
+
+      <main>
+        <h1>Kolmo API</h1>
+        <p class="lead">
+          Simple Python tools for energy market statistics, curves, spreads, risk, and project economics.
+          Bring your own data; Kolmo gives you small functions you can compose.
+        </p>
+
+        <section id="overview">
+          <h2>Overview</h2>
+          <p>
+            <span class="inline-code">kolmo-stats</span> is a Python package for analysts, traders, and risk teams.
+            It works with lists, dictionaries, NumPy arrays, pandas Series, and DataFrames.
+          </p>
+
+          <div class="cards">
+            <div class="card">
+              <h3>What it does</h3>
+              <p>Reads curves, computes spreads, estimates risk, and values project cash flows.</p>
+            </div>
+            <div class="card">
+              <h3>What it is not</h3>
+              <p>It is not a data feed or hosted service. There are no API keys and no downloads.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="install">
+          <h2>Install</h2>
+          <pre><code>python -m pip install kolmo-stats</code></pre>
+          <p class="note">Intent: install the core package. JAX and CVXPY are optional extras for workflows shown below.</p>
+
+          <h3>Import a few functions</h3>
+          <pre><code>from kolmo import curve_shape, crack_spread, historical_var
+from kolmo import scenario_pnl, npv</code></pre>
+          <p class="note">Intent: keep imports explicit. The package is designed for readable scripts and notebooks.</p>
+        </section>
+
+        <section id="core">
+          <h2>Core API</h2>
+
+          <h3>Read a forward curve</h3>
+          <pre><code>from kolmo import curve_shape, calendar_spread
+
+brent = {"M1": 84.5, "M2": 83.2, "M6": 80.5}
+
+shape = curve_shape(brent)
+spread = calendar_spread(brent, "M1", "M6")</code></pre>
+          <p class="note">Intent: turn a small contract dictionary into curve structure and near-minus-far spread.</p>
+
+          <h3>Check a crack spread</h3>
+          <pre><code>from kolmo import crack_spread
+
+margin = crack_spread(
+    crude=80,
+    gasoline=103,
+    distillate=110,
+    ratio="3-2-1",
+)</code></pre>
+          <p class="note">Intent: convert crude and product prices into a comparable refining margin.</p>
+
+          <h3>Value a project</h3>
+          <pre><code>from kolmo import npv
+
+cashflows = [80, 120, 140, 130, 110]
+value = npv(cashflows, discount_rate=0.12, initial_investment=400)</code></pre>
+          <p class="note">Intent: use the same plain-function style for economics as for market analytics.</p>
+        </section>
+
+        <section id="jax">
+          <h2>JAX example</h2>
+          <p>
+            Use JAX when the array work is the heavy part. Generate or transform many scenarios with JAX,
+            then pass ordinary values into Kolmo for the market statistic.
+          </p>
+
+          <pre><code>python -m pip install jax</code></pre>
+          <p class="note">Intent: add JAX only when you need fast array simulation or batching.</p>
+
+          <pre><code>import jax
+import jax.numpy as jnp
+from kolmo import historical_var
+
+key = jax.random.PRNGKey(7)
+returns = jax.random.normal(key, shape=(20_000,)) * 0.025
+pnl = (84.5 * jnp.exp(returns) - 84.5) * 100_000
+
+var_95 = historical_var(pnl.tolist(), confidence=0.95)</code></pre>
+          <p class="note">Intent: let JAX create the simulated P&amp;L distribution; let Kolmo compute the risk number.</p>
+        </section>
+
+        <section id="cvxpy">
+          <h2>CVXPY example</h2>
+          <p>
+            Use CVXPY when you need variables, objectives, and constraints. After solving, use Kolmo
+            to score the resulting book under a scenario.
+          </p>
+
+          <pre><code>python -m pip install cvxpy</code></pre>
+          <p class="note">Intent: add CVXPY only for optimization workflows.</p>
+
+          <pre><code>import cvxpy as cp
+import numpy as np
+from kolmo import scenario_pnl
+
+exposure = np.array([1_000_000.0, -400_000.0])
+max_trade = np.array([750_000.0, 500_000.0])
+hedge = cp.Variable(2)
+
+problem = cp.Problem(
+    cp.Minimize(cp.sum_squares(exposure + hedge)),
+    [cp.abs(hedge) <= max_trade],
+)
+problem.solve()
+
+net = exposure + hedge.value
+pnl = scenario_pnl({"brent": float(net[0])}, {"brent": -0.05})</code></pre>
+          <p class="note">Intent: choose a constrained hedge first, then evaluate scenario impact with Kolmo.</p>
+        </section>
+
+        <section id="reference">
+          <h2>Reference</h2>
+          <p>The public API is grouped by job.</p>
+          <ul class="functions">
+            <li>mean</li>
+            <li>weighted_mean</li>
+            <li>rolling_zscore</li>
+            <li>seasonal_zscore</li>
+            <li>rolling_correlation</li>
+            <li>lead_lag_correlation</li>
+            <li>curve_shape</li>
+            <li>calendar_spread</li>
+            <li>butterfly_spread</li>
+            <li>roll_yield</li>
+            <li>curve_slope</li>
+            <li>crack_spread</li>
+            <li>spark_spread</li>
+            <li>lng_arbitrage</li>
+            <li>historical_var</li>
+            <li>expected_shortfall</li>
+            <li>scenario_pnl</li>
+            <li>hedge_ratio</li>
+            <li>npv</li>
+            <li>breakeven_price</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <div class="footer-inner">
+        <a href="/">Kolmo</a> API documentation
+      </div>
+    </footer>
+  </body>
+</html>
