@@ -6,38 +6,39 @@
     <meta name="robots" content="index, follow" />
     <meta
       name="description"
-      content="Kolmo API documentation for using kolmo-stats in Python, with small JAX and CVXPY examples."
+      content="Kolmo Stats API documentation for kolmo-stats v0.2.0: Python oil and gas analytics for statistics, curves, spreads, risk, units, and project economics."
     />
     <meta name="theme-color" content="#ffffff" />
     <link rel="canonical" href="https://kolmolabs.com/stats-api/" />
     <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="Kolmo" />
+    <meta property="og:site_name" content="Kolmo Labs" />
     <meta property="og:url" content="https://kolmolabs.com/stats-api/" />
-    <meta property="og:title" content="Kolmo API" />
+    <meta property="og:title" content="Kolmo Stats API | Oil and Gas Analytics in Python" />
     <meta
       property="og:description"
-      content="Simple Python examples for curves, spreads, risk, JAX simulation, and CVXPY optimization."
+      content="Python examples and public API reference for kolmo-stats v0.2.0."
     />
     <meta property="og:image" content="https://kolmolabs.com/og-image.svg" />
     <meta property="og:image:type" content="image/svg+xml" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Kolmo API" />
+    <meta name="twitter:title" content="Kolmo Stats API | Oil and Gas Analytics in Python" />
     <meta
       name="twitter:description"
-      content="Small examples and notes for using the Kolmo Stats Python API."
+      content="Python examples and public API reference for kolmo-stats v0.2.0."
     />
     <meta name="twitter:image" content="https://kolmolabs.com/og-image.svg" />
-    <title>Kolmo API</title>
+    <title>Kolmo Stats API | Oil and Gas Analytics in Python</title>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "TechArticle",
         "url": "https://kolmolabs.com/stats-api/",
-        "headline": "Kolmo API",
-        "description": "Documentation for using kolmo-stats in Python.",
+        "headline": "Kolmo Stats API | Oil and Gas Analytics in Python",
+        "description": "Documentation for using kolmo-stats v0.2.0 in Python for oil and gas statistics, curves, spreads, risk, units, and project economics.",
+        "dateModified": "2026-05-21",
         "publisher": {
           "@type": "Organization",
-          "name": "Kolmo",
+          "name": "Kolmo Labs",
           "url": "https://kolmolabs.com/"
         },
         "inLanguage": "en"
@@ -190,6 +191,37 @@
         background: #fbfbfd;
       }
 
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        margin-top: 1rem;
+      }
+
+      .badge {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--soft);
+        padding: 0.28rem 0.62rem;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.78rem;
+      }
+
+      .repo-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .repo-links a {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 0.48rem 0.7rem;
+        background: #fff;
+      }
+
       pre {
         margin: 0.8rem 0 0;
         overflow-x: auto;
@@ -250,6 +282,17 @@
         font-size: 0.9rem;
       }
 
+      .reference-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .reference-grid .functions {
+        columns: 1;
+      }
+
       footer {
         border-top: 1px solid var(--line);
         color: var(--muted);
@@ -291,6 +334,10 @@
           grid-template-columns: 1fr;
         }
 
+        .reference-grid {
+          grid-template-columns: 1fr;
+        }
+
         .functions {
           columns: 1;
         }
@@ -305,8 +352,9 @@
           <a href="/">Home</a>
           <a href="https://kolmo.netlify.app/terminal" target="_blank" rel="noreferrer">TERMINAL</a>
           <a href="#install">Install</a>
-          <a href="#jax">JAX</a>
-          <a href="#cvxpy">CVXPY</a>
+          <a href="#quickstart">Quickstart</a>
+          <a href="#reference">Reference</a>
+          <a href="https://github.com/GBR24/kolmo_stats" target="_blank" rel="noreferrer">GitHub</a>
         </nav>
       </div>
     </header>
@@ -316,163 +364,295 @@
         <div class="toc-title">Contents</div>
         <a href="#overview">Overview</a>
         <a href="#install">Install</a>
-        <a href="#core">Core API</a>
-        <a href="#jax">JAX example</a>
-        <a href="#cvxpy">CVXPY example</a>
+        <a href="#quickstart">Quickstart</a>
+        <a href="#workflows">Workflows</a>
+        <a href="#explain">explain=True</a>
+        <a href="#repo">Repo docs</a>
         <a href="#reference">Reference</a>
       </aside>
 
       <main>
-        <h1>Kolmo API</h1>
+        <h1>Kolmo Stats API</h1>
         <p class="lead">
-          Simple Python tools for energy market statistics, curves, spreads, risk, and project economics.
-          Bring your own data; Kolmo gives you small functions you can compose.
+          Open-source Python tools for oil and gas market statistics, forward curves, spreads, risk,
+          units, and project economics. Bring your own data; Kolmo gives you small functions you can compose.
         </p>
+        <div class="badges" aria-label="Package facts">
+          <span class="badge">kolmo-stats v0.2.0</span>
+          <span class="badge">import kolmo_stats</span>
+          <span class="badge">Python &gt;= 3.10</span>
+          <span class="badge">MIT</span>
+        </div>
 
         <section id="overview">
           <h2>Overview</h2>
           <p>
-            <span class="inline-code">kolmo-stats</span> is a Python package for analysts, traders, and risk teams.
-            It works with lists, dictionaries, NumPy arrays, pandas Series, and DataFrames.
+            <span class="inline-code">kolmo-stats</span> is the package name on pip.
+            <span class="inline-code">kolmo_stats</span> is the Python import module. The library is built for
+            analysts, traders, and risk teams working with crude oil, refined products, natural gas,
+            LNG, and related derivatives.
           </p>
 
           <div class="cards">
             <div class="card">
-              <h3>What it does</h3>
-              <p>Reads curves, computes spreads, estimates risk, and values project cash flows.</p>
+              <h3>Data model</h3>
+              <p>Works with pandas Series and DataFrames, NumPy arrays, lists, and dictionaries.</p>
             </div>
             <div class="card">
-              <h3>What it is not</h3>
+              <h3>No hosted dependency</h3>
               <p>It is not a data feed or hosted service. There are no API keys and no downloads.</p>
+            </div>
+            <div class="card">
+              <h3>Core dependencies</h3>
+              <p>Uses the standard scientific stack: numpy, pandas, scipy, and networkx.</p>
+            </div>
+            <div class="card">
+              <h3>Public API</h3>
+              <p>Functions are exported from <span class="inline-code">kolmo_stats.__init__</span>.</p>
             </div>
           </div>
         </section>
 
         <section id="install">
           <h2>Install</h2>
-          <pre><code>python -m pip install kolmo-stats</code></pre>
-          <p class="note">Intent: install the core package. JAX and CVXPY are optional extras for workflows shown below.</p>
+          <pre><code>pip install kolmo-stats</code></pre>
+          <p class="note">Requires Python 3.10 or newer. Runtime dependencies are numpy, pandas, scipy, and networkx.</p>
 
           <h3>Import a few functions</h3>
-          <pre><code>from kolmo import curve_shape, crack_spread, historical_var
-from kolmo import scenario_pnl, npv</code></pre>
+          <pre><code>from kolmo_stats import crack_spread, curve_shape, historical_var
+from kolmo_stats import npv, breakeven_price, lng_arbitrage</code></pre>
           <p class="note">Intent: keep imports explicit. The package is designed for readable scripts and notebooks.</p>
         </section>
 
-        <section id="core">
-          <h2>Core API</h2>
+        <section id="quickstart">
+          <h2>Quickstart</h2>
+          <pre><code>import numpy as np
+from kolmo_stats import (
+    crack_spread, curve_shape, curve_slope,
+    historical_var, npv, breakeven_price, lng_arbitrage,
+)
+
+# Brent forward curve
+brent = {"M1": 84.5, "M2": 83.2, "M3": 82.1, "M6": 80.5, "M12": 78.0}
+print(curve_shape(brent))  # "backwardation"
+print(curve_slope(brent))  # negative means backwardation
+
+# Refinery margin
+crack = crack_spread(crude=80, gasoline=103, distillate=110, ratio="3-2-1")
+print(f"3-2-1 crack: ${crack:.2f}/bbl")
+
+# LNG arbitrage
+arb = lng_arbitrage(
+    14.0,
+    3.5,
+    freight_cost=2.0,
+    liquefaction_cost=2.5,
+    regas_cost=0.3,
+    boil_off_cost=0.2,
+)
+print(f"LNG arb: ${arb:.2f}/MMBtu")
+
+# Historical VaR
+returns = np.random.randn(500) * 2
+print(f"VaR 95%: ${historical_var(returns):,.0f}")
+
+# Project NPV
+cashflows = [80, 120, 140, 130, 110, 90, 70, 50, 30]
+print(f"NPV: ${npv(cashflows, discount_rate=0.12, initial_investment=400):.1f}M")
+
+# Breakeven oil price
+price = breakeven_price(
+    capex=500_000_000,
+    fixed_opex=[30_000_000] * 15,
+    variable_opex_per_unit=12.0,
+    production=[5_000_000] * 15,
+    discount_rate=0.10,
+)
+print(f"Breakeven: ${price:.2f}/bbl")</code></pre>
+        </section>
+
+        <section id="workflows">
+          <h2>Core Workflows</h2>
 
           <h3>Read a forward curve</h3>
-          <pre><code>from kolmo import curve_shape, calendar_spread
+          <pre><code>from kolmo_stats import curve_shape, calendar_spread, prompt_spread
 
-brent = {"M1": 84.5, "M2": 83.2, "M6": 80.5}
+brent = {"M1": 84.5, "M2": 83.2, "M3": 82.1, "M6": 80.5}
 
 shape = curve_shape(brent)
-spread = calendar_spread(brent, "M1", "M6")</code></pre>
-          <p class="note">Intent: turn a small contract dictionary into curve structure and near-minus-far spread.</p>
+spread = calendar_spread(brent, "M1", "M6")
+prompt = prompt_spread(brent)</code></pre>
+          <p class="note">Intent: turn a contract dictionary into curve structure, prompt spread, and near-minus-far spread.</p>
 
-          <h3>Check a crack spread</h3>
-          <pre><code>from kolmo import crack_spread
+          <h3>Check physical and regional spreads</h3>
+          <pre><code>from kolmo_stats import crack_spread, brent_wti_spread, ttf_jkm_spread
 
 margin = crack_spread(
     crude=80,
     gasoline=103,
     distillate=110,
     ratio="3-2-1",
-)</code></pre>
-          <p class="note">Intent: convert crude and product prices into a comparable refining margin.</p>
+)
+atlantic_basis = brent_wti_spread(brent=84.5, wti=80.0)
+lng_signal = ttf_jkm_spread(ttf=10.8, jkm=13.2)</code></pre>
+          <p class="note">Intent: compare refinery margin, oil basis, and gas hub differentials in the same script.</p>
+
+          <h3>Stress a book</h3>
+          <pre><code>from kolmo_stats import scenario_pnl, historical_var, expected_shortfall
+
+positions = {"brent": 1_000_000, "ttf": -350_000}
+scenario = {"brent": -0.05, "ttf": 0.08}
+
+pnl = scenario_pnl(positions, scenario)
+var_95 = historical_var([-2.1, 0.4, 1.2, -0.8, -3.0], confidence=0.95)
+es_95 = expected_shortfall([-2.1, 0.4, 1.2, -0.8, -3.0], confidence=0.95)</code></pre>
+          <p class="note">Intent: pair scenario PnL with distribution-based tail risk.</p>
 
           <h3>Value a project</h3>
-          <pre><code>from kolmo import npv
+          <pre><code>from kolmo_stats import npv, breakeven_price
 
 cashflows = [80, 120, 140, 130, 110]
-value = npv(cashflows, discount_rate=0.12, initial_investment=400)</code></pre>
+value = npv(cashflows, discount_rate=0.12, initial_investment=400)
+
+price = breakeven_price(
+    capex=500_000_000,
+    fixed_opex=[30_000_000] * 15,
+    variable_opex_per_unit=12.0,
+    production=[5_000_000] * 15,
+    discount_rate=0.10,
+)</code></pre>
           <p class="note">Intent: use the same plain-function style for economics as for market analytics.</p>
         </section>
 
-        <section id="jax">
-          <h2>JAX example</h2>
+        <section id="explain">
+          <h2>explain=True</h2>
           <p>
-            Use JAX when the array work is the heavy part. Generate or transform many scenarios with JAX,
-            then pass ordinary values into Kolmo for the market statistic.
+            Most analytics functions accept <span class="inline-code">explain=True</span> and return a dictionary
+            with the result, plain-English explanation, formula, and key inputs.
           </p>
+          <pre><code>from kolmo_stats import crack_spread
 
-          <pre><code>python -m pip install jax</code></pre>
-          <p class="note">Intent: add JAX only when you need fast array simulation or batching.</p>
-
-          <pre><code>import jax
-import jax.numpy as jnp
-from kolmo import historical_var
-
-key = jax.random.PRNGKey(7)
-returns = jax.random.normal(key, shape=(20_000,)) * 0.025
-pnl = (84.5 * jnp.exp(returns) - 84.5) * 100_000
-
-var_95 = historical_var(pnl.tolist(), confidence=0.95)</code></pre>
-          <p class="note">Intent: let JAX create the simulated P&amp;L distribution; let Kolmo compute the risk number.</p>
+print(crack_spread(80, 103, 110, ratio="3-2-1", explain=True))
+# {
+#   "result": 25.33,
+#   "explanation": "Gross refinery crack spread proxy using the 3-2-1 ratio.",
+#   "formula": "((2 * gasoline) + distillate - (3 * crude)) / 3",
+#   "inputs": {"crude": 80.0, "gasoline": 103.0, "distillate": 110.0, "ratio": "3-2-1"}
+# }</code></pre>
         </section>
 
-        <section id="cvxpy">
-          <h2>CVXPY example</h2>
+        <section id="repo">
+          <h2>Repo Docs</h2>
           <p>
-            Use CVXPY when you need variables, objectives, and constraints. After solving, use Kolmo
-            to score the resulting book under a scenario.
+            The GitHub repository contains contributor guidance, market conventions, examples, tests,
+            and the source package under <span class="inline-code">src/kolmo_stats/</span>.
           </p>
+          <div class="repo-links" aria-label="GitHub documentation links">
+            <a href="https://github.com/GBR24/kolmo_stats" target="_blank" rel="noreferrer">Repository</a>
+            <a href="https://github.com/GBR24/kolmo_stats/blob/main/docs/README.md" target="_blank" rel="noreferrer">Docs README</a>
+            <a href="https://github.com/GBR24/kolmo_stats/blob/main/docs/CONVENTIONS.md" target="_blank" rel="noreferrer">Conventions</a>
+            <a href="https://github.com/GBR24/kolmo_stats/blob/main/CONTRIBUTING.md" target="_blank" rel="noreferrer">Contributing</a>
+          </div>
 
-          <pre><code>python -m pip install cvxpy</code></pre>
-          <p class="note">Intent: add CVXPY only for optimization workflows.</p>
-
-          <pre><code>import cvxpy as cp
-import numpy as np
-from kolmo import scenario_pnl
-
-exposure = np.array([1_000_000.0, -400_000.0])
-max_trade = np.array([750_000.0, 500_000.0])
-hedge = cp.Variable(2)
-
-problem = cp.Problem(
-    cp.Minimize(cp.sum_squares(exposure + hedge)),
-    [cp.abs(hedge) <= max_trade],
-)
-problem.solve()
-
-net = exposure + hedge.value
-pnl = scenario_pnl({"brent": float(net[0])}, {"brent": -0.05})</code></pre>
-          <p class="note">Intent: choose a constrained hedge first, then evaluate scenario impact with Kolmo.</p>
+          <h3>Local development</h3>
+          <pre><code>git clone https://github.com/GBR24/kolmo_stats.git
+cd kolmo_stats
+pip install -e ".[dev]"
+python -m pytest</code></pre>
         </section>
 
         <section id="reference">
           <h2>Reference</h2>
-          <p>The public API is grouped by job.</p>
-          <ul class="functions">
-            <li>mean</li>
-            <li>weighted_mean</li>
-            <li>rolling_zscore</li>
-            <li>seasonal_zscore</li>
-            <li>rolling_correlation</li>
-            <li>lead_lag_correlation</li>
-            <li>curve_shape</li>
-            <li>calendar_spread</li>
-            <li>butterfly_spread</li>
-            <li>roll_yield</li>
-            <li>curve_slope</li>
-            <li>crack_spread</li>
-            <li>spark_spread</li>
-            <li>lng_arbitrage</li>
-            <li>historical_var</li>
-            <li>expected_shortfall</li>
-            <li>scenario_pnl</li>
-            <li>hedge_ratio</li>
-            <li>npv</li>
-            <li>breakeven_price</li>
-          </ul>
+          <p>The public API is grouped by job and exported from <span class="inline-code">kolmo_stats</span>.</p>
+          <div class="reference-grid">
+            <article class="card">
+              <h3>Statistics</h3>
+              <ul class="functions">
+                <li>mean</li>
+                <li>weighted_mean</li>
+                <li>rolling_zscore</li>
+                <li>seasonal_zscore</li>
+                <li>rolling_correlation</li>
+                <li>lead_lag_correlation</li>
+                <li>transition_matrix</li>
+                <li>simulate_markov_chain</li>
+                <li>regime_probabilities</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h3>Curves</h3>
+              <ul class="functions">
+                <li>curve_shape</li>
+                <li>calendar_spread</li>
+                <li>butterfly_spread</li>
+                <li>roll_yield</li>
+                <li>curve_slope</li>
+                <li>prompt_spread</li>
+                <li>m1_m3</li>
+                <li>m1_m12</li>
+                <li>time_spread_series</li>
+                <li>annualized_carry</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h3>Spreads</h3>
+              <ul class="functions">
+                <li>crack_spread</li>
+                <li>spark_spread</li>
+                <li>lng_arbitrage</li>
+                <li>brent_wti_spread</li>
+                <li>quality_spread</li>
+                <li>location_spread</li>
+                <li>ttf_jkm_spread</li>
+                <li>henry_hub_ttf_arb</li>
+                <li>lng_netback</li>
+                <li>shipping_adjusted_spread</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h3>Risk</h3>
+              <ul class="functions">
+                <li>historical_var</li>
+                <li>expected_shortfall</li>
+                <li>scenario_pnl</li>
+                <li>hedge_ratio</li>
+                <li>rolling_var</li>
+                <li>rolling_expected_shortfall</li>
+                <li>stress_matrix</li>
+                <li>cholesky_decompose</li>
+                <li>correlated_normals</li>
+                <li>correlated_price_shocks</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h3>Project Economics</h3>
+              <ul class="functions">
+                <li>npv</li>
+                <li>breakeven_price</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h3>Units</h3>
+              <ul class="functions">
+                <li>usd_per_gal_to_usd_per_bbl</li>
+                <li>usd_per_bbl_to_usd_per_gal</li>
+                <li>product_tons_to_bbl</li>
+                <li>bbl_to_product_tons</li>
+              </ul>
+            </article>
+          </div>
         </section>
       </main>
     </div>
 
     <footer>
       <div class="footer-inner">
-        <a href="/">Kolmo</a> API documentation
+        <a href="/">Kolmo</a> Stats documentation, updated from GBR24/kolmo_stats v0.2.0
       </div>
     </footer>
   </body>
