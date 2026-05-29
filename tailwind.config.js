@@ -4,21 +4,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: "#04090f",
-        inkSoft: "#08111a",
-        textPrimary: "#edf3f8",
-        textSecondary: "#b2c2ce",
-        line: "rgba(103, 168, 200, 0.34)",
-        cyanSoft: "rgba(125, 191, 218, 0.15)",
+        ink: "#070b12",
+        inkSoft: "#0e141d",
+        textPrimary: "#d6e2f0",
+        textSecondary: "#7c8a9a",
+        line: "rgba(77, 163, 255, 0.28)",
+        cyanSoft: "rgba(77, 163, 255, 0.14)",
       },
       boxShadow: {
         panel: "0 24px 70px rgba(0, 0, 0, 0.28)",
         insetline: "inset 0 1px 0 rgba(255, 255, 255, 0.03)",
       },
       backgroundImage: {
-        grid: "linear-gradient(rgba(123, 147, 164, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(123, 147, 164, 0.06) 1px, transparent 1px)",
+        grid: "linear-gradient(rgba(77, 163, 255, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(210, 153, 34, 0.035) 1px, transparent 1px)",
         vignette:
-          "radial-gradient(circle at top, rgba(63, 102, 128, 0.18), transparent 24%), radial-gradient(circle at 78% 20%, rgba(117, 146, 171, 0.08), transparent 18%)",
+          "radial-gradient(circle at top, rgba(77, 163, 255, 0.18), transparent 27%), radial-gradient(circle at 80% 18%, rgba(210, 153, 34, 0.11), transparent 20%)",
       },
       animation: {
         drift: "drift 12s linear infinite",

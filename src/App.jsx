@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
 import kolmoMark from "../assets/kolmo-mark.svg";
-import showcaseAiAnalyst from "../assets/showcase-ai-analyst.png";
-import showcaseAiSummary from "../assets/showcase-ai-summary.png";
-import showcaseCorrelationShocks from "../assets/showcase-correlation-shocks.png";
-import showcaseEnergyTerminal from "../assets/showcase-energy-terminal.png";
 import { getAnalyticsConsent, initGoogleAnalytics, persistAnalyticsConsent } from "./analytics";
 
 const NEWSLETTER_DISMISSED_KEY = "kolmo-newsletter-dismissed";
@@ -25,9 +21,15 @@ const audienceTags = [
 ];
 
 const overviewCards = [
-  { title: "Market Map", detail: "Price, flow, policy, and exposure." },
-  { title: "AI Analyst", detail: "Ask, trace, brief." },
-  { title: "Risk Path", detail: "Map shocks before the move." },
+  { title: "Market drivers" },
+  { title: "Open relationships" },
+  { title: "Risk paths" },
+];
+
+const contributionSteps = [
+  { title: "Pick a node" },
+  { title: "Map a relationship" },
+  { title: "Open a pull request" },
 ];
 
 const heroSignals = [
@@ -39,68 +41,69 @@ const heroSignals = [
   { label: "Flows", tone: "neutral" },
 ];
 
-const platformShowcaseSlides = [
-  {
-    title: "Live Energy Terminal",
-    body: "Prices, news, prompts, and desk context.",
-    image: showcaseEnergyTerminal,
-  },
-  {
-    title: "Correlation Shock Matrix",
-    body: "Where relationships hold, break, and transmit.",
-    image: showcaseCorrelationShocks,
-  },
-  {
-    title: "AI Briefs for Market Docs",
-    body: "Dense documents into desk-ready findings.",
-    image: showcaseAiSummary,
-  },
-  {
-    title: "AI Energy Analyst",
-    body: "Ask a market question. Get a usable read.",
-    image: showcaseAiAnalyst,
-  },
-];
+const platformShowcaseSlides = [];
 
 const capabilityCards = [
   {
     title: "Live Market Layer",
-    body: "Benchmarks, news, prompts, and context.",
+    body: "Monitor oil, gas, freight, storage, refining, policy, and market news without scattering the desk across tools.",
   },
   {
     title: "Shock Mapping",
-    body: "See where risk travels next.",
+    body: "Trace how OPEC policy, outages, LNG flows, or storage changes can travel across prices, spreads, and exposure.",
   },
   {
     title: "AI Briefs",
-    body: "Turn documents into decisions.",
+    body: "Turn dense market reports, filings, and internal notes into concise energy market briefings.",
   },
   {
     title: "Scenario Engine",
-    body: "Stress the path before the tape does.",
+    body: "Run commodity scenario analysis before the tape reprices the book.",
   },
 ];
 
 const workflowSteps = [
   {
-    step: "01",
-    title: "Read the market",
-    body: "Pull the market into one surface.",
+    title: "Read",
   },
   {
-    step: "02",
-    title: "Trace the driver",
-    body: "Separate the driver from the noise.",
+    title: "Trace",
   },
   {
-    step: "03",
-    title: "Brief the desk",
-    body: "Turn signal into a clear market read.",
+    title: "Ask",
+  },
+];
+
+const useCaseCards = [
+  {
+    title: "Energy Trading Desks",
+    body: "Track market-moving signals across Brent, WTI, TTF, products, freight, refinery margins, and physical-flow context.",
   },
   {
-    step: "04",
-    title: "Stress the path",
-    body: "Run the shock path before the tape does.",
+    title: "Commodity Risk Teams",
+    body: "Map exposures to event risk, policy shifts, storage builds, outages, and correlated cross-market moves.",
+  },
+  {
+    title: "Banks and Hedge Funds",
+    body: "Use AI market intelligence to pressure-test views, prepare morning notes, and compare scenarios against portfolio context.",
+  },
+];
+
+const faqItems = [
+  {
+    question: "What is Kolmo Labs?",
+    answer:
+      "Kolmo Labs is an AI energy market intelligence platform for oil and gas traders, analysts, and risk teams that need to monitor market structure, trace event risk, and brief the desk quickly.",
+  },
+  {
+    question: "Who is Kolmo Labs built for?",
+    answer:
+      "Kolmo Labs is built for energy trading desks, commodity firms, banks, hedge funds, portfolio managers, analysts, and risk teams working across oil, gas, freight, storage, refining, and cross-market exposure.",
+  },
+  {
+    question: "How does Kolmo Labs support commodity risk intelligence?",
+    answer:
+      "Kolmo Labs connects price, policy, refining, freight, storage, news, and portfolio context so teams can map shock paths, run scenarios, and turn energy market signals into actionable briefings.",
   },
 ];
 
@@ -133,13 +136,9 @@ const marketRows = [
   { name: "Jet", price: "$4.23", change: "+0.7%", tone: "text-[#d8e3ea]" },
 ];
 
-const terminalAlerts = [
-  "North Sea freight tightening",
-  "Pipeline maintenance repricing gas spreads",
-  "Refinery run cuts shifting product balances",
-];
+const terminalAlerts = ["North Sea freight tightening", "Pipeline work repricing gas spreads", "Refinery cuts moving products"];
 
-const commandLog = ["> show brent drivers", "> compare book vs freight shock", "> run refinery outage scenario"];
+const commandLog = ["> trace brent shock", "> brief risk in 4 lines", "> open knowledge web"];
 
 const networkNodes = [
   { label: "Brent", x: 170, y: 190, dx: -8, dy: -50, mobileDx: -18, mobileDy: 14, size: "large" },
@@ -324,10 +323,12 @@ function SectionHeading({ eyebrow, title, body, align = "left" }) {
 
   return (
     <div className={`flex max-w-3xl flex-col gap-3 ${alignment}`}>
-      <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">{eyebrow}</span>
-      <h2 className="max-w-4xl text-balance font-serif-display text-3xl leading-[0.98] text-textPrimary sm:text-4xl lg:text-[3.2rem]">
-        {title}
-      </h2>
+      {eyebrow ? <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">{eyebrow}</span> : null}
+      {title ? (
+        <h2 className="max-w-4xl text-balance font-serif-display text-3xl leading-[0.98] text-textPrimary sm:text-4xl lg:text-[3.2rem]">
+          {title}
+        </h2>
+      ) : null}
       {body ? <p className="text-pretty text-base leading-8 text-textSecondary sm:text-[1.02rem]">{body}</p> : null}
     </div>
   );
@@ -339,7 +340,7 @@ function PrimaryButton({ children, href = CALENDLY_URL }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/[0.08] px-6 py-3 text-sm font-medium tracking-[0.14em] text-textPrimary transition duration-300 hover:border-white/22 hover:bg-white/[0.12]"
+      className="inline-flex items-center justify-center rounded-full border border-[#4da3ff]/35 bg-[#4da3ff]/10 px-6 py-3 text-sm font-medium uppercase tracking-[0.14em] text-textPrimary transition duration-300 hover:border-[#4da3ff]/60 hover:bg-[#4da3ff]/16"
     >
       {children}
     </a>
@@ -380,7 +381,7 @@ function GitHubStarsLink({ stars }) {
       target="_blank"
       rel="noreferrer"
       aria-label="View Kolmo Stats on GitHub"
-      className="hidden items-center overflow-hidden rounded-full border border-white/12 bg-white/[0.04] text-[0.68rem] font-medium uppercase tracking-[0.14em] text-[rgba(237,243,248,0.9)] transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white md:inline-flex"
+      className="hidden items-center overflow-hidden rounded-full border border-white/12 bg-white/[0.04] text-[0.68rem] font-medium uppercase tracking-[0.14em] text-[rgba(214,226,240,0.9)] transition hover:border-[#4da3ff]/40 hover:bg-white/[0.08] hover:text-white md:inline-flex"
     >
       <span className="inline-flex items-center gap-1.5 px-3 py-2">
         <GitHubIcon className="h-4 w-4" />
@@ -391,6 +392,195 @@ function GitHubStarsLink({ stars }) {
         <span>{formattedStars ?? "Stars"}</span>
       </span>
     </a>
+  );
+}
+
+function KnowledgeGraphVisual() {
+  const graphNodes = [
+    { label: "Drivers", x: 126, y: 292, tone: "source", width: 86 },
+    { label: "Brent", x: 318, y: 244, tone: "core", width: 78 },
+    { label: "Gas", x: 488, y: 160, tone: "neutral", width: 62 },
+    { label: "Policy", x: 654, y: 214, tone: "risk", width: 82 },
+    { label: "Freight", x: 302, y: 376, tone: "neutral", width: 90 },
+    { label: "Storage", x: 522, y: 354, tone: "neutral", width: 94 },
+    { label: "Refining", x: 700, y: 366, tone: "risk", width: 96 },
+    { label: "Risk path", x: 832, y: 288, tone: "source", width: 100 },
+  ];
+
+  const nodeTone = {
+    core: { fill: "#4da3ff", stroke: "rgba(77,163,255,0.65)", text: "#e2f0ff" },
+    neutral: { fill: "#c7d6e2", stroke: "rgba(214,226,240,0.24)", text: "#d6e2f0" },
+    risk: { fill: "#d29922", stroke: "rgba(210,153,34,0.5)", text: "#f8d98c" },
+    source: { fill: "#6f9fd0", stroke: "rgba(77,163,255,0.38)", text: "#e2f0ff" },
+  };
+
+  return (
+    <div className="knowledge-web relative h-[15rem] overflow-hidden rounded-lg border border-white/10 bg-[rgba(5,10,15,0.68)] shadow-panel sm:h-[24rem] lg:h-[31rem]">
+      <div className="pointer-events-none absolute inset-x-4 top-4 z-[2] flex items-center justify-between text-[0.62rem] uppercase tracking-[0.22em] text-textPrimary sm:inset-x-5">
+        <span className="border-l border-[#4da3ff]/60 pl-3 text-[#e2f0ff]">Open market graph</span>
+        <span className="hidden text-[#d29922] sm:inline">Market paths</span>
+      </div>
+
+      <svg
+        aria-label="Open market knowledge graph showing drivers, energy variables, open relationships, and risk paths"
+        className="absolute inset-0 z-[1] hidden h-full w-full sm:block"
+        role="img"
+        viewBox="0 0 960 540"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <defs>
+          <radialGradient id="knowledgeGraphGlow" cx="50%" cy="48%" r="48%">
+            <stop offset="0%" stopColor="rgba(77,163,255,0.18)" />
+            <stop offset="48%" stopColor="rgba(77,163,255,0.06)" />
+            <stop offset="100%" stopColor="rgba(77,163,255,0)" />
+          </radialGradient>
+          <filter id="knowledgeNodeGlow" x="-120%" y="-120%" width="340%" height="340%">
+            <feGaussianBlur stdDeviation="10" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <marker id="knowledgeArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10Z" fill="#d29922" opacity="0.78" />
+          </marker>
+        </defs>
+
+        <rect x="44" y="66" width="872" height="408" rx="22" fill="url(#knowledgeGraphGlow)" opacity="0.52" />
+
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M126 292C198 268 250 254 318 244" stroke="rgba(77,163,255,0.3)" strokeWidth="1.5" />
+          <path d="M126 292C174 338 226 366 302 376" stroke="rgba(77,163,255,0.18)" strokeWidth="1.2" />
+          <path d="M318 244C382 202 428 174 488 160" stroke="rgba(77,163,255,0.28)" strokeWidth="1.3" />
+          <path d="M488 160C558 170 610 188 654 214" stroke="rgba(77,163,255,0.22)" strokeWidth="1.2" />
+          <path d="M318 244C390 284 452 322 522 354" stroke="rgba(210,153,34,0.7)" strokeWidth="1.8" markerEnd="url(#knowledgeArrow)" />
+          <path d="M302 376C376 386 452 380 522 354" stroke="rgba(77,163,255,0.24)" strokeWidth="1.2" />
+          <path d="M522 354C586 354 644 358 700 366" stroke="rgba(210,153,34,0.64)" strokeWidth="1.8" markerEnd="url(#knowledgeArrow)" />
+          <path d="M654 214C686 256 704 308 700 366" stroke="rgba(77,163,255,0.22)" strokeWidth="1.2" />
+          <path d="M700 366C742 336 790 310 832 288" stroke="rgba(210,153,34,0.62)" strokeWidth="1.8" markerEnd="url(#knowledgeArrow)" />
+        </g>
+
+        <path id="knowledgeActivePath" d="M126 292C198 268 250 254 318 244C390 284 452 322 522 354C586 354 644 358 700 366C742 336 790 310 832 288" fill="none" />
+        <circle r="5" fill="#d29922" opacity="0.92">
+          <animateMotion dur="9s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#knowledgeActivePath" />
+          </animateMotion>
+        </circle>
+
+        {graphNodes.map((node) => {
+          const tone = nodeTone[node.tone];
+          const labelX = node.x - node.width / 2;
+          const labelY = node.y - 29;
+
+          return (
+            <g key={node.label}>
+              <circle cx={node.x} cy={node.y} r="16" fill={tone.fill} opacity="0.18" filter="url(#knowledgeNodeGlow)" />
+              <circle cx={node.x} cy={node.y} r={node.tone === "core" ? "8" : "6"} fill={tone.fill} stroke={tone.stroke} strokeWidth="1.4" />
+              <rect
+                x={labelX}
+                y={node.y - 42}
+                width={node.width}
+                height="26"
+                rx="13"
+                fill="rgba(5,10,15,0.88)"
+                stroke={tone.stroke}
+                strokeWidth="1"
+              />
+              <text
+                x={node.x}
+                y={labelY}
+                fill={tone.text}
+                fontSize="10"
+                fontWeight="600"
+                letterSpacing="3"
+                dominantBaseline="middle"
+                textAnchor="middle"
+              >
+                {node.label.toUpperCase()}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+
+      <svg
+        aria-label="Simplified open market knowledge graph risk path"
+        className="absolute inset-0 z-[1] h-full w-full sm:hidden"
+        role="img"
+        viewBox="0 0 360 240"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <defs>
+          <radialGradient id="mobileKnowledgeGraphGlow" cx="52%" cy="48%" r="54%">
+            <stop offset="0%" stopColor="rgba(77,163,255,0.18)" />
+            <stop offset="54%" stopColor="rgba(77,163,255,0.06)" />
+            <stop offset="100%" stopColor="rgba(77,163,255,0)" />
+          </radialGradient>
+          <filter id="mobileKnowledgeNodeGlow" x="-120%" y="-120%" width="340%" height="340%">
+            <feGaussianBlur stdDeviation="7" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <rect x="18" y="48" width="324" height="146" rx="18" fill="url(#mobileKnowledgeGraphGlow)" opacity="0.56" />
+
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M54 126C94 108 126 94 158 91" stroke="rgba(77,163,255,0.34)" strokeWidth="1.35" />
+          <path d="M158 91C190 122 214 144 246 150" stroke="rgba(210,153,34,0.72)" strokeWidth="1.7" />
+          <path d="M246 150C276 136 296 122 322 110" stroke="rgba(210,153,34,0.66)" strokeWidth="1.7" />
+        </g>
+
+        <path id="mobileKnowledgeActivePath" d="M54 126C94 108 126 94 158 91C190 122 214 144 246 150C276 136 296 122 322 110" fill="none" />
+        <circle r="3.8" fill="#d29922" opacity="0.92">
+          <animateMotion dur="8s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#mobileKnowledgeActivePath" />
+          </animateMotion>
+        </circle>
+
+        {[
+          { label: "Driver", x: 54, y: 126, width: 58, fill: "#6f9fd0", stroke: "rgba(77,163,255,0.42)" },
+          { label: "Brent", x: 158, y: 91, width: 54, fill: "#4da3ff", stroke: "rgba(77,163,255,0.66)" },
+          { label: "Link", x: 246, y: 150, width: 48, fill: "#d29922", stroke: "rgba(210,153,34,0.52)" },
+          { label: "Risk", x: 322, y: 110, width: 44, fill: "#6f9fd0", stroke: "rgba(77,163,255,0.42)" },
+        ].map((node) => (
+          <g key={node.label}>
+            <circle cx={node.x} cy={node.y} r="14" fill={node.fill} opacity="0.18" filter="url(#mobileKnowledgeNodeGlow)" />
+            <circle cx={node.x} cy={node.y} r="5.8" fill={node.fill} stroke={node.stroke} strokeWidth="1.2" />
+            <rect
+              x={node.x - node.width / 2}
+              y={node.y - 31}
+              width={node.width}
+              height="20"
+              rx="10"
+              fill="rgba(5,10,15,0.9)"
+              stroke={node.stroke}
+              strokeWidth="0.8"
+            />
+            <text
+              x={node.x}
+              y={node.y - 21}
+              fill={node.fill === "#d29922" ? "#f8d98c" : "#e2f0ff"}
+              fontSize="7.5"
+              fontWeight="650"
+              letterSpacing="1.7"
+              dominantBaseline="middle"
+              textAnchor="middle"
+            >
+              {node.label.toUpperCase()}
+            </text>
+          </g>
+        ))}
+      </svg>
+
+      <div className="pointer-events-none absolute inset-x-4 bottom-4 z-[2] flex flex-wrap items-center justify-between gap-3 text-[0.6rem] uppercase tracking-[0.18em] text-textSecondary sm:inset-x-5">
+        <span>drivers</span>
+        <span>relationships</span>
+        <span>risk paths</span>
+      </div>
+    </div>
   );
 }
 
@@ -585,45 +775,122 @@ function HeroMobileSignalVisual() {
   );
 }
 
+function MinimalTerminalVisual({ compact = false }) {
+  const panelRef = useDepthMotion();
+
+  return (
+    <div
+      ref={panelRef}
+      className={`depth-panel relative w-full min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[linear-gradient(180deg,rgba(8,15,22,0.94),rgba(5,9,14,0.82))] shadow-panel ${
+        compact ? "max-w-[44rem]" : "max-w-[calc(100vw-2.5rem)] lg:max-w-none"
+      }`}
+    >
+      <div className="depth-panel__glow" />
+      <div className="border-b border-white/10 bg-[rgba(5,10,15,0.9)]">
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-[0.64rem] uppercase tracking-[0.24em] text-textSecondary">
+          <div className="flex items-center gap-4">
+            <span className="text-textPrimary">Kolmo</span>
+            <span>Energy Risk Terminal</span>
+          </div>
+          <span className="text-[#4da3ff]">Live</span>
+        </div>
+      </div>
+
+      <div className="grid gap-px bg-white/10 lg:grid-cols-[0.42fr_0.58fr]">
+        <div className="bg-[rgba(5,10,15,0.82)] p-4">
+          <div className="mb-4 text-[0.64rem] uppercase tracking-[0.22em] text-textSecondary">Ask</div>
+          <div className="space-y-3 font-mono text-sm leading-6">
+            {commandLog.map((line, index) => (
+              <div key={line} className={index === 0 ? "text-[#4da3ff]" : "text-textSecondary"}>
+                {line}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-[rgba(5,10,15,0.82)] p-4">
+          <div className="flex items-center justify-between text-[0.64rem] uppercase tracking-[0.22em] text-textSecondary">
+            <span>Risk read</span>
+            <span className="text-[#d29922]">Shock path</span>
+          </div>
+          <p className="mt-5 max-w-[34rem] text-2xl leading-tight text-textPrimary sm:text-3xl">
+            Freight tightness is reinforcing Brent strength through refining margins.
+          </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {["Policy", "Brent", "Freight"].map((item, index) => (
+              <div key={item} className="border-t border-white/10 pt-3">
+                <div className="text-[0.62rem] uppercase tracking-[0.2em] text-textSecondary">0{index + 1}</div>
+                <div className="mt-2 text-sm text-textPrimary">{item}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-px bg-white/10 lg:grid-cols-[0.42fr_0.58fr]">
+        <div className="bg-[rgba(5,10,15,0.82)] p-4">
+          <div className="mb-3 text-[0.64rem] uppercase tracking-[0.22em] text-textSecondary">Prices</div>
+          <div className="space-y-1">
+            {marketRows.slice(0, 3).map((row) => (
+              <div key={row.name} className="grid grid-cols-[1fr_auto_auto] gap-3 border-b border-white/6 py-2 text-sm">
+                <span className="text-textPrimary">{row.name}</span>
+                <span className="text-textSecondary">{row.price}</span>
+                <span className={row.change.startsWith("+") ? "text-[#4da3ff]" : "text-[#d29922]"}>{row.change}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-[rgba(5,10,15,0.82)] p-4">
+          <svg aria-hidden="true" className="h-32 w-full" viewBox="0 0 520 150">
+            {[24, 72, 120].map((y) => (
+              <line key={y} x1="0" x2="520" y1={y} y2={y} stroke="rgba(214,226,240,0.08)" strokeDasharray="4 10" />
+            ))}
+            <polyline
+              fill="none"
+              points="6,112 58,100 112,106 168,82 226,92 282,72 338,80 388,58 426,64 460,30 500,42"
+              stroke="#4da3ff"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <polyline
+              fill="none"
+              points="6,118 58,112 112,114 168,98 226,104 282,88 338,92 388,76 426,82 460,58 500,66"
+              stroke="#d29922"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.78"
+            />
+          </svg>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {terminalAlerts.map((headline) => (
+              <span key={headline} className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-[0.62rem] uppercase tracking-[0.14em] text-textSecondary">
+                {headline}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-white/10 bg-[rgba(5,10,15,0.92)] px-4 py-4">
+        <a href={TERMINAL_URL} target="_blank" rel="noreferrer" className="inline-flex text-[0.72rem] uppercase tracking-[0.18em] text-[#4da3ff] transition hover:text-white">
+          Open the live terminal
+        </a>
+      </div>
+    </div>
+  );
+}
+
 function HeroAtmosphere() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2.2rem]" aria-hidden="true">
-      <div className="hero-atmosphere__grid" />
-      <svg className="hero-atmosphere__contours" viewBox="0 0 1600 900" preserveAspectRatio="none">
-        <path
-          className="hero-atmosphere__path hero-atmosphere__path--a"
-          d="M-40 170C108 138 232 112 372 146C510 179 642 252 794 248C940 244 1046 160 1172 140C1338 114 1484 180 1660 130"
-        />
-        <path
-          className="hero-atmosphere__path hero-atmosphere__path--b"
-          d="M-20 312C134 274 260 282 382 330C540 392 638 444 792 432C936 420 1038 346 1174 312C1312 278 1458 280 1640 360"
-        />
-        <path
-          className="hero-atmosphere__path hero-atmosphere__path--c"
-          d="M-30 502C126 470 252 520 380 590C510 660 640 708 806 680C952 654 1050 582 1184 566C1340 548 1474 592 1650 564"
-        />
-        <path
-          className="hero-atmosphere__path hero-atmosphere__path--d"
-          d="M120 40C206 114 264 226 338 320C408 406 522 490 676 506C824 522 918 472 1020 394C1128 310 1188 192 1300 120"
-        />
-        <circle className="hero-atmosphere__point hero-atmosphere__point--a" cx="382" cy="330" r="5" />
-        <circle className="hero-atmosphere__point hero-atmosphere__point--b" cx="794" cy="248" r="6" />
-        <circle className="hero-atmosphere__point hero-atmosphere__point--c" cx="1184" cy="566" r="5" />
-        <circle className="hero-atmosphere__point hero-atmosphere__point--d" cx="1020" cy="394" r="5" />
-      </svg>
-      <div className="hero-atmosphere__datafield">
-        <span className="hero-atmosphere__bar hero-atmosphere__bar--1" />
-        <span className="hero-atmosphere__bar hero-atmosphere__bar--2" />
-        <span className="hero-atmosphere__bar hero-atmosphere__bar--3" />
-        <span className="hero-atmosphere__bar hero-atmosphere__bar--4" />
-        <span className="hero-atmosphere__bar hero-atmosphere__bar--5" />
-        <span className="hero-atmosphere__bar hero-atmosphere__bar--6" />
-      </div>
-      <div className="hero-atmosphere__beam hero-atmosphere__beam--left" />
-      <div className="hero-atmosphere__beam hero-atmosphere__beam--right" />
-      <div className="hero-atmosphere__ring hero-atmosphere__ring--one" />
-      <div className="hero-atmosphere__ring hero-atmosphere__ring--two" />
-      <div className="hero-atmosphere__scan" />
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <div className="minimal-atmosphere__wash" />
+      <div className="minimal-atmosphere__line minimal-atmosphere__line--one" />
+      <div className="minimal-atmosphere__line minimal-atmosphere__line--two" />
+      <div className="minimal-atmosphere__point minimal-atmosphere__point--one" />
+      <div className="minimal-atmosphere__point minimal-atmosphere__point--two" />
     </div>
   );
 }
@@ -712,7 +979,7 @@ function ShowcaseCarousel({ onSlideChange = () => {} }) {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(151,190,211,0.08),transparent_42%)]" />
                 <img
                   src={slide.image}
-                  alt={slide.title}
+                  alt={slide.alt}
                   loading="lazy"
                   className="relative h-[18rem] w-full bg-[#060c12] object-contain p-2 sm:h-[22rem] sm:p-3 lg:h-[30rem]"
                 />
@@ -888,12 +1155,45 @@ function NetworkVisual({ activeShock = 0, isCompact = false, onShockChange = () 
   );
 }
 
-function OverviewCard({ title, detail }) {
+function OverviewCard({ title }) {
   return (
-    <div className="group rounded-[1.35rem] border border-white/8 bg-[rgba(8,15,22,0.78)] px-5 py-5 shadow-panel transition duration-300 hover:border-white/12 hover:bg-[rgba(9,16,23,0.88)]">
-      <div className="mb-4 h-px w-12 bg-gradient-to-r from-[#8ab1c6]/70 to-transparent" />
-      <h3 className="text-sm font-medium uppercase tracking-[0.16em] text-textPrimary sm:text-[0.92rem]">{title}</h3>
-      <p className="mt-3 text-sm leading-7 text-textSecondary">{detail}</p>
+    <div className="border-t border-white/10 py-4">
+      <h3 className="text-sm font-medium uppercase tracking-[0.18em] text-textPrimary sm:text-[0.92rem]">{title}</h3>
+    </div>
+  );
+}
+
+function OpenSourceCallout({ stars }) {
+  const formattedStars = formatStarCount(stars);
+
+  return (
+    <a
+      href={GITHUB_REPO_URL}
+      target="_blank"
+      rel="noreferrer"
+      className="group block border-y border-white/10 py-5 transition hover:border-[#4da3ff]/35"
+    >
+      <div className="flex flex-col gap-4">
+        <div className="flex items-start gap-3">
+          <GitHubIcon className="mt-0.5 h-5 w-5 text-[#4da3ff]" />
+          <div>
+            <div className="text-sm font-medium uppercase tracking-[0.14em] text-textPrimary">Open-source relationships</div>
+            <p className="mt-2 max-w-[28rem] text-sm leading-7 text-textSecondary">Inspect how markets connect.</p>
+          </div>
+        </div>
+        <div className="whitespace-nowrap text-[0.72rem] uppercase tracking-[0.16em] text-[#4da3ff] transition group-hover:text-white">
+          GitHub{formattedStars ? ` / ${formattedStars} stars` : ""}
+        </div>
+      </div>
+    </a>
+  );
+}
+
+function ContributionStep({ title, index }) {
+  return (
+    <div className="border-t border-white/10 py-6">
+      <div className="text-[0.62rem] uppercase tracking-[0.22em] text-[#d29922]">0{index + 1}</div>
+      <h3 className="mt-3 text-xl font-medium text-textPrimary">{title}</h3>
     </div>
   );
 }
@@ -911,16 +1211,10 @@ function CapabilityCard({ title, body }) {
   );
 }
 
-function WorkflowCard({ step, title, body, index }) {
+function WorkflowCard({ title }) {
   return (
-    <div
-      className={`rounded-[1rem] border border-white/6 bg-[linear-gradient(180deg,rgba(8,15,22,0.72),rgba(7,12,18,0.92))] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.14)] ${
-        index % 2 === 1 ? "lg:translate-y-8" : ""
-      }`}
-    >
-      <div className="text-[0.72rem] uppercase tracking-[0.24em] text-textSecondary">{step}</div>
-      <h3 className="mt-4 text-lg font-medium text-textPrimary">{title}</h3>
-      <p className="mt-3 max-w-[26ch] text-sm leading-7 text-textSecondary">{body}</p>
+    <div className="py-7 text-center">
+      <h3 className="text-2xl font-medium text-textPrimary">{title}</h3>
     </div>
   );
 }
@@ -940,6 +1234,24 @@ function AudienceStrip() {
   );
 }
 
+function UseCaseCard({ title, body }) {
+  return (
+    <div className="rounded-[1.25rem] border border-white/8 bg-[rgba(8,15,22,0.74)] p-6 shadow-panel">
+      <h3 className="text-lg font-medium text-textPrimary">{title}</h3>
+      <p className="mt-4 text-sm leading-7 text-textSecondary">{body}</p>
+    </div>
+  );
+}
+
+function FaqItem({ question, answer }) {
+  return (
+    <article className="border-t border-white/8 py-6">
+      <h3 className="text-lg font-medium text-textPrimary">{question}</h3>
+      <p className="mt-3 text-sm leading-7 text-textSecondary sm:text-base sm:leading-8">{answer}</p>
+    </article>
+  );
+}
+
 export default function App() {
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const [analyticsConsent, setAnalyticsConsent] = useState(() => getAnalyticsConsent());
@@ -949,6 +1261,19 @@ export default function App() {
   const [activeShowcaseSlide, setActiveShowcaseSlide] = useState(0);
   const [activeShock, setActiveShock] = useState(0);
   const [githubStars, setGithubStars] = useState(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.location.hash) {
+      return undefined;
+    }
+
+    const targetId = window.location.hash.slice(1);
+    const scrollTimer = window.setTimeout(() => {
+      document.getElementById(targetId)?.scrollIntoView({ block: "start" });
+    }, 0);
+
+    return () => window.clearTimeout(scrollTimer);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -969,20 +1294,6 @@ export default function App() {
     return () => {
       isMounted = false;
     };
-  }, []);
-
-  useEffect(() => {
-    const hasDismissed = window.localStorage.getItem(NEWSLETTER_DISMISSED_KEY) === "true";
-
-    if (hasDismissed) {
-      return undefined;
-    }
-
-    const timer = window.setTimeout(() => {
-      setIsNewsletterOpen(true);
-    }, 30000);
-
-    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -1073,18 +1384,22 @@ export default function App() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-ink text-textPrimary">
       <div className="fixed inset-0 -z-10 bg-vignette" />
-      <div className="fixed inset-0 -z-10 bg-grid bg-[size:72px_72px] opacity-[0.1]" />
-      <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(4,10,16,0.44),rgba(4,9,15,0.94))]" />
+      <div className="fixed inset-0 -z-10 bg-grid bg-[size:88px_88px] opacity-[0.08]" />
+      <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(7,12,19,0.18),rgba(5,8,17,0.82))]" />
 
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[rgba(4,10,16,0.82)] shadow-[0_12px_36px_rgba(0,0,0,0.18)] backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[rgba(5,8,17,0.78)] shadow-[0_12px_36px_rgba(0,0,0,0.18)] backdrop-blur-xl">
         <div className="mx-auto flex w-full min-w-0 max-w-[100vw] items-center justify-between px-5 py-4 sm:px-6 lg:max-w-[1280px] lg:px-8">
-          <a href="#top" className="flex items-center gap-3 text-sm font-semibold tracking-[0.34em] text-textPrimary">
+          <a
+            href="#top"
+            aria-label="Kolmo Labs home"
+            className="flex items-center gap-3 text-sm font-semibold tracking-[0.34em] text-textPrimary"
+          >
             {/* Replace with production logo asset if needed */}
             <img src={kolmoMark} alt="" className="h-6 w-6 opacity-90" />
             <span>KOLMO</span>
           </a>
 
-          <nav className="hidden items-center gap-6 text-[0.74rem] uppercase tracking-[0.2em] text-[rgba(237,243,248,0.82)] lg:flex">
+          <nav className="hidden items-center gap-6 text-[0.74rem] uppercase tracking-[0.2em] text-[rgba(214,226,240,0.82)] lg:flex">
             <a href={TERMINAL_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">
               TERMINAL
             </a>
@@ -1096,24 +1411,18 @@ export default function App() {
               >
                 <span>AUDIENCE</span>
               </button>
-              <div className="pointer-events-none absolute left-1/2 top-full z-50 mt-4 w-64 -translate-x-1/2 rounded-[1.1rem] border border-white/10 bg-[rgba(7,14,21,0.98)] p-2 opacity-0 shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl transition duration-200 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
+              <div className="invisible pointer-events-none absolute left-1/2 top-full z-50 mt-4 w-64 -translate-x-1/2 rounded-[1.1rem] border border-white/10 bg-[rgba(5,10,15,0.98)] p-2 opacity-0 shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl transition duration-200 group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100">
                 {audienceTags.map((tag) => (
                   <a
                     key={tag}
-                    href="#target-users"
-                    className="block rounded-[0.9rem] px-3 py-2.5 text-[0.68rem] uppercase tracking-[0.18em] text-[rgba(237,243,248,0.76)] transition hover:bg-white/[0.06] hover:text-white"
+                    href="#use-cases"
+                    className="block rounded-[0.9rem] px-3 py-2.5 text-[0.68rem] uppercase tracking-[0.18em] text-[rgba(214,226,240,0.76)] transition hover:bg-white/[0.06] hover:text-white"
                   >
                     {tag}
                   </a>
                 ))}
               </div>
             </div>
-            <a href="#capabilities" className="transition hover:text-white">
-              Capabilities
-            </a>
-            <a href="#showcase" className="transition hover:text-white">
-              Product
-            </a>
             <a href="/stats-api/" className="transition hover:text-white">
               API
             </a>
@@ -1125,7 +1434,7 @@ export default function App() {
               href={CALENDLY_URL}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-[rgba(237,243,248,0.9)] transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
+              className="inline-flex rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-[rgba(214,226,240,0.9)] transition hover:border-[#4da3ff]/40 hover:bg-white/[0.08] hover:text-white sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
             >
               Contact Us
             </a>
@@ -1134,219 +1443,103 @@ export default function App() {
       </header>
 
       <main id="top">
-        <section className="hero-stage relative overflow-hidden border-b border-white/6">
-          <div className="mx-auto w-full max-w-[100vw] px-5 pb-18 pt-14 sm:px-6 lg:max-w-[1440px] lg:px-8 lg:pb-24 lg:pt-20">
+        <section className="hero-stage relative overflow-hidden border-b border-white/8">
+          <div className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-10 sm:px-6 lg:px-8 lg:pb-20 lg:pt-10">
             <HeroAtmosphere />
 
-            <div className="relative mx-auto grid w-full max-w-[100vw] gap-12 lg:min-h-[calc(100vh-10rem)] lg:max-w-[1280px] lg:grid-cols-[minmax(0,0.95fr)_minmax(560px,1.05fr)] lg:items-center lg:gap-16">
-              <div className="w-full min-w-0 max-w-[22rem] sm:max-w-[38rem]">
-                <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">Oil & gas market intelligence</span>
-                <h1 className="mt-6 max-w-[10ch] font-serif-display text-5xl leading-[0.94] text-textPrimary sm:text-6xl lg:text-[5.15rem]">
-                  See the shock path before the street does.
+            <div className="relative mx-auto grid w-full max-w-[1280px] gap-10 lg:min-h-[42rem] lg:grid-cols-[minmax(0,0.82fr)_minmax(520px,1.18fr)] lg:items-center lg:gap-16 lg:pt-8">
+              <div className="w-full min-w-0 max-w-[38rem]">
+                <h1 className="max-w-[10ch] font-serif-display text-[3.75rem] leading-[0.9] text-textPrimary sm:text-7xl lg:text-[6.1rem]">
+                  AI for Energy Risk.
                 </h1>
-                <p className="mt-6 max-w-[21rem] text-base leading-7 text-textSecondary sm:max-w-[34rem] sm:text-lg sm:leading-8">
-                  Kolmo turns market structure, event risk, and cross-market signals into a faster operating layer for
-                  energy desks.
+                <p className="mt-6 max-w-[31rem] text-base leading-8 text-textSecondary sm:text-lg">
+                  Open-source market graph and terminal for tracing shocks across energy markets.
                 </p>
 
-                <div className="mt-8 flex flex-wrap gap-2.5">
-                  {heroSignals.map((signal) => (
-                    <span
-                      key={signal.label}
-                      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-[rgba(237,243,248,0.82)]"
-                    >
-                      <span
-                        className={`h-2 w-2 rounded-full ${
-                          signal.tone === "up"
-                            ? "bg-[#8fd3b2]"
-                            : signal.tone === "down"
-                              ? "bg-[#d19a9a]"
-                              : "bg-[#9bb3c0]"
-                        }`}
-                      />
-                      {signal.label}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row">
-                  <PrimaryButton>Contact Us</PrimaryButton>
+                <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+                  <PrimaryButton href={TERMINAL_URL}>Open Terminal</PrimaryButton>
+                  <a
+                    href={CALENDLY_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex text-sm uppercase tracking-[0.16em] text-textSecondary transition hover:text-white"
+                  >
+                    Contact
+                  </a>
                 </div>
               </div>
 
-              <div className="md:hidden">
-                <HeroMobileSignalVisual />
-              </div>
-              <div className="hidden md:block">
-                <HeroTerminalVisual />
-              </div>
+              <MinimalTerminalVisual />
             </div>
           </div>
         </section>
 
-        <section id="platform" className="mx-auto w-full max-w-[1280px] px-5 py-24 sm:px-6 lg:px-8 lg:py-30">
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-start lg:gap-16">
+        <section id="knowledge-web" className="mx-auto w-full max-w-[1280px] px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.65fr)_minmax(0,1.35fr)] lg:items-center lg:gap-16">
             <div className="space-y-8">
               <SectionHeading
-                eyebrow="Knowledge Web"
-                title="One market map. Fewer blind spots."
-                body="Price, policy, refining, freight, storage, and exposure in one connected field."
+                title="Open Market Graph"
+                body="Kolmo maps how energy variables move together."
               />
 
-              <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
+              <div className="grid gap-4">
                 {overviewCards.map((card) => (
-                  <OverviewCard key={card.title} title={card.title} detail={card.detail} />
+                  <OverviewCard key={card.title} title={card.title} />
                 ))}
               </div>
+
+              <OpenSourceCallout stars={githubStars} />
             </div>
 
-            <div>
-              <NetworkVisual activeShock={activeShock} isCompact={isCompactViewport} onShockChange={setActiveShock} />
-            </div>
+            <KnowledgeGraphVisual />
           </div>
         </section>
 
-        <section id="capabilities" className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-6 lg:px-8 lg:py-12">
-          <SectionHeading
-            eyebrow="Core capabilities"
-            title="Built for fast reads, sharp scenarios, and cleaner conviction."
-            body="Less dashboard sprawl. More signal."
-          />
-
-          <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {capabilityCards.map((card) => (
-              <CapabilityCard key={card.title} title={card.title} body={card.body} />
-            ))}
-          </div>
-        </section>
-
-        <section className="mx-auto w-full max-w-[1280px] px-5 py-24 sm:px-6 lg:px-8 lg:py-30">
-          <SectionHeading
-            eyebrow="How it works"
-            title="From signal to conviction."
-            body="Read. Trace. Brief. Stress."
-          />
-
-          <div className="relative mt-12 grid gap-4 lg:grid-cols-4 lg:before:absolute lg:before:left-0 lg:before:right-0 lg:before:top-1/2 lg:before:h-px lg:before:-translate-y-1/2 lg:before:bg-white/6">
-            {workflowSteps.map((item, index) => (
-              <WorkflowCard key={item.step} step={item.step} title={item.title} body={item.body} index={index} />
-            ))}
-          </div>
-        </section>
-
-        <section id="showcase" className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-6 lg:px-8 lg:py-12">
-          <div className="overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.88),rgba(7,12,18,0.94))] shadow-panel">
-            <div className="grid gap-10 px-6 py-8 sm:px-8 sm:py-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(300px,0.65fr)] lg:items-center lg:gap-12 lg:px-10 lg:py-12">
-              <div className="order-2 max-w-xl lg:order-2">
-                <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">Platform showcase</span>
-                <h2 className="mt-5 font-serif-display text-3xl leading-[0.98] text-textPrimary sm:text-4xl lg:text-[3rem]">
-                  {platformShowcaseSlides[activeShowcaseSlide].title}
-                </h2>
-                <p className="mt-5 text-base leading-8 text-textSecondary">
-                  {platformShowcaseSlides[activeShowcaseSlide].body}
-                </p>
-              </div>
-
-              <div className="order-1 lg:order-1">
-                <ShowcaseCarousel onSlideChange={setActiveShowcaseSlide} />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="mx-auto w-full max-w-[1280px] px-5 py-24 sm:px-6 lg:px-8 lg:py-30">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-center lg:gap-16">
+        <section id="contribute" className="mx-auto w-full max-w-[1280px] px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,1.26fr)] lg:items-start lg:gap-16">
             <div className="max-w-xl">
               <SectionHeading
-                eyebrow="Risk intelligence"
-                title="See how a shock travels before it reprices the book."
-                body="Watch. Frame. Act."
+                title="Contribute"
               />
 
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                {riskStats.map((stat) => (
-                  <div key={stat.label} className="border-t border-white/10 pt-4">
-                    <div className="text-2xl font-medium text-textPrimary">{stat.value}</div>
-                    <div className="mt-2 text-[0.68rem] uppercase tracking-[0.18em] text-textSecondary">{stat.label}</div>
-                  </div>
-                ))}
+              <div className="mt-8">
+                <PrimaryButton href={GITHUB_REPO_URL}>Contribute on GitHub</PrimaryButton>
               </div>
             </div>
 
-            <div className="rounded-[1.5rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.78),rgba(7,12,18,0.92))] p-5 shadow-panel">
-              <div className="flex items-center justify-between text-[0.72rem] uppercase tracking-[0.22em] text-textSecondary">
-                <span>Shock path</span>
-                <span>Stress view</span>
-              </div>
-
-              <div className="mt-8 space-y-5">
-                {riskPathRows.map((row) => (
-                  <div key={row.label}>
-                    <div className="flex items-center justify-between text-sm text-textPrimary">
-                      <span>{row.label}</span>
-                      <span className="text-textSecondary">{row.value}</span>
-                    </div>
-                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/6">
-                      <div className="h-full rounded-full bg-[linear-gradient(90deg,#789eb5,#d3e4ee)]" style={{ width: row.value }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                {["Outage", "Freight", "Storage"].map((item) => (
-                  <div key={item} className="rounded-[0.9rem] border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-textPrimary">
-                    {item}
-                  </div>
-                ))}
-              </div>
+            <div className="grid gap-0 border-b border-white/10">
+              {contributionSteps.map((item, index) => (
+                <ContributionStep key={item.title} title={item.title} index={index} />
+              ))}
             </div>
           </div>
         </section>
 
-        <section id="target-users" className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-6 lg:px-8 lg:py-12">
-          <SectionHeading
-            eyebrow="Target users"
-            title="Built for real market decisions."
-          />
-
-          <div className="mt-10">
-            <AudienceStrip />
+        <section id="use-cases" className="mx-auto w-full max-w-[1280px] px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+          <div className="border-y border-white/10 py-8">
+            <div className="flex justify-center">
+              <AudienceStrip />
+            </div>
           </div>
         </section>
 
-        <section id="contact" className="mx-auto w-full max-w-[1280px] px-5 py-24 sm:px-6 lg:px-8 lg:py-30">
-          <div className="rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.82),rgba(7,12,18,0.94))] px-6 py-10 text-center shadow-panel sm:px-8 lg:px-10 lg:py-14">
-            <SectionHeading align="center" title="Book a live walkthrough with Kolmo." />
+        <section id="how-it-works" className="mx-auto w-full max-w-[900px] px-5 py-20 text-center sm:px-6 lg:px-8 lg:py-28">
+          <SectionHeading title="How it works" align="center" />
 
-            <div className="mt-10 flex items-center justify-center">
-              <PrimaryButton>Contact Us</PrimaryButton>
-            </div>
-
-            {/* Optional analytics and demo-request integration can be added here. */}
+          <div className="mx-auto mt-12 max-w-[44rem] divide-y divide-white/10 border-y border-white/10">
+            {workflowSteps.map((item) => (
+              <WorkflowCard key={item.title} title={item.title} />
+            ))}
           </div>
-        </section>
 
-        <section id="newsletter" className="mx-auto w-full max-w-[1280px] px-5 pb-16 sm:px-6 lg:px-8 lg:pb-20">
-          <div className="overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,15,22,0.84),rgba(7,12,18,0.96))] shadow-panel">
-            <div className="px-6 py-5 sm:px-8 sm:py-6 lg:px-10">
-              <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">Newsletter</span>
-              <div className="mt-4">
-                {isMobileNewsletterFallback ? (
-                  <NewsletterFallback />
-                ) : (
-                  <div className="rounded-[1.5rem] border border-white/8 bg-[rgba(255,255,255,0.02)] p-2 sm:p-3">
-                    <NewsletterEmbed />
-                  </div>
-                )}
-              </div>
-            </div>
+          <div className="mt-10 flex justify-center">
+            <PrimaryButton href={TERMINAL_URL}>Open Terminal</PrimaryButton>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-white/10 bg-[rgba(4,10,16,0.88)]">
-        <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-5 px-5 py-8 text-sm text-[rgba(237,243,248,0.74)] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+      <footer className="border-t border-white/10 bg-[rgba(5,9,14,0.86)]">
+        <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-5 px-5 py-8 text-sm text-[rgba(214,226,240,0.72)] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <div className="flex items-center gap-3 tracking-[0.28em] text-textPrimary">
             <img src={kolmoMark} alt="" className="h-5 w-5 opacity-90" />
             <span>KOLMO</span>
@@ -1356,16 +1549,13 @@ export default function App() {
             <a href={TERMINAL_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">
               TERMINAL
             </a>
-            <a href="#capabilities" className="transition hover:text-white">
-              Capabilities
-            </a>
-            <a href="#showcase" className="transition hover:text-white">
-              Product
+            <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">
+              GitHub
             </a>
             <a href="/stats-api/" className="transition hover:text-white">
               API
             </a>
-            <a href="#contact" className="transition hover:text-white">
+            <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">
               Contact
             </a>
             <button type="button" onClick={openCookieSettings} className="transition hover:text-white">

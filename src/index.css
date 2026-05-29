@@ -19,9 +19,10 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at top, rgba(86, 132, 159, 0.1), transparent 26%),
-    linear-gradient(180deg, #06101a 0%, #04090f 100%);
-  color: #edf3f8;
+    radial-gradient(circle at 18% 8%, rgba(77, 163, 255, 0.09), transparent 24%),
+    radial-gradient(circle at 78% 16%, rgba(210, 153, 34, 0.07), transparent 18%),
+    linear-gradient(180deg, #080d14 0%, #050811 100%);
+  color: #d6e2f0;
   font-family: "Inter", "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -49,7 +50,7 @@ a {
   .font-serif-display {
     font-family: "Geist", "Inter", "Space Grotesk", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-weight: 600;
-    letter-spacing: -0.045em;
+    letter-spacing: 0;
     font-feature-settings: "ss01" 1, "cv01" 1, "cv02" 1;
   }
 
@@ -91,9 +92,9 @@ a {
 
   .hero-stage {
     background:
-      linear-gradient(180deg, rgba(7, 14, 22, 0.96) 0%, rgba(7, 12, 18, 0.84) 56%, rgba(5, 10, 16, 0.32) 100%),
-      radial-gradient(circle at 16% 20%, rgba(117, 155, 179, 0.15), transparent 22%),
-      radial-gradient(circle at 82% 24%, rgba(143, 173, 194, 0.1), transparent 18%);
+      linear-gradient(180deg, rgba(8, 12, 18, 0.96) 0%, rgba(7, 12, 19, 0.84) 60%, rgba(6, 10, 16, 0.48) 100%),
+      radial-gradient(circle at 20% 20%, rgba(77, 163, 255, 0.11), transparent 24%),
+      radial-gradient(circle at 82% 22%, rgba(210, 153, 34, 0.08), transparent 18%);
   }
 
   .hero-stage::before {
@@ -102,9 +103,9 @@ a {
     inset: 0;
     pointer-events: none;
     background:
-      linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.025) 45%, transparent 100%),
-      linear-gradient(180deg, transparent 0%, rgba(136, 164, 181, 0.04) 62%, transparent 100%);
-    opacity: 0.85;
+      linear-gradient(90deg, transparent 0%, rgba(77, 163, 255, 0.04) 45%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, rgba(210, 153, 34, 0.035) 62%, transparent 100%);
+    opacity: 0.72;
   }
 
   .hero-stage::after {
@@ -113,8 +114,77 @@ a {
     inset: 0;
     pointer-events: none;
     background:
-      radial-gradient(circle at 50% 18%, rgba(138, 171, 191, 0.1), transparent 24%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 16%);
+      radial-gradient(circle at 50% 18%, rgba(77, 163, 255, 0.09), transparent 24%),
+      linear-gradient(180deg, rgba(214, 226, 240, 0.025), transparent 16%);
+  }
+
+  .minimal-atmosphere__wash,
+  .minimal-atmosphere__line,
+  .minimal-atmosphere__point {
+    position: absolute;
+  }
+
+  .minimal-atmosphere__wash {
+    inset: 0;
+    background:
+      radial-gradient(circle at 70% 28%, rgba(77, 163, 255, 0.1), transparent 20%),
+      radial-gradient(circle at 18% 68%, rgba(210, 153, 34, 0.075), transparent 24%);
+    opacity: 0.82;
+  }
+
+  .minimal-atmosphere__line {
+    height: 1px;
+    width: 48vw;
+    background: linear-gradient(90deg, transparent, rgba(77, 163, 255, 0.24), transparent);
+    transform-origin: center;
+    animation: minimalLineFloat 16s ease-in-out infinite;
+  }
+
+  .minimal-atmosphere__line--one {
+    right: 2%;
+    top: 22%;
+    transform: rotate(-8deg);
+  }
+
+  .minimal-atmosphere__line--two {
+    left: 4%;
+    bottom: 18%;
+    background: linear-gradient(90deg, transparent, rgba(210, 153, 34, 0.18), transparent);
+    transform: rotate(6deg);
+    animation-delay: -6s;
+  }
+
+  .minimal-atmosphere__point {
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: #4da3ff;
+    box-shadow: 0 0 22px rgba(77, 163, 255, 0.72);
+    animation: heroPointPulse 7s ease-in-out infinite;
+  }
+
+  .minimal-atmosphere__point--one {
+    right: 25%;
+    top: 34%;
+  }
+
+  .minimal-atmosphere__point--two {
+    left: 18%;
+    bottom: 30%;
+    background: #d29922;
+    box-shadow: 0 0 22px rgba(210, 153, 34, 0.5);
+    animation-delay: -3s;
+  }
+
+  .knowledge-web::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(214, 226, 240, 0.045), transparent 24%),
+      radial-gradient(circle at 55% 45%, rgba(77, 163, 255, 0.08), transparent 30%);
   }
 
   .hero-atmosphere__grid,
@@ -359,6 +429,18 @@ a {
   }
   50% {
     transform: translate3d(18px, -12px, 0) scale(1.05);
+  }
+}
+
+@keyframes minimalLineFloat {
+  0%,
+  100% {
+    opacity: 0.18;
+    translate: 0 0;
+  }
+  50% {
+    opacity: 0.55;
+    translate: 18px -8px;
   }
 }
 
