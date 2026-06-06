@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 import kolmoMark from "../assets/kolmo-mark.svg";
 import { getAnalyticsConsent, initGoogleAnalytics, persistAnalyticsConsent } from "./analytics";
@@ -9,6 +9,7 @@ const CALENDLY_URL = "https://calendly.com/kolmolabs/30min";
 const TERMINAL_URL = "https://kolmo.netlify.app/terminal";
 const GITHUB_REPO_URL = "https://github.com/GBR24/kolmo_stats";
 const GITHUB_REPO_API_URL = "https://api.github.com/repos/GBR24/kolmo_stats";
+const STATS_API_URL = "/stats-api/index.html";
 
 const audienceTags = [
   "Traders",
@@ -108,10 +109,10 @@ const faqItems = [
 ];
 
 const shockScenarios = [
-  { label: "OPEC cut", nodes: ["OPEC Policy", "Brent", "WTI Spread", "Inventories"] },
-  { label: "Refinery outage", nodes: ["Refinery Margins", "Crack Spreads", "Freight Rates", "Brent"] },
-  { label: "Freight spike", nodes: ["Freight Rates", "Shipping Lanes", "LNG Flows", "Storage Levels"] },
-  { label: "Storage build", nodes: ["Inventories", "Storage Levels", "WTI Spread", "Brent"] },
+  { label: "Strait disruption", nodes: ["Middle East Risk", "Shipping Lanes", "Freight Rates", "Brent"] },
+  { label: "Gasoline squeeze", nodes: ["Freight Rates", "Gasoline", "Crack Spreads", "Refinery Margins"] },
+  { label: "Hedge rebalance", nodes: ["Brent", "WTI Spread", "Portfolio Exposure", "Hedge Ratio"] },
+  { label: "Past analogue", nodes: ["Middle East Risk", "Past Events", "Correlation Matrix", "Portfolio Exposure"] },
 ];
 
 const audienceGroups = ["Traders", "Analysts", "Risk teams", "Banks", "Hedge funds", "Commodity firms"];
@@ -130,56 +131,196 @@ const riskPathRows = [
 ];
 
 const marketRows = [
-  { name: "Brent", price: "$93.98", change: "-1.6%", tone: "text-[#c7d4dc]" },
-  { name: "WTI", price: "$94.58", change: "-1.8%", tone: "text-[#c7d4dc]" },
-  { name: "TTF", price: "€45.48", change: "-0.9%", tone: "text-[#c7d4dc]" },
-  { name: "Jet", price: "$4.23", change: "+0.7%", tone: "text-[#d8e3ea]" },
+  { name: "Brent", price: "$93.98", change: "+2.4%", tone: "text-[#d8e3ea]" },
+  { name: "WTI", price: "$90.58", change: "+1.8%", tone: "text-[#d8e3ea]" },
+  { name: "RBOB", price: "$2.83", change: "+3.1%", tone: "text-[#d8e3ea]" },
+  { name: "Freight", price: "WS 158", change: "+8.6%", tone: "text-[#d8e3ea]" },
 ];
 
-const terminalAlerts = ["North Sea freight tightening", "Pipeline work repricing gas spreads", "Refinery cuts moving products"];
+const terminalAlerts = ["AIS lanes thinning through key corridor", "War-risk premium repricing tanker flows", "Gasoline cracks breaking correlation"];
 
-const commandLog = ["> trace brent shock", "> brief risk in 4 lines", "> open knowledge web"];
+const commandLog = ["> trace shipping shock", "> simulate hedge actions", "> update correlation matrix"];
+
+const missionDispatchLog = [
+  "06:13:07 - MIDDLE EAST RISK HEADLINE",
+  "06:13:11 - SHIPPING LANES DISRUPTED",
+  "06:13:24 - FREIGHT AND INSURANCE REPRICING",
+  "06:13:29 - GASOLINE CRACKS ACTIVE",
+  "06:13:32 -> ROUTING TO KOLMO GRAPH...",
+  "06:13:33 OK AGENTS RUNNING SIMULATIONS",
+  "06:13:34 ▇ HEDGE / REBALANCE BRIEF READY",
+];
+
+const reasoningLog = [
+  "Reading conflict headlines, AIS flow notes, freight, insurance, prices, and position context",
+  "Linking shipping lanes to Brent structure, gasoline cracks, refinery margins, and storage",
+  "Comparing the current path with Suez, Strait, OPEC, and refinery-outage analogues",
+  "Preparing hedge, rebalance, and correlation updates with traceable graph evidence",
+];
+
+const riskPath = ["Middle East flashpoint", "Shipping lanes", "Freight and insurance", "Brent / RBOB spreads", "Portfolio exposure"];
+
+const missionMetrics = [
+  { value: "00:47", label: "Time to first trace" },
+  { value: "18", label: "Drivers connected" },
+  { value: "6", label: "Actions tested" },
+  { value: "4", label: "Past analogues" },
+];
+
+const systemPrinciples = [
+  {
+    lead: "You don't chase the shock by hand.",
+    body: "Kolmo agents watch prices, reports, freight, flows, policy, and portfolio context in one command layer.",
+  },
+  {
+    lead: "You don't lose the market path.",
+    body: "Kolmo keeps causality visible through graph relationships that can be inspected, challenged, and improved.",
+  },
+  {
+    lead: "You don't brief from scratch.",
+    body: "Kolmo turns the trace into simulated actions, correlation changes, and a concise desk-ready risk read.",
+  },
+];
+
+const accessRows = [
+  { label: "Pilot scenario", detail: "Energy shock workflow" },
+  { label: "Live terminal", detail: "Kolmo walkthrough" },
+  { label: "Open graph", detail: "Contribution path" },
+];
 
 const networkNodes = [
-  { label: "Brent", x: 170, y: 190, dx: -8, dy: -50, mobileDx: -18, mobileDy: 14, size: "large" },
-  { label: "OPEC Policy", x: 430, y: 180, dx: -38, dy: -54, mobileDx: -34, mobileDy: 14 },
-  { label: "Refinery Margins", x: 690, y: 235, dx: -28, dy: -52, mobileDx: -46, mobileDy: 14 },
-  { label: "WTI Spread", x: 280, y: 255, dx: -26, dy: -50 },
-  { label: "Inventories", x: 360, y: 365, dx: -26, dy: -50 },
-  { label: "Crack Spreads", x: 770, y: 330, dx: -24, dy: -52 },
-  { label: "Freight Rates", x: 160, y: 470, dx: -16, dy: -52 },
-  { label: "Shipping Lanes", x: 305, y: 505, dx: -34, dy: -52 },
-  { label: "Storage Levels", x: 565, y: 540, dx: -22, dy: -54 },
-  { label: "LNG Flows", x: 770, y: 605, dx: -12, dy: -50 },
-  { label: "Sanctions Risk", x: 470, y: 610, dx: -30, dy: -52 },
-  { label: "Pipeline Constraints", x: 330, y: 690, dx: -64, dy: -50 },
-  { label: "Weather Models", x: 660, y: 715, dx: -30, dy: -52 },
-  { label: "Power Demand", x: 545, y: 790, dx: -18, dy: -52 },
+  { label: "Middle East Risk", x: 145, y: 170, dx: -58, dy: -50, mobileDx: -46, mobileDy: 14, size: "large" },
+  { label: "Shipping Lanes", x: 350, y: 185, dx: -44, dy: -54, mobileDx: -48, mobileDy: 14 },
+  { label: "Freight Rates", x: 565, y: 235, dx: -30, dy: -52, mobileDx: -42, mobileDy: 14 },
+  { label: "Brent", x: 245, y: 320, dx: -12, dy: -50, size: "large" },
+  { label: "WTI Spread", x: 418, y: 360, dx: -28, dy: -50 },
+  { label: "Gasoline", x: 690, y: 340, dx: -18, dy: -52 },
+  { label: "Crack Spreads", x: 760, y: 465, dx: -24, dy: -52 },
+  { label: "Refinery Margins", x: 570, y: 500, dx: -44, dy: -54 },
+  { label: "Storage Levels", x: 335, y: 525, dx: -34, dy: -52 },
+  { label: "Sanctions Risk", x: 135, y: 555, dx: -34, dy: -52 },
+  { label: "Past Events", x: 480, y: 640, dx: -28, dy: -52 },
+  { label: "Correlation Matrix", x: 680, y: 655, dx: -64, dy: -52 },
+  { label: "Portfolio Exposure", x: 345, y: 730, dx: -62, dy: -52 },
+  { label: "Hedge Ratio", x: 590, y: 765, dx: -28, dy: -52 },
 ];
 
 const networkLinks = [
-  [170, 190, 430, 180],
-  [170, 190, 280, 255],
-  [430, 180, 690, 235],
-  [430, 180, 360, 365],
-  [280, 255, 360, 365],
-  [280, 255, 160, 470],
-  [360, 365, 770, 330],
-  [360, 365, 160, 470],
-  [360, 365, 565, 540],
-  [160, 470, 305, 505],
-  [305, 505, 565, 540],
-  [565, 540, 770, 605],
-  [565, 540, 470, 610],
-  [470, 610, 330, 690],
-  [470, 610, 660, 715],
-  [330, 690, 545, 790],
-  [660, 715, 545, 790],
-  [690, 235, 770, 330],
-  [770, 330, 770, 605],
+  [145, 170, 350, 185],
+  [145, 170, 245, 320],
+  [145, 170, 135, 555],
+  [350, 185, 565, 235],
+  [565, 235, 245, 320],
+  [565, 235, 690, 340],
+  [565, 235, 570, 500],
+  [245, 320, 418, 360],
+  [245, 320, 335, 525],
+  [418, 360, 335, 525],
+  [690, 340, 760, 465],
+  [760, 465, 570, 500],
+  [570, 500, 245, 320],
+  [335, 525, 480, 640],
+  [135, 555, 480, 640],
+  [480, 640, 680, 655],
+  [680, 655, 345, 730],
+  [345, 730, 590, 765],
+  [418, 360, 345, 730],
+  [690, 340, 345, 730],
+  [565, 235, 680, 655],
 ];
 
-const compactHiddenNodeLabels = new Set(["WTI Spread", "Shipping Lanes", "Sanctions Risk", "Weather Models"]);
+const compactHiddenNodeLabels = new Set([
+  "Shipping Lanes",
+  "WTI Spread",
+  "Sanctions Risk",
+  "Past Events",
+  "Correlation Matrix",
+  "Portfolio Exposure",
+  "Hedge Ratio",
+]);
+
+const simulationActions = [
+  {
+    title: "Hedge",
+    metric: "+14% cover",
+    body: "Increase Brent tail protection against a route-risk premium while the freight signal stays elevated.",
+  },
+  {
+    title: "Gasoline",
+    metric: "Rebalance",
+    body: "Trim RBOB beta until gasoline cracks confirm whether the move is supply-led or demand-led.",
+  },
+  {
+    title: "Correlation",
+    metric: "Matrix v2",
+    body: "Refresh Brent, RBOB, freight, and WTI relationships using the live shock window.",
+  },
+  {
+    title: "Analogue",
+    metric: "4 matches",
+    body: "Compare the path with Suez, Strait, OPEC, and refinery-outage regimes before sizing the move.",
+  },
+];
+
+const correlationAssets = ["Brent", "RBOB", "Freight", "WTI"];
+
+const correlationMatrix = [
+  [1, 0.72, 0.64, 0.88],
+  [0.72, 1, 0.58, 0.69],
+  [0.64, 0.58, 1, 0.43],
+  [0.88, 0.69, 0.43, 1],
+];
+
+const blogResearchTracks = [
+  {
+    title: "Market Structure",
+    body: "Research notes on how crude, products, freight, storage, and policy relationships shift during stress.",
+  },
+  {
+    title: "Graph Methods",
+    body: "How Kolmo maps causal paths, open relationships, analogues, and correlation changes across energy markets.",
+  },
+  {
+    title: "Desk Workflows",
+    body: "Practical notes on turning event risk into hedges, rebalances, and concise risk reads.",
+  },
+];
+
+const featuredResearchNote = {
+  eyebrow: "Featured research",
+  title: "Mapping energy shocks from first headline to portfolio exposure",
+  dek: "A working research series on how market structure, graph relationships, and desk workflows can be joined into one traceable view of risk.",
+  meta: "Series opening soon",
+};
+
+const blogTopics = ["Oil", "Gas", "Freight", "Products", "Storage", "Refining", "Policy", "Graph Methods"];
+
+const researchQueue = [
+  {
+    title: "How route risk becomes a Brent and gasoline problem",
+    type: "Market map",
+    date: "Upcoming",
+    body: "A practical walkthrough of how shipping lanes, freight, insurance, and cracks can form one risk path.",
+  },
+  {
+    title: "Building an open graph for energy market relationships",
+    type: "Methods",
+    date: "Upcoming",
+    body: "Notes on relationship primitives, confidence, directionality, analogues, and how contributors can inspect the graph.",
+  },
+  {
+    title: "Correlation matrices during market stress",
+    type: "Quant note",
+    date: "Upcoming",
+    body: "How Kolmo thinks about live shock windows, stale correlations, and when a desk should refresh assumptions.",
+  },
+  {
+    title: "From trace to desk action",
+    type: "Workflow",
+    date: "Upcoming",
+    body: "A template for turning event detection into hedge, rebalance, monitor, and brief outputs.",
+  },
+];
 
 function useDepthMotion() {
   const panelRef = useRef(null);
@@ -325,7 +466,7 @@ function SectionHeading({ eyebrow, title, body, align = "left" }) {
     <div className={`flex max-w-3xl flex-col gap-3 ${alignment}`}>
       {eyebrow ? <span className="text-[0.72rem] uppercase tracking-[0.28em] text-textSecondary">{eyebrow}</span> : null}
       {title ? (
-        <h2 className="max-w-4xl text-balance font-serif-display text-3xl leading-[0.98] text-textPrimary sm:text-4xl lg:text-[3.2rem]">
+        <h2 className="max-w-4xl text-balance font-serif-display text-3xl leading-[1.02] text-textPrimary sm:text-4xl lg:text-[3.2rem]">
           {title}
         </h2>
       ) : null}
@@ -335,11 +476,13 @@ function SectionHeading({ eyebrow, title, body, align = "left" }) {
 }
 
 function PrimaryButton({ children, href = CALENDLY_URL }) {
+  const isExternal = href.startsWith("http");
+
   return (
     <a
       href={href}
-      target="_blank"
-      rel="noreferrer"
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noreferrer" : undefined}
       className="inline-flex items-center justify-center rounded-full border border-[#4da3ff]/35 bg-[#4da3ff]/10 px-6 py-3 text-sm font-medium uppercase tracking-[0.14em] text-textPrimary transition duration-300 hover:border-[#4da3ff]/60 hover:bg-[#4da3ff]/16"
     >
       {children}
@@ -392,6 +535,150 @@ function GitHubStarsLink({ stars }) {
         <span>{formattedStars ?? "Stars"}</span>
       </span>
     </a>
+  );
+}
+
+function MissionDispatchPanel({ compact = false }) {
+  const visibleLog = compact ? missionDispatchLog.slice(2) : missionDispatchLog;
+
+  return (
+    <div className="relative overflow-hidden rounded-lg border border-white/10 bg-[rgba(4,7,10,0.82)] shadow-panel">
+      <div className="absolute inset-0 bg-[linear-gradient(118deg,transparent_8%,rgba(77,163,255,0.09)_44%,transparent_70%)]" />
+      <div className="relative border-b border-white/10 px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-[0.64rem] uppercase tracking-[0.2em] text-textSecondary">
+          <span>Energy dispatch - scenario desk</span>
+          <span className="text-[#4da3ff]">06:13 UTC</span>
+        </div>
+      </div>
+      <div className={`relative font-mono text-[0.74rem] leading-6 text-textSecondary ${compact ? "p-4" : "p-5 sm:p-6"}`}>
+        {visibleLog.map((line, index) => (
+          <div
+            key={line}
+            className={`mission-log-line border-b border-white/6 py-2 ${index === visibleLog.length - 1 ? "border-b-0 text-textPrimary" : ""}`}
+          >
+            {line}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CommandBriefPanel() {
+  return (
+    <div className="depth-panel relative overflow-hidden rounded-lg border border-white/10 bg-[rgba(4,7,10,0.84)] shadow-panel">
+      <div className="depth-panel__glow" />
+      <div className="relative grid gap-px bg-white/10 lg:grid-cols-[0.78fr_1.22fr]">
+        <div className="bg-[rgba(4,7,10,0.9)] p-5 sm:p-6">
+          <div className="text-[0.64rem] uppercase tracking-[0.22em] text-textSecondary">Desk command</div>
+          <div className="mt-8 break-words font-mono text-base leading-8 text-textPrimary sm:text-xl">
+            <span className="text-[#4da3ff]">$</span> trace the Middle East shipping shock across Brent, gasoline, freight, hedges, and our book
+          </div>
+        </div>
+
+        <div className="bg-[rgba(4,7,10,0.9)] p-5 sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-[0.64rem] uppercase tracking-[0.22em] text-textSecondary">
+            <span>Kolmo reasoning engine</span>
+            <span className="text-[#d29922]">Trace active</span>
+          </div>
+          <div className="mt-6 grid gap-3">
+            {reasoningLog.map((line, index) => (
+              <div key={line} className="grid grid-cols-[2.5rem_1fr] gap-3 border-t border-white/8 pt-3 text-sm leading-7">
+                <span className="text-[0.62rem] uppercase tracking-[0.18em] text-textSecondary">0{index + 1}</span>
+                <span className="text-textPrimary">{line}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RiskPathPanel() {
+  return (
+    <div className="rounded-lg border border-white/10 bg-[rgba(4,7,10,0.82)] p-5 shadow-panel sm:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 text-[0.64rem] uppercase tracking-[0.22em] text-textSecondary">
+        <span>Risk path confirmed</span>
+        <span className="text-[#4da3ff]">Live read</span>
+      </div>
+
+      <div className="mt-7 grid gap-3">
+        {riskPath.map((item, index) => (
+          <div key={item} className="grid grid-cols-[2.25rem_1fr] items-center gap-3 border-t border-white/8 pt-3">
+            <span className="text-[0.62rem] uppercase tracking-[0.18em] text-[#d29922]">0{index + 1}</span>
+            <span className="text-sm text-textPrimary sm:text-base">{item}</span>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-7 text-xl leading-tight text-textPrimary sm:text-2xl">
+        Route-risk premium is moving freight first, then feeding Brent structure, gasoline cracks, and book exposure.
+      </p>
+    </div>
+  );
+}
+
+function MissionMetric({ value, label }) {
+  return (
+    <div className="border-t border-white/10 py-5">
+      <div className="font-mono text-3xl text-textPrimary sm:text-4xl">{value}</div>
+      <div className="mt-2 text-[0.68rem] uppercase tracking-[0.18em] text-textSecondary">{label}</div>
+    </div>
+  );
+}
+
+function SystemPrinciples() {
+  return (
+    <div className="divide-y divide-white/10 border-y border-white/10">
+      {systemPrinciples.map((principle) => (
+        <article key={principle.lead} className="grid gap-3 py-6 sm:grid-cols-[2.5rem_1fr]">
+          <div className="text-xl text-[#4da3ff]">-&gt;</div>
+          <div>
+            <h3 className="text-xl font-medium text-textPrimary">{principle.lead}</h3>
+            <p className="mt-3 text-sm leading-7 text-textSecondary sm:text-base sm:leading-8">{principle.body}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function AccessPanel({ onNewsletter }) {
+  return (
+    <div className="grid gap-10 rounded-lg border border-white/10 bg-[rgba(4,7,10,0.84)] p-5 shadow-panel sm:p-7 lg:grid-cols-[0.85fr_1.15fr] lg:p-8">
+      <div>
+        <div className="text-[0.68rem] uppercase tracking-[0.24em] text-textSecondary">Request access</div>
+        <h2 className="mt-4 max-w-[12ch] font-serif-display text-4xl leading-[0.95] text-textPrimary sm:text-5xl">
+          Join the energy room.
+        </h2>
+        <p className="mt-5 max-w-md text-base leading-8 text-textSecondary">
+          Kolmo is being built with traders, analysts, and risk teams who need traceable reads when energy-market causality gets messy.
+        </p>
+      </div>
+
+      <div className="flex flex-col justify-between gap-7">
+        <div className="border-y border-white/10">
+          {accessRows.map((row) => (
+            <div key={row.label} className="flex items-center justify-between gap-4 border-b border-white/8 py-4 last:border-b-0">
+              <span className="text-sm uppercase tracking-[0.16em] text-textSecondary">{row.label}</span>
+              <span className="text-right text-sm text-textPrimary/60">{row.detail}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+          <PrimaryButton href={CALENDLY_URL}>Request Access</PrimaryButton>
+          <button
+            type="button"
+            onClick={onNewsletter}
+            className="inline-flex text-sm uppercase tracking-[0.16em] text-textSecondary transition hover:text-white"
+          >
+            Subscribe to notes
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -814,10 +1101,10 @@ function MinimalTerminalVisual({ compact = false }) {
             <span className="text-[#d29922]">Shock path</span>
           </div>
           <p className="mt-5 max-w-[34rem] text-2xl leading-tight text-textPrimary sm:text-3xl">
-            Freight tightness is reinforcing Brent strength through refining margins.
+            Route risk is lifting freight, changing Brent / RBOB correlation, and moving the hedge ratio.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {["Policy", "Brent", "Freight"].map((item, index) => (
+            {["Shipping", "Gasoline", "Hedge"].map((item, index) => (
               <div key={item} className="border-t border-white/10 pt-3">
                 <div className="text-[0.62rem] uppercase tracking-[0.2em] text-textSecondary">0{index + 1}</div>
                 <div className="mt-2 text-sm text-textPrimary">{item}</div>
@@ -891,6 +1178,29 @@ function HeroAtmosphere() {
       <div className="minimal-atmosphere__line minimal-atmosphere__line--two" />
       <div className="minimal-atmosphere__point minimal-atmosphere__point--one" />
       <div className="minimal-atmosphere__point minimal-atmosphere__point--two" />
+    </div>
+  );
+}
+
+function HeroSignalField() {
+  return (
+    <div className="pointer-events-none relative hidden min-h-[28rem] lg:block" aria-hidden="true">
+      <div className="absolute left-[12%] top-[18%] h-px w-[68%] bg-[linear-gradient(90deg,transparent,rgba(214,226,240,0.22),transparent)]" />
+      <div className="absolute right-[10%] top-[36%] h-px w-[46%] bg-[linear-gradient(90deg,transparent,rgba(77,163,255,0.18),transparent)]" />
+      <div className="absolute bottom-[28%] left-[20%] h-px w-[54%] bg-[linear-gradient(90deg,transparent,rgba(210,153,34,0.16),transparent)]" />
+
+      <div className="absolute left-[24%] top-[17%] h-2 w-2 rounded-full bg-[#d6e2f0] shadow-[0_0_24px_rgba(214,226,240,0.42)]" />
+      <div className="absolute right-[22%] top-[35%] h-1.5 w-1.5 rounded-full bg-[#4da3ff] shadow-[0_0_24px_rgba(77,163,255,0.48)]" />
+      <div className="absolute bottom-[27%] left-[55%] h-1.5 w-1.5 rounded-full bg-[#d29922] shadow-[0_0_24px_rgba(210,153,34,0.4)]" />
+
+      <div className="absolute right-[7%] top-[12%] max-w-[16rem] border-l border-white/10 pl-4 text-[0.64rem] uppercase leading-6 tracking-[0.2em] text-textSecondary">
+        <span className="block text-textPrimary">06:13 UTC</span>
+        <span>Shipping risk begins to move before the explanation arrives.</span>
+      </div>
+      <div className="absolute bottom-[16%] left-[8%] max-w-[18rem] border-l border-[#4da3ff]/30 pl-4 text-[0.64rem] uppercase leading-6 tracking-[0.2em] text-textSecondary">
+        <span className="block text-[#4da3ff]">Kolmo trace armed</span>
+        <span>Waiting for the first causal path to light up.</span>
+      </div>
     </div>
   );
 }
@@ -1024,11 +1334,11 @@ function NetworkVisual({ activeShock = 0, isCompact = false, onShockChange = () 
 
   return (
     <div
-      className={`network-shell relative w-full min-w-0 max-w-[calc(100vw-2.5rem)] overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(9,15,22,0.92),rgba(7,12,18,0.78))] shadow-panel lg:max-w-none ${
+      className={`network-shell relative w-full min-w-0 max-w-[calc(100vw-2.5rem)] overflow-hidden rounded-lg border border-white/8 bg-[linear-gradient(180deg,rgba(5,6,6,0.92),rgba(4,5,5,0.78))] shadow-panel lg:max-w-none ${
         isCompact ? "min-h-[31rem]" : "min-h-[41rem]"
       }`}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(85,134,164,0.12),transparent_26%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(116deg,transparent_12%,rgba(85,134,164,0.11)_46%,transparent_72%)]" />
       <div className="pointer-events-none absolute inset-0 bg-grid bg-[size:76px_76px] opacity-[0.16]" />
       <div
         className={`pointer-events-none absolute z-20 flex items-center justify-between rounded-full border border-white/8 bg-[rgba(8,15,22,0.68)] uppercase text-textSecondary/85 backdrop-blur ${
@@ -1037,8 +1347,8 @@ function NetworkVisual({ activeShock = 0, isCompact = false, onShockChange = () 
             : "inset-x-6 top-5 px-4 py-2 text-[0.62rem] tracking-[0.24em]"
         }`}
       >
-        <span>Global Energy Map</span>
-        <span>Command Layer</span>
+        <span>Open Energy Graph</span>
+        <span>Shock Paths</span>
       </div>
 
       <svg className="absolute inset-0 h-full w-full" viewBox="0 0 900 900" aria-hidden="true">
@@ -1121,14 +1431,14 @@ function NetworkVisual({ activeShock = 0, isCompact = false, onShockChange = () 
         ))}
       </div>
 
-      <div className="absolute inset-x-[22%] top-[24%] h-[48%] rounded-full border border-white/5 bg-[radial-gradient(circle,rgba(102,135,157,0.08),transparent_65%)] blur-2xl" />
+      <div className="absolute inset-x-[18%] top-[36%] h-px bg-[linear-gradient(90deg,transparent,rgba(102,135,157,0.22),transparent)]" />
       <div
         className={`absolute flex items-center gap-3 rounded-full border border-white/8 bg-[rgba(8,15,22,0.72)] uppercase text-textSecondary backdrop-blur ${
           isCompact ? "bottom-4 left-4 px-3 py-2 text-[0.56rem] tracking-[0.12em]" : "bottom-6 left-6 px-4 py-2 text-[0.68rem] tracking-[0.18em]"
         }`}
       >
         <img src={kolmoMark} alt="" className="h-4 w-4 opacity-80" />
-        <span>Systemic market intelligence</span>
+        <span>Graph theory for market risk</span>
       </div>
 
       <div
@@ -1150,6 +1460,84 @@ function NetworkVisual({ activeShock = 0, isCompact = false, onShockChange = () 
             {item.label}
           </button>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function SimulationPanel() {
+  return (
+    <div className="relative overflow-hidden rounded-lg border border-white/10 bg-[rgba(4,7,10,0.84)] shadow-panel">
+      <div className="absolute inset-0 bg-[linear-gradient(118deg,transparent_8%,rgba(77,163,255,0.08)_44%,transparent_76%)]" />
+      <div className="relative border-b border-white/10 px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-[0.64rem] uppercase tracking-[0.2em] text-textSecondary">
+          <span>Scenario engine</span>
+          <span className="text-[#d29922]">6 branches tested</span>
+        </div>
+      </div>
+
+      <div className="relative grid gap-px bg-white/10 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="bg-[rgba(4,7,10,0.88)] p-5 sm:p-6">
+          <div className="text-[0.64rem] uppercase tracking-[0.22em] text-textSecondary">Agent recommendations</div>
+          <div className="mt-6 divide-y divide-white/8 border-y border-white/8">
+            {simulationActions.map((action, index) => (
+              <article key={action.title} className="grid gap-4 py-5 sm:grid-cols-[5.5rem_1fr_auto] sm:items-start">
+                <div>
+                  <div className="text-[0.62rem] uppercase tracking-[0.18em] text-[#d29922]">0{index + 1}</div>
+                  <h3 className="mt-2 text-base font-medium text-textPrimary">{action.title}</h3>
+                </div>
+                <p className="text-sm leading-7 text-textSecondary">{action.body}</p>
+                <div className="w-fit rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[0.62rem] uppercase tracking-[0.16em] text-textPrimary">
+                  {action.metric}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-[rgba(4,7,10,0.88)] p-5 sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-[0.64rem] uppercase tracking-[0.22em] text-textSecondary">
+            <span>Correlation matrix</span>
+            <span className="text-[#4da3ff]">Live shock window</span>
+          </div>
+
+          <div className="mt-6 grid grid-cols-[4.5rem_repeat(4,minmax(0,1fr))] gap-1 text-center text-[0.62rem] uppercase tracking-[0.12em] text-textSecondary">
+            <span />
+            {correlationAssets.map((asset) => (
+              <span key={asset} className="truncate py-2">
+                {asset}
+              </span>
+            ))}
+
+            {correlationMatrix.map((row, rowIndex) => (
+              <Fragment key={correlationAssets[rowIndex]}>
+                <span className="flex items-center justify-start truncate py-2 text-left text-textPrimary">{correlationAssets[rowIndex]}</span>
+                {row.map((value, columnIndex) => {
+                  const intensity = Math.max(0.16, Math.min(0.58, value * 0.58));
+                  const isDiagonal = rowIndex === columnIndex;
+
+                  return (
+                    <span
+                      key={`${correlationAssets[rowIndex]}-${correlationAssets[columnIndex]}`}
+                      className="flex min-h-10 items-center justify-center border border-white/8 text-[0.72rem] text-textPrimary"
+                      style={{
+                        backgroundColor: isDiagonal
+                          ? "rgba(77, 163, 255, 0.22)"
+                          : `rgba(210, 153, 34, ${intensity.toFixed(2)})`,
+                      }}
+                    >
+                      {value.toFixed(2)}
+                    </span>
+                  );
+                })}
+              </Fragment>
+            ))}
+          </div>
+
+          <p className="mt-6 text-base leading-8 text-textSecondary">
+            Kolmo shows what changed, which relationships explain it, and which suggested moves depend on the same causal path.
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -1178,7 +1566,9 @@ function OpenSourceCallout({ stars }) {
           <GitHubIcon className="mt-0.5 h-5 w-5 text-[#4da3ff]" />
           <div>
             <div className="text-sm font-medium uppercase tracking-[0.14em] text-textPrimary">Open-source relationships</div>
-            <p className="mt-2 max-w-[28rem] text-sm leading-7 text-textSecondary">Inspect how markets connect.</p>
+            <p className="mt-2 max-w-[28rem] text-sm leading-7 text-textSecondary">
+              Inspect how energy variables connect, contribute relationships, and challenge the market map.
+            </p>
           </div>
         </div>
         <div className="whitespace-nowrap text-[0.72rem] uppercase tracking-[0.16em] text-[#4da3ff] transition group-hover:text-white">
@@ -1252,6 +1642,156 @@ function FaqItem({ question, answer }) {
   );
 }
 
+function BlogPage({ onNewsletter }) {
+  return (
+    <main id="top">
+      <section className="hero-stage relative overflow-hidden border-b border-white/8">
+        <div className="mx-auto grid w-full max-w-[1280px] gap-12 px-5 py-20 sm:px-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:px-8 lg:py-28 lg:items-center lg:gap-16">
+          <HeroAtmosphere />
+          <div className="relative">
+            <div className="inline-flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.28em] text-textSecondary">
+              <img src={kolmoMark} alt="" className="h-5 w-5 opacity-80" />
+              <span>Kolmo Research</span>
+            </div>
+            <h1 className="mt-7 max-w-[13ch] font-serif-display text-5xl uppercase leading-[0.92] text-textPrimary sm:text-7xl lg:text-[5.7rem]">
+              Field notes for energy risk.
+            </h1>
+            <p className="mt-7 max-w-[38rem] text-base leading-8 text-textSecondary sm:text-lg">
+              Research on oil, gas, freight, products, graph methods, market structure, and the workflows behind Kolmo.
+            </p>
+            <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+              <button
+                type="button"
+                onClick={onNewsletter}
+                className="inline-flex items-center justify-center rounded-full border border-[#4da3ff]/35 bg-[#4da3ff]/10 px-6 py-3 text-sm font-medium uppercase tracking-[0.14em] text-textPrimary transition duration-300 hover:border-[#4da3ff]/60 hover:bg-[#4da3ff]/16"
+              >
+                Subscribe
+              </button>
+              <a href="/" className="inline-flex text-sm uppercase tracking-[0.16em] text-textSecondary transition hover:text-white">
+                Back to Kolmo
+              </a>
+            </div>
+          </div>
+
+          <div className="relative">
+            <KnowledgeGraphVisual />
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto grid w-full max-w-[1280px] gap-8 px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
+        <article className="relative overflow-hidden rounded-lg border border-white/10 bg-[rgba(4,7,10,0.84)] p-5 shadow-panel sm:p-7 lg:p-8">
+          <div className="absolute inset-0 bg-[linear-gradient(118deg,transparent_8%,rgba(77,163,255,0.08)_44%,transparent_76%)]" />
+          <div className="relative grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-end">
+            <div>
+              <div className="text-[0.68rem] uppercase tracking-[0.24em] text-[#4da3ff]">{featuredResearchNote.eyebrow}</div>
+              <h2 className="mt-5 max-w-[13ch] font-serif-display text-4xl uppercase leading-[0.94] text-textPrimary sm:text-5xl lg:text-[4.8rem]">
+                {featuredResearchNote.title}
+              </h2>
+            </div>
+            <div className="grid gap-7">
+              <p className="max-w-2xl text-base leading-8 text-textSecondary sm:text-lg">{featuredResearchNote.dek}</p>
+              <div className="flex flex-wrap gap-2">
+                {blogTopics.map((topic) => (
+                  <span
+                    key={topic}
+                    className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-[0.62rem] uppercase tracking-[0.16em] text-textSecondary"
+                  >
+                    {topic}
+                  </span>
+                ))}
+              </div>
+              <div className="text-[0.68rem] uppercase tracking-[0.2em] text-[#d29922]">{featuredResearchNote.meta}</div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section className="mx-auto grid w-full max-w-[1280px] gap-12 px-5 py-20 sm:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:px-8 lg:py-28 lg:gap-16">
+        <div>
+          <SectionHeading
+            eyebrow="Research Tracks"
+            title={
+              <>
+                WHAT WE
+                <br />
+                WILL PUBLISH
+              </>
+            }
+            body="The blog is a place for research notes, diagrams, market structure observations, and transparent thinking behind the product."
+          />
+        </div>
+
+        <div className="divide-y divide-white/10 border-y border-white/10">
+          {blogResearchTracks.map((track, index) => (
+            <article key={track.title} className="grid gap-4 py-7 sm:grid-cols-[5rem_1fr]">
+              <div className="text-[0.62rem] uppercase tracking-[0.22em] text-[#d29922]">0{index + 1}</div>
+              <div>
+                <h2 className="text-2xl font-medium text-textPrimary">{track.title}</h2>
+                <p className="mt-3 text-sm leading-7 text-textSecondary sm:text-base sm:leading-8">{track.body}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="border-y border-white/8 bg-[rgba(255,255,255,0.015)]">
+        <div className="mx-auto grid w-full max-w-[1280px] gap-10 px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <SectionHeading
+            eyebrow="Publication Queue"
+            title={
+              <>
+                RESEARCH
+                <br />
+                INDEX
+              </>
+            }
+            body="The first notes will live here as soon as we publish. Each entry is organized by market question, method, and desk use."
+          />
+
+          <div className="grid gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10 shadow-panel lg:grid-cols-2">
+            {researchQueue.map((post) => (
+              <article key={post.title} className="bg-[rgba(4,7,10,0.88)] p-5 sm:p-6">
+                <div>
+                  <div className="flex flex-wrap items-center justify-between gap-3 text-[0.62rem] uppercase tracking-[0.2em] text-textSecondary">
+                    <span>{post.type}</span>
+                    <span className="text-[#d29922]">{post.date}</span>
+                  </div>
+                  <h2 className="mt-5 text-2xl font-medium leading-tight text-textPrimary">{post.title}</h2>
+                  <p className="mt-4 text-sm leading-7 text-textSecondary sm:text-base sm:leading-8">{post.body}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-[1280px] px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
+        <div className="grid gap-10 border-y border-white/10 py-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+          <div>
+            <div className="text-[0.68rem] uppercase tracking-[0.24em] text-textSecondary">Research updates</div>
+            <h2 className="mt-4 max-w-[14ch] font-serif-display text-4xl uppercase leading-[0.95] text-textPrimary sm:text-5xl">
+              Get the notes when they ship.
+            </h2>
+          </div>
+          <div className="flex flex-col items-start gap-5">
+            <p className="max-w-2xl text-base leading-8 text-textSecondary">
+              We will use the newsletter for research releases, graph updates, and short market-structure observations.
+            </p>
+            <button
+              type="button"
+              onClick={onNewsletter}
+              className="inline-flex items-center justify-center rounded-full border border-[#4da3ff]/35 bg-[#4da3ff]/10 px-6 py-3 text-sm font-medium uppercase tracking-[0.14em] text-textPrimary transition duration-300 hover:border-[#4da3ff]/60 hover:bg-[#4da3ff]/16"
+            >
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 export default function App() {
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const [analyticsConsent, setAnalyticsConsent] = useState(() => getAnalyticsConsent());
@@ -1261,6 +1801,8 @@ export default function App() {
   const [activeShowcaseSlide, setActiveShowcaseSlide] = useState(0);
   const [activeShock, setActiveShock] = useState(0);
   const [githubStars, setGithubStars] = useState(null);
+  const currentPath = typeof window === "undefined" ? "/" : window.location.pathname.replace(/\/+$/, "") || "/";
+  const isBlogPage = currentPath === "/blog";
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.location.hash) {
@@ -1309,6 +1851,14 @@ export default function App() {
       initGoogleAnalytics();
     }
   }, [analyticsConsent]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") {
+      return;
+    }
+
+    document.title = isBlogPage ? "Kolmo Research | Energy Market Notes" : "Kolmo Labs | AI for Energy Risk";
+  }, [isBlogPage]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -1385,158 +1935,208 @@ export default function App() {
     <div className="min-h-screen overflow-x-hidden bg-ink text-textPrimary">
       <div className="fixed inset-0 -z-10 bg-vignette" />
       <div className="fixed inset-0 -z-10 bg-grid bg-[size:88px_88px] opacity-[0.08]" />
-      <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(7,12,19,0.18),rgba(5,8,17,0.82))]" />
+      <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(6,6,6,0.18),rgba(3,3,3,0.86))]" />
 
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[rgba(5,8,17,0.78)] shadow-[0_12px_36px_rgba(0,0,0,0.18)] backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[rgba(4,5,7,0.82)] shadow-[0_12px_36px_rgba(0,0,0,0.18)] backdrop-blur-xl">
         <div className="mx-auto flex w-full min-w-0 max-w-[100vw] items-center justify-between px-5 py-4 sm:px-6 lg:max-w-[1280px] lg:px-8">
           <a
-            href="#top"
+            href={isBlogPage ? "/" : "#top"}
             aria-label="Kolmo Labs home"
             className="flex items-center gap-3 text-sm font-semibold tracking-[0.34em] text-textPrimary"
           >
-            {/* Replace with production logo asset if needed */}
             <img src={kolmoMark} alt="" className="h-6 w-6 opacity-90" />
             <span>KOLMO</span>
           </a>
 
           <nav className="hidden items-center gap-6 text-[0.74rem] uppercase tracking-[0.2em] text-[rgba(214,226,240,0.82)] lg:flex">
-            <a href={TERMINAL_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">
-              TERMINAL
-            </a>
-            <div className="group relative">
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 transition hover:text-white focus:outline-none focus:text-white"
-                aria-label="Open audience menu"
-              >
-                <span>AUDIENCE</span>
-              </button>
-              <div className="invisible pointer-events-none absolute left-1/2 top-full z-50 mt-4 w-64 -translate-x-1/2 rounded-[1.1rem] border border-white/10 bg-[rgba(5,10,15,0.98)] p-2 opacity-0 shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl transition duration-200 group-hover:visible group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:opacity-100">
-                {audienceTags.map((tag) => (
-                  <a
-                    key={tag}
-                    href="#use-cases"
-                    className="block rounded-[0.9rem] px-3 py-2.5 text-[0.68rem] uppercase tracking-[0.18em] text-[rgba(214,226,240,0.76)] transition hover:bg-white/[0.06] hover:text-white"
-                  >
-                    {tag}
-                  </a>
-                ))}
-              </div>
-            </div>
-            <a href="/stats-api/" className="transition hover:text-white">
+            <a href={STATS_API_URL} className="transition hover:text-white">
               API
+            </a>
+            <a href={TERMINAL_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">
+              Terminal
+            </a>
+            <a href="/blog" className={`transition hover:text-white ${isBlogPage ? "text-white" : ""}`}>
+              Blog
             </a>
           </nav>
 
           <div className="hidden items-center gap-3 sm:flex">
             <GitHubStarsLink stars={githubStars} />
             <a
-              href={CALENDLY_URL}
-              target="_blank"
-              rel="noreferrer"
+              href={isBlogPage ? "/#access" : "#access"}
               className="inline-flex rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-[rgba(214,226,240,0.9)] transition hover:border-[#4da3ff]/40 hover:bg-white/[0.08] hover:text-white sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
             >
-              Contact Us
+              Request Access
             </a>
           </div>
         </div>
       </header>
 
+      {isBlogPage ? (
+        <BlogPage onNewsletter={openNewsletter} />
+      ) : (
       <main id="top">
         <section className="hero-stage relative overflow-hidden border-b border-white/8">
-          <div className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-10 sm:px-6 lg:px-8 lg:pb-20 lg:pt-10">
+          <div className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-12 sm:px-6 lg:px-8 lg:pb-20 lg:pt-16">
             <HeroAtmosphere />
 
-            <div className="relative mx-auto grid w-full max-w-[1280px] gap-10 lg:min-h-[42rem] lg:grid-cols-[minmax(0,0.82fr)_minmax(520px,1.18fr)] lg:items-center lg:gap-16 lg:pt-8">
-              <div className="w-full min-w-0 max-w-[38rem]">
-                <h1 className="max-w-[10ch] font-serif-display text-[3.75rem] leading-[0.9] text-textPrimary sm:text-7xl lg:text-[6.1rem]">
-                  AI for Energy Risk.
-                </h1>
-                <p className="mt-6 max-w-[31rem] text-base leading-8 text-textSecondary sm:text-lg">
-                  Open-source market graph and terminal for tracing shocks across energy markets.
-                </p>
+            <div className="relative mx-auto grid w-full max-w-[1280px] gap-12 lg:min-h-[34rem] lg:grid-cols-[minmax(0,0.76fr)_minmax(440px,1.24fr)] lg:items-center lg:gap-20 lg:pt-4">
+              <div className="w-full min-w-0 max-w-[40rem]">
+                <div className="inline-flex flex-col items-center gap-4">
+                  <img src={kolmoMark} alt="" className="h-28 w-28 opacity-95 sm:h-36 sm:w-36 lg:h-44 lg:w-44" />
+                  <h1 className="pl-[0.48em] text-[1rem] font-semibold uppercase tracking-[0.48em] text-textPrimary sm:text-[1.18rem] lg:text-[1.35rem]">
+                    Kolmo
+                  </h1>
+                </div>
 
-                <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-                  <PrimaryButton href={TERMINAL_URL}>Open Terminal</PrimaryButton>
+                <div className="mt-14 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+                  <PrimaryButton href="#mission">Begin Scenario</PrimaryButton>
                   <a
-                    href={CALENDLY_URL}
+                    href={TERMINAL_URL}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex text-sm uppercase tracking-[0.16em] text-textSecondary transition hover:text-white"
                   >
-                    Contact
+                    Open Terminal
                   </a>
                 </div>
               </div>
 
-              <MinimalTerminalVisual />
+              <HeroSignalField />
             </div>
           </div>
         </section>
 
-        <section id="knowledge-web" className="mx-auto w-full max-w-[1280px] px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.65fr)_minmax(0,1.35fr)] lg:items-center lg:gap-16">
-            <div className="space-y-8">
+        <section id="mission" className="mx-auto w-full max-w-[1280px] px-5 pb-20 pt-12 sm:px-6 lg:px-8 lg:pb-28 lg:pt-16">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-center lg:gap-16">
+            <div>
               <SectionHeading
-                title="Open Market Graph"
-                body="Kolmo maps how energy variables move together."
+                eyebrow="01 / The Shock"
+                title={
+                  <>
+                    A ROUTE
+                    <br />
+                    GOES HOT
+                  </>
+                }
+                body="It starts as a line in the feed, then the waterway goes quiet. Tankers slow, insurance widens, and the first prices move before anyone has agreed on the story."
               />
 
-              <div className="grid gap-4">
-                {overviewCards.map((card) => (
-                  <OverviewCard key={card.title} title={card.title} />
+              <p className="mt-7 max-w-xl text-base leading-8 text-textSecondary">
+                The desk can feel the shock before it can name it. Kolmo begins tracing the route from headline to exposure.
+              </p>
+            </div>
+
+            <MissionDispatchPanel />
+          </div>
+        </section>
+
+        <section id="command" className="border-y border-white/8 bg-[rgba(255,255,255,0.015)]">
+          <div className="mx-auto grid w-full max-w-[1280px] gap-10 px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
+            <SectionHeading
+              eyebrow="02 / Agents Catch It"
+              title={
+                <>
+                  THE SIGNAL
+                  <br />
+                  IS CAUGHT
+                </>
+              }
+              body="The first answer is not a dashboard. It is a question whispered into the system: what just broke, where does it travel, and what in the book is now carrying that risk?"
+            />
+
+            <CommandBriefPanel />
+          </div>
+        </section>
+
+        <section id="graph" className="mx-auto w-full max-w-[1280px] px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,1.26fr)] lg:items-start lg:gap-16">
+            <div className="grid gap-8">
+              <SectionHeading
+                eyebrow="03 / Open Market Graph"
+                title={
+                  <>
+                    THE GRAPH
+                    <br />
+                    LIGHTS UP
+                  </>
+                }
+                body="One node turns into a path. Shipping lanes pull on freight, freight pulls on crude structure, crude pulls on gasoline cracks, and the chain finds its way back to exposure."
+              />
+              <div className="hidden gap-8 lg:grid">
+                <RiskPathPanel />
+                <OpenSourceCallout stars={githubStars} />
+              </div>
+            </div>
+
+            <div className="grid gap-6">
+              <NetworkVisual activeShock={activeShock} isCompact={isCompactViewport} onShockChange={setActiveShock} />
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {missionMetrics.map((metric) => (
+                  <MissionMetric key={metric.label} value={metric.value} label={metric.label} />
                 ))}
               </div>
+            </div>
 
+            <div className="grid gap-8 lg:hidden">
+              <RiskPathPanel />
               <OpenSourceCallout stars={githubStars} />
             </div>
-
-            <KnowledgeGraphVisual />
           </div>
         </section>
 
-        <section id="contribute" className="mx-auto w-full max-w-[1280px] px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,1.26fr)] lg:items-start lg:gap-16">
-            <div className="max-w-xl">
+        <section id="simulation" className="border-y border-white/8 bg-[rgba(255,255,255,0.015)]">
+          <div className="mx-auto grid w-full max-w-[1280px] gap-10 px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
+            <SectionHeading
+              eyebrow="04 / Agent Simulations"
+              title={
+                <>
+                  ACTIONS
+                  <br />
+                  ARE TESTED
+                </>
+              }
+              body="Kolmo runs branches before the desk commits: hedge the crude tail, rebalance gasoline exposure, refresh the correlation matrix, and compare the shock against past regimes."
+            />
+
+            <SimulationPanel />
+          </div>
+        </section>
+
+        <section id="system" className="border-y border-white/8 bg-[rgba(255,255,255,0.015)]">
+          <div className="mx-auto grid w-full max-w-[1280px] gap-10 px-5 py-20 sm:px-6 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.24fr)] lg:px-8 lg:py-28 lg:items-start lg:gap-16">
+            <div className="grid gap-8">
               <SectionHeading
-                title="Contribute"
+                eyebrow="05 / The System"
+                title={
+                  <>
+                    YOU CHOOSE
+                    <br />
+                    THE MOVE
+                  </>
+                }
+                body="Kolmo is built for moments when an energy-market shock moves faster than the memo. Agents monitor, graph relationships, simulate responses, and produce a traceable desk brief."
               />
-
-              <div className="mt-8">
-                <PrimaryButton href={GITHUB_REPO_URL}>Contribute on GitHub</PrimaryButton>
-              </div>
+              <SystemPrinciples />
             </div>
 
-            <div className="grid gap-0 border-b border-white/10">
-              {contributionSteps.map((item, index) => (
-                <ContributionStep key={item.title} title={item.title} index={index} />
-              ))}
-            </div>
+            <MinimalTerminalVisual compact />
           </div>
         </section>
 
-        <section id="use-cases" className="mx-auto w-full max-w-[1280px] px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <section id="access" className="mx-auto w-full max-w-[1280px] px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <AccessPanel onNewsletter={openNewsletter} />
+        </section>
+
+        <section className="mx-auto w-full max-w-[1280px] px-5 pb-20 sm:px-6 lg:px-8">
           <div className="border-y border-white/10 py-8">
             <div className="flex justify-center">
               <AudienceStrip />
             </div>
           </div>
         </section>
-
-        <section id="how-it-works" className="mx-auto w-full max-w-[900px] px-5 py-20 text-center sm:px-6 lg:px-8 lg:py-28">
-          <SectionHeading title="How it works" align="center" />
-
-          <div className="mx-auto mt-12 max-w-[44rem] divide-y divide-white/10 border-y border-white/10">
-            {workflowSteps.map((item) => (
-              <WorkflowCard key={item.title} title={item.title} />
-            ))}
-          </div>
-
-          <div className="mt-10 flex justify-center">
-            <PrimaryButton href={TERMINAL_URL}>Open Terminal</PrimaryButton>
-          </div>
-        </section>
       </main>
+      )}
 
       <footer className="border-t border-white/10 bg-[rgba(5,9,14,0.86)]">
         <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-5 px-5 py-8 text-sm text-[rgba(214,226,240,0.72)] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
@@ -1552,8 +2152,11 @@ export default function App() {
             <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">
               GitHub
             </a>
-            <a href="/stats-api/" className="transition hover:text-white">
+            <a href={STATS_API_URL} className="transition hover:text-white">
               API
+            </a>
+            <a href="/blog" className="transition hover:text-white">
+              Blog
             </a>
             <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">
               Contact
