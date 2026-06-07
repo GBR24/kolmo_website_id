@@ -182,12 +182,6 @@ const systemPrinciples = [
   },
 ];
 
-const accessRows = [
-  { label: "Pilot scenario", detail: "Energy shock workflow" },
-  { label: "Live terminal", detail: "Kolmo walkthrough" },
-  { label: "Open graph", detail: "Contribution path" },
-];
-
 const networkNodes = [
   { label: "Middle East Risk", x: 145, y: 170, dx: -58, dy: -50, mobileDx: -46, mobileDy: 14, size: "large" },
   { label: "Shipping Lanes", x: 350, y: 185, dx: -44, dy: -54, mobileDx: -48, mobileDy: 14 },
@@ -413,6 +407,14 @@ function useDepthMotion() {
   return panelRef;
 }
 
+function ScrollReveal({ children, className = "", delay = 0, as: Component = "div" }) {
+  return (
+    <Component className={`scroll-reveal ${className}`} style={{ "--reveal-delay": `${delay}ms` }}>
+      {children}
+    </Component>
+  );
+}
+
 function NewsletterEmbed({ compact = false }) {
   return (
     <iframe
@@ -472,21 +474,6 @@ function SectionHeading({ eyebrow, title, body, align = "left" }) {
       ) : null}
       {body ? <p className="text-pretty text-base leading-8 text-textSecondary sm:text-[1.02rem]">{body}</p> : null}
     </div>
-  );
-}
-
-function PrimaryButton({ children, href = CALENDLY_URL }) {
-  const isExternal = href.startsWith("http");
-
-  return (
-    <a
-      href={href}
-      target={isExternal ? "_blank" : undefined}
-      rel={isExternal ? "noreferrer" : undefined}
-      className="inline-flex items-center justify-center rounded-full border border-[#4da3ff]/35 bg-[#4da3ff]/10 px-6 py-3 text-sm font-medium uppercase tracking-[0.14em] text-textPrimary transition duration-300 hover:border-[#4da3ff]/60 hover:bg-[#4da3ff]/16"
-    >
-      {children}
-    </a>
   );
 }
 
@@ -612,9 +599,6 @@ function RiskPathPanel() {
         ))}
       </div>
 
-      <p className="mt-7 text-xl leading-tight text-textPrimary sm:text-2xl">
-        Route-risk premium is moving freight first, then feeding Brent structure, gasoline cracks, and book exposure.
-      </p>
     </div>
   );
 }
@@ -630,7 +614,7 @@ function MissionMetric({ value, label }) {
 
 function SystemPrinciples() {
   return (
-    <div className="divide-y divide-white/10 border-y border-white/10">
+    <div className="divide-y divide-white/10">
       {systemPrinciples.map((principle) => (
         <article key={principle.lead} className="grid gap-3 py-6 sm:grid-cols-[2.5rem_1fr]">
           <div className="text-xl text-[#4da3ff]">-&gt;</div>
@@ -640,44 +624,6 @@ function SystemPrinciples() {
           </div>
         </article>
       ))}
-    </div>
-  );
-}
-
-function AccessPanel({ onNewsletter }) {
-  return (
-    <div className="grid gap-10 rounded-lg border border-white/10 bg-[rgba(4,7,10,0.84)] p-5 shadow-panel sm:p-7 lg:grid-cols-[0.85fr_1.15fr] lg:p-8">
-      <div>
-        <div className="text-[0.68rem] uppercase tracking-[0.24em] text-textSecondary">Request access</div>
-        <h2 className="mt-4 max-w-[12ch] font-serif-display text-4xl leading-[0.95] text-textPrimary sm:text-5xl">
-          Join the energy room.
-        </h2>
-        <p className="mt-5 max-w-md text-base leading-8 text-textSecondary">
-          Kolmo is being built with traders, analysts, and risk teams who need traceable reads when energy-market causality gets messy.
-        </p>
-      </div>
-
-      <div className="flex flex-col justify-between gap-7">
-        <div className="border-y border-white/10">
-          {accessRows.map((row) => (
-            <div key={row.label} className="flex items-center justify-between gap-4 border-b border-white/8 py-4 last:border-b-0">
-              <span className="text-sm uppercase tracking-[0.16em] text-textSecondary">{row.label}</span>
-              <span className="text-right text-sm text-textPrimary/60">{row.detail}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-          <PrimaryButton href={CALENDLY_URL}>Request Access</PrimaryButton>
-          <button
-            type="button"
-            onClick={onNewsletter}
-            className="inline-flex text-sm uppercase tracking-[0.16em] text-textSecondary transition hover:text-white"
-          >
-            Subscribe to notes
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
@@ -1205,6 +1151,43 @@ function HeroSignalField() {
   );
 }
 
+function HeroBrandMark() {
+  return (
+    <div className="hero-brand-lockup">
+      <div className="hero-brand-core" aria-hidden="true">
+        <svg className="hero-brand-core__field" viewBox="0 0 512 512" fill="none">
+          <defs>
+            <linearGradient id="kolmoHeroBlue" x1="64" y1="68" x2="448" y2="444" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#EDF3F8" stopOpacity="0.84" />
+              <stop offset="0.42" stopColor="#4DA3FF" stopOpacity="0.72" />
+              <stop offset="1" stopColor="#D29922" stopOpacity="0.5" />
+            </linearGradient>
+            <linearGradient id="kolmoHeroQuiet" x1="102" y1="78" x2="410" y2="430" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#EDF3F8" stopOpacity="0.5" />
+              <stop offset="1" stopColor="#4DA3FF" stopOpacity="0.12" />
+            </linearGradient>
+          </defs>
+
+          <path className="hero-brand-core__trace hero-brand-core__trace--outer" d="M256 28L454 142V370L256 484L58 370V142L256 28Z" stroke="url(#kolmoHeroBlue)" />
+          <path className="hero-brand-core__trace hero-brand-core__trace--middle" d="M256 74L414 165V347L256 438L98 347V165L256 74Z" stroke="url(#kolmoHeroQuiet)" />
+          <path className="hero-brand-core__trace hero-brand-core__trace--inner" d="M256 132L364 194V318L256 380L148 318V194L256 132Z" stroke="#EDF3F8" />
+          <path className="hero-brand-core__link hero-brand-core__link--one" d="M128 302C174 266 215 248 256 248C304 248 342 221 384 168" />
+          <path className="hero-brand-core__link hero-brand-core__link--two" d="M152 172C194 204 226 232 248 256C278 289 315 312 366 326" />
+          <circle className="hero-brand-core__node hero-brand-core__node--one" cx="128" cy="302" r="4" />
+          <circle className="hero-brand-core__node hero-brand-core__node--two" cx="384" cy="168" r="4" />
+          <circle className="hero-brand-core__node hero-brand-core__node--three" cx="366" cy="326" r="3.5" />
+        </svg>
+
+        <div className="hero-brand-core__plate">
+          <img src={kolmoMark} alt="" className="hero-brand-core__mark" />
+        </div>
+      </div>
+
+      <h1 className="hero-brand-lockup__name">Kolmo</h1>
+    </div>
+  );
+}
+
 function ShowcaseCarousel({ onSlideChange = () => {} }) {
   const panelRef = useDepthMotion();
   const scrollerRef = useRef(null);
@@ -1534,9 +1517,6 @@ function SimulationPanel() {
             ))}
           </div>
 
-          <p className="mt-6 text-base leading-8 text-textSecondary">
-            Kolmo shows what changed, which relationships explain it, and which suggested moves depend on the same causal path.
-          </p>
         </div>
       </div>
     </div>
@@ -1611,7 +1591,7 @@ function WorkflowCard({ title }) {
 
 function AudienceStrip() {
   return (
-    <div className="flex flex-wrap gap-2.5">
+    <div className="flex flex-wrap justify-center gap-2.5">
       {audienceGroups.map((group) => (
         <span
           key={group}
@@ -1644,8 +1624,8 @@ function FaqItem({ question, answer }) {
 
 function BlogPage({ onNewsletter }) {
   return (
-    <main id="top">
-      <section className="hero-stage relative overflow-hidden border-b border-white/8">
+    <main id="top" className="story-page">
+      <section className="hero-stage relative overflow-hidden">
         <div className="mx-auto grid w-full max-w-[1280px] gap-12 px-5 py-20 sm:px-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:px-8 lg:py-28 lg:items-center lg:gap-16">
           <HeroAtmosphere />
           <div className="relative">
@@ -1722,7 +1702,7 @@ function BlogPage({ onNewsletter }) {
           />
         </div>
 
-        <div className="divide-y divide-white/10 border-y border-white/10">
+        <div className="divide-y divide-white/10">
           {blogResearchTracks.map((track, index) => (
             <article key={track.title} className="grid gap-4 py-7 sm:grid-cols-[5rem_1fr]">
               <div className="text-[0.62rem] uppercase tracking-[0.22em] text-[#d29922]">0{index + 1}</div>
@@ -1735,7 +1715,7 @@ function BlogPage({ onNewsletter }) {
         </div>
       </section>
 
-      <section className="border-y border-white/8 bg-[rgba(255,255,255,0.015)]">
+      <section className="bg-[rgba(255,255,255,0.015)]">
         <div className="mx-auto grid w-full max-w-[1280px] gap-10 px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
           <SectionHeading
             eyebrow="Publication Queue"
@@ -1767,7 +1747,7 @@ function BlogPage({ onNewsletter }) {
       </section>
 
       <section className="mx-auto w-full max-w-[1280px] px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <div className="grid gap-10 border-y border-white/10 py-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+        <div className="grid gap-10 py-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>
             <div className="text-[0.68rem] uppercase tracking-[0.24em] text-textSecondary">Research updates</div>
             <h2 className="mt-4 max-w-[14ch] font-serif-display text-4xl uppercase leading-[0.95] text-textPrimary sm:text-5xl">
@@ -1906,6 +1886,44 @@ export default function App() {
     return () => mediaQuery.removeListener(updateCompactViewport);
   }, []);
 
+  useEffect(() => {
+    if (typeof document === "undefined" || typeof window === "undefined") {
+      return undefined;
+    }
+
+    const revealNodes = Array.from(document.querySelectorAll(".scroll-reveal"));
+
+    if (!revealNodes.length) {
+      return undefined;
+    }
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
+      revealNodes.forEach((node) => node.classList.add("is-visible"));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        rootMargin: "0px 0px -12% 0px",
+        threshold: 0.16,
+      }
+    );
+
+    revealNodes.forEach((node) => observer.observe(node));
+
+    return () => observer.disconnect();
+  }, [isBlogPage]);
+
   const openNewsletter = () => {
     setIsNewsletterOpen(true);
   };
@@ -1949,11 +1967,11 @@ export default function App() {
           </a>
 
           <nav className="hidden items-center gap-6 text-[0.74rem] uppercase tracking-[0.2em] text-[rgba(214,226,240,0.82)] lg:flex">
-            <a href={STATS_API_URL} className="transition hover:text-white">
-              API
-            </a>
             <a href={TERMINAL_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">
               Terminal
+            </a>
+            <a href={STATS_API_URL} className="transition hover:text-white">
+              API
             </a>
             <a href="/blog" className={`transition hover:text-white ${isBlogPage ? "text-white" : ""}`}>
               Blog
@@ -1963,8 +1981,10 @@ export default function App() {
           <div className="hidden items-center gap-3 sm:flex">
             <GitHubStarsLink stars={githubStars} />
             <a
-              href={isBlogPage ? "/#access" : "#access"}
-              className="inline-flex rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-[rgba(214,226,240,0.9)] transition hover:border-[#4da3ff]/40 hover:bg-white/[0.08] hover:text-white sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex rounded-full border border-[#4da3ff]/70 bg-[#4da3ff] px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#06111a] shadow-[0_0_28px_rgba(77,163,255,0.22)] transition hover:border-[#8fc6ff] hover:bg-[#78bdff] sm:px-4 sm:text-[0.72rem] sm:tracking-[0.18em]"
             >
               Request Access
             </a>
@@ -1975,41 +1995,26 @@ export default function App() {
       {isBlogPage ? (
         <BlogPage onNewsletter={openNewsletter} />
       ) : (
-      <main id="top">
-        <section className="hero-stage relative overflow-hidden border-b border-white/8">
-          <div className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-12 sm:px-6 lg:px-8 lg:pb-20 lg:pt-16">
+      <main id="top" className="story-page">
+        <section className="hero-stage story-section story-section--hero relative overflow-hidden">
+          <div className="story-section__inner story-section__inner--hero">
             <HeroAtmosphere />
 
             <div className="relative mx-auto grid w-full max-w-[1280px] gap-12 lg:min-h-[34rem] lg:grid-cols-[minmax(0,0.76fr)_minmax(440px,1.24fr)] lg:items-center lg:gap-20 lg:pt-4">
-              <div className="w-full min-w-0 max-w-[40rem]">
-                <div className="inline-flex flex-col items-center gap-4">
-                  <img src={kolmoMark} alt="" className="h-28 w-28 opacity-95 sm:h-36 sm:w-36 lg:h-44 lg:w-44" />
-                  <h1 className="pl-[0.48em] text-[1rem] font-semibold uppercase tracking-[0.48em] text-textPrimary sm:text-[1.18rem] lg:text-[1.35rem]">
-                    Kolmo
-                  </h1>
-                </div>
+              <ScrollReveal className="w-full min-w-0 max-w-[40rem]">
+                <HeroBrandMark />
+              </ScrollReveal>
 
-                <div className="mt-14 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-                  <PrimaryButton href="#mission">Begin Scenario</PrimaryButton>
-                  <a
-                    href={TERMINAL_URL}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex text-sm uppercase tracking-[0.16em] text-textSecondary transition hover:text-white"
-                  >
-                    Open Terminal
-                  </a>
-                </div>
-              </div>
-
-              <HeroSignalField />
+              <ScrollReveal delay={140}>
+                <HeroSignalField />
+              </ScrollReveal>
             </div>
           </div>
         </section>
 
-        <section id="mission" className="mx-auto w-full max-w-[1280px] px-5 pb-20 pt-12 sm:px-6 lg:px-8 lg:pb-28 lg:pt-16">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-center lg:gap-16">
-            <div>
+        <section id="mission" className="story-section story-section--mission">
+          <div className="story-section__inner grid gap-14 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-center lg:gap-[4.5rem]">
+            <ScrollReveal>
               <SectionHeading
                 eyebrow="01 / The Shock"
                 title={
@@ -2025,33 +2030,40 @@ export default function App() {
               <p className="mt-7 max-w-xl text-base leading-8 text-textSecondary">
                 The desk can feel the shock before it can name it. Kolmo begins tracing the route from headline to exposure.
               </p>
-            </div>
+            </ScrollReveal>
 
-            <MissionDispatchPanel />
+            <ScrollReveal delay={150}>
+              <MissionDispatchPanel />
+            </ScrollReveal>
           </div>
         </section>
 
-        <section id="command" className="border-y border-white/8 bg-[rgba(255,255,255,0.015)]">
-          <div className="mx-auto grid w-full max-w-[1280px] gap-10 px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
-            <SectionHeading
-              eyebrow="02 / Agents Catch It"
-              title={
-                <>
-                  THE SIGNAL
-                  <br />
-                  IS CAUGHT
-                </>
-              }
-              body="The first answer is not a dashboard. It is a question whispered into the system: what just broke, where does it travel, and what in the book is now carrying that risk?"
-            />
+        <section id="command" className="story-section story-section--command">
+          <div className="story-section__inner grid gap-12">
+            <ScrollReveal>
+              <SectionHeading
+                eyebrow="02 / Agents Catch It"
+                title={
+                  <>
+                    THE SIGNAL
+                    <br />
+                    IS CAUGHT
+                  </>
+                }
+                body="The first answer is not a dashboard. It is a question whispered into the system: what just broke, where does it travel, and what in the book is now carrying that risk?"
+              />
+            </ScrollReveal>
 
-            <CommandBriefPanel />
+            <ScrollReveal delay={150}>
+              <CommandBriefPanel />
+            </ScrollReveal>
           </div>
         </section>
 
-        <section id="graph" className="mx-auto w-full max-w-[1280px] px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,1.26fr)] lg:items-start lg:gap-16">
-            <div className="grid gap-8">
+        <section id="graph" className="story-section story-section--graph">
+          <div className="story-section__inner grid gap-14 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,1.26fr)] lg:items-start lg:gap-[4.5rem]">
+            <div className="grid gap-10">
+              <ScrollReveal>
               <SectionHeading
                 eyebrow="03 / Open Market Graph"
                 title={
@@ -2061,84 +2073,102 @@ export default function App() {
                     LIGHTS UP
                   </>
                 }
-                body="One node turns into a path. Shipping lanes pull on freight, freight pulls on crude structure, crude pulls on gasoline cracks, and the chain finds its way back to exposure."
               />
+              </ScrollReveal>
               <div className="hidden gap-8 lg:grid">
-                <RiskPathPanel />
-                <OpenSourceCallout stars={githubStars} />
+                <ScrollReveal delay={120}>
+                  <RiskPathPanel />
+                </ScrollReveal>
+                <ScrollReveal delay={220}>
+                  <OpenSourceCallout stars={githubStars} />
+                </ScrollReveal>
               </div>
             </div>
 
             <div className="grid gap-6">
-              <NetworkVisual activeShock={activeShock} isCompact={isCompactViewport} onShockChange={setActiveShock} />
+              <ScrollReveal delay={150}>
+                <NetworkVisual activeShock={activeShock} isCompact={isCompactViewport} onShockChange={setActiveShock} />
+              </ScrollReveal>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {missionMetrics.map((metric) => (
-                  <MissionMetric key={metric.label} value={metric.value} label={metric.label} />
+                {missionMetrics.map((metric, index) => (
+                  <ScrollReveal key={metric.label} delay={220 + index * 80}>
+                    <MissionMetric value={metric.value} label={metric.label} />
+                  </ScrollReveal>
                 ))}
               </div>
             </div>
 
             <div className="grid gap-8 lg:hidden">
-              <RiskPathPanel />
-              <OpenSourceCallout stars={githubStars} />
+              <ScrollReveal delay={120}>
+                <RiskPathPanel />
+              </ScrollReveal>
+              <ScrollReveal delay={220}>
+                <OpenSourceCallout stars={githubStars} />
+              </ScrollReveal>
             </div>
           </div>
         </section>
 
-        <section id="simulation" className="border-y border-white/8 bg-[rgba(255,255,255,0.015)]">
-          <div className="mx-auto grid w-full max-w-[1280px] gap-10 px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
-            <SectionHeading
-              eyebrow="04 / Agent Simulations"
-              title={
-                <>
-                  ACTIONS
-                  <br />
-                  ARE TESTED
-                </>
-              }
-              body="Kolmo runs branches before the desk commits: hedge the crude tail, rebalance gasoline exposure, refresh the correlation matrix, and compare the shock against past regimes."
-            />
-
-            <SimulationPanel />
-          </div>
-        </section>
-
-        <section id="system" className="border-y border-white/8 bg-[rgba(255,255,255,0.015)]">
-          <div className="mx-auto grid w-full max-w-[1280px] gap-10 px-5 py-20 sm:px-6 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.24fr)] lg:px-8 lg:py-28 lg:items-start lg:gap-16">
-            <div className="grid gap-8">
+        <section id="simulation" className="story-section story-section--simulation">
+          <div className="story-section__inner grid gap-12">
+            <ScrollReveal>
               <SectionHeading
-                eyebrow="05 / The System"
+                eyebrow="04 / Agent Simulations"
                 title={
                   <>
-                    YOU CHOOSE
+                    ACTIONS
                     <br />
-                    THE MOVE
+                    ARE TESTED
                   </>
                 }
-                body="Kolmo is built for moments when an energy-market shock moves faster than the memo. Agents monitor, graph relationships, simulate responses, and produce a traceable desk brief."
               />
-              <SystemPrinciples />
-            </div>
+            </ScrollReveal>
 
-            <MinimalTerminalVisual compact />
+            <ScrollReveal delay={150}>
+              <SimulationPanel />
+            </ScrollReveal>
           </div>
         </section>
 
-        <section id="access" className="mx-auto w-full max-w-[1280px] px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <AccessPanel onNewsletter={openNewsletter} />
+        <section id="system" className="story-section story-section--system">
+          <div className="story-section__inner grid gap-14 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.24fr)] lg:items-start lg:gap-[4.5rem]">
+            <div className="grid gap-8">
+              <ScrollReveal>
+                <SectionHeading
+                  eyebrow="05 / The System"
+                  title={
+                    <>
+                      YOU CHOOSE
+                      <br />
+                      THE MOVE
+                    </>
+                  }
+                  body="Kolmo is built for moments when an energy-market shock moves faster than the memo. Agents monitor, graph relationships, simulate responses, and produce a traceable desk brief."
+                />
+              </ScrollReveal>
+              <ScrollReveal delay={140}>
+                <SystemPrinciples />
+              </ScrollReveal>
+            </div>
+
+            <ScrollReveal delay={180}>
+              <MinimalTerminalVisual compact />
+            </ScrollReveal>
+          </div>
         </section>
 
-        <section className="mx-auto w-full max-w-[1280px] px-5 pb-20 sm:px-6 lg:px-8">
-          <div className="border-y border-white/10 py-8">
-            <div className="flex justify-center">
+        <section className="story-section story-section--audience">
+          <div className="story-section__inner story-section__inner--compact">
+            <ScrollReveal>
               <AudienceStrip />
-            </div>
+            </ScrollReveal>
           </div>
         </section>
+
       </main>
       )}
 
-      <footer className="border-t border-white/10 bg-[rgba(5,9,14,0.86)]">
+      <footer className="site-footer">
         <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-5 px-5 py-8 text-sm text-[rgba(214,226,240,0.72)] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <div className="flex items-center gap-3 tracking-[0.28em] text-textPrimary">
             <img src={kolmoMark} alt="" className="h-5 w-5 opacity-90" />
