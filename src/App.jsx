@@ -10,6 +10,22 @@ const TERMINAL_URL = "https://kolmo.netlify.app/terminal";
 const GITHUB_REPO_URL = "https://github.com/GBR24/kolmo_stats";
 const GITHUB_REPO_API_URL = "https://api.github.com/repos/GBR24/kolmo_stats";
 const STATS_API_URL = "/stats-api/index.html";
+const HOME_PAGE_URL = "https://kolmolabs.com/";
+const BLOG_PAGE_URL = "https://kolmolabs.com/blog";
+
+const pageMeta = {
+  home: {
+    title: "Kolmo Labs | AI for Energy Risk",
+    description: "Kolmo Labs builds AI for energy risk: an open-source knowledge web and live terminal for tracing market shocks.",
+    url: HOME_PAGE_URL,
+  },
+  blog: {
+    title: "Kolmo Research | Energy Market Notes",
+    description:
+      "Kolmo Research publishes energy market notes from research teams covering oil, gas, freight, products, market structure, and graph methods.",
+    url: BLOG_PAGE_URL,
+  },
+};
 
 const audienceTags = [
   "Traders",
@@ -268,52 +284,91 @@ const correlationMatrix = [
 const blogResearchTracks = [
   {
     title: "Market Structure",
-    body: "Research notes on how crude, products, freight, storage, and policy relationships shift during stress.",
+    kicker: "Oil, gas, products, freight",
+    body: "Notes on how crude, products, gas, freight, storage, and policy relationships shift when the market is under stress.",
   },
   {
     title: "Graph Methods",
-    body: "How Kolmo maps causal paths, open relationships, analogues, and correlation changes across energy markets.",
+    kicker: "Causality, analogues, confidence",
+    body: "How research teams can map causal paths, open relationships, analogues, confidence, and correlation changes across energy markets.",
   },
   {
     title: "Desk Workflows",
-    body: "Practical notes on turning event risk into hedges, rebalances, and concise risk reads.",
+    kicker: "Briefs, hedges, rebalances",
+    body: "Practical writing on turning event risk into monitor lists, hedge ideas, rebalances, and concise desk-ready risk reads.",
+  },
+  {
+    title: "Research Builds",
+    kicker: "Datasets, tools, product notes",
+    body: "Short updates from the Kolmo team on datasets, graph primitives, terminal workflows, and what is moving from research into product.",
   },
 ];
 
 const featuredResearchNote = {
-  eyebrow: "Featured research",
+  eyebrow: "Featured series",
   title: "Mapping energy shocks from first headline to portfolio exposure",
-  dek: "A working research series on how market structure, graph relationships, and desk workflows can be joined into one traceable view of risk.",
+  dek: "A working series for research teams: how to connect market structure, graph relationships, and desk workflows into one traceable view of risk.",
   meta: "Series opening soon",
+  owner: "Kolmo Research",
+  cadence: "Briefs, maps, and methods notes",
 };
 
-const blogTopics = ["Oil", "Gas", "Freight", "Products", "Storage", "Refining", "Policy", "Graph Methods"];
+const blogTopics = ["Oil", "Gas", "Freight", "Products", "Storage", "Refining", "Policy", "Graph Methods", "Desk Briefs"];
 
-const researchQueue = [
+const researchArticles = [
   {
     title: "How route risk becomes a Brent and gasoline problem",
     type: "Market map",
+    team: "Market Structure",
     date: "Upcoming",
     body: "A practical walkthrough of how shipping lanes, freight, insurance, and cracks can form one risk path.",
+    tags: ["Freight", "Brent", "Products"],
   },
   {
     title: "Building an open graph for energy market relationships",
     type: "Methods",
+    team: "Graph Methods",
     date: "Upcoming",
     body: "Notes on relationship primitives, confidence, directionality, analogues, and how contributors can inspect the graph.",
+    tags: ["Graph", "Causality", "Open data"],
   },
   {
     title: "Correlation matrices during market stress",
     type: "Quant note",
+    team: "Quant Research",
     date: "Upcoming",
     body: "How Kolmo thinks about live shock windows, stale correlations, and when a desk should refresh assumptions.",
+    tags: ["Correlation", "Risk", "Scenarios"],
   },
   {
     title: "From trace to desk action",
     type: "Workflow",
+    team: "Desk Workflows",
     date: "Upcoming",
     body: "A template for turning event detection into hedge, rebalance, monitor, and brief outputs.",
+    tags: ["Briefs", "Hedges", "Operations"],
   },
+];
+
+const researchWorkflow = [
+  {
+    title: "Frame the market question",
+    body: "Start with the desk question, the variables involved, and the event path the team wants to make legible.",
+  },
+  {
+    title: "Attach evidence and graph context",
+    body: "Connect the note to charts, relationship maps, datasets, assumptions, and open questions that can be challenged.",
+  },
+  {
+    title: "Publish a reusable brief",
+    body: "Turn the research into an article format another analyst can scan, cite, and update as the market changes.",
+  },
+];
+
+const researchRoomStats = [
+  { value: "4", label: "Research tracks" },
+  { value: "8+", label: "Market topics" },
+  { value: "Team", label: "Bylines ready" },
 ];
 
 function useDepthMotion() {
@@ -475,6 +530,25 @@ function SectionHeading({ eyebrow, title, body, align = "left" }) {
       {body ? <p className="text-pretty text-base leading-8 text-textSecondary sm:text-[1.02rem]">{body}</p> : null}
     </div>
   );
+}
+
+function setMetaContent(selector, content) {
+  const element = document.querySelector(selector);
+
+  if (element) {
+    element.setAttribute("content", content);
+  }
+}
+
+function updateDocumentMeta(meta) {
+  document.title = meta.title;
+  setMetaContent('meta[name="description"]', meta.description);
+  setMetaContent('meta[property="og:url"]', meta.url);
+  setMetaContent('meta[property="og:title"]', meta.title);
+  setMetaContent('meta[property="og:description"]', meta.description);
+  setMetaContent('meta[name="twitter:title"]', meta.title);
+  setMetaContent('meta[name="twitter:description"]', meta.description);
+  document.querySelector('link[rel="canonical"]')?.setAttribute("href", meta.url);
 }
 
 function formatStarCount(stars) {
@@ -1622,24 +1696,69 @@ function FaqItem({ question, answer }) {
   );
 }
 
+function ResearchArticleCard({ article }) {
+  return (
+    <article className="group flex h-full flex-col justify-between bg-[rgba(4,7,10,0.88)] p-5 transition duration-300 hover:bg-[rgba(7,13,19,0.94)] sm:p-6">
+      <div>
+        <div className="flex flex-wrap items-center justify-between gap-3 text-[0.62rem] uppercase tracking-[0.2em] text-textSecondary">
+          <span>{article.type}</span>
+          <span className="text-[#d29922]">{article.date}</span>
+        </div>
+        <h2 className="mt-5 text-2xl font-medium leading-tight text-textPrimary">{article.title}</h2>
+        <p className="mt-4 text-sm leading-7 text-textSecondary sm:text-base sm:leading-8">{article.body}</p>
+      </div>
+
+      <div className="mt-7 grid gap-5">
+        <div className="flex flex-wrap gap-2">
+          {article.tags.map((tag) => (
+            <span key={tag} className="border border-white/10 bg-white/[0.025] px-2.5 py-1.5 text-[0.58rem] uppercase tracking-[0.14em] text-textSecondary">
+              {tag}
+            </span>
+          ))}
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/8 pt-4">
+          <span className="text-[0.64rem] uppercase tracking-[0.18em] text-textSecondary">{article.team}</span>
+          <span className="text-[0.64rem] uppercase tracking-[0.18em] text-[#4da3ff]">In queue</span>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function ResearchWorkflowStep({ step, index }) {
+  return (
+    <article className="border-t border-white/10 py-6">
+      <div className="text-[0.62rem] uppercase tracking-[0.22em] text-[#d29922]">0{index + 1}</div>
+      <h3 className="mt-3 text-xl font-medium text-textPrimary">{step.title}</h3>
+      <p className="mt-3 text-sm leading-7 text-textSecondary sm:text-base sm:leading-8">{step.body}</p>
+    </article>
+  );
+}
+
+function ResearchRoomMetric({ value, label }) {
+  return (
+    <div className="border-t border-white/10 pt-4">
+      <div className="font-mono text-3xl text-textPrimary">{value}</div>
+      <div className="mt-2 text-[0.62rem] uppercase tracking-[0.18em] text-textSecondary">{label}</div>
+    </div>
+  );
+}
+
 function BlogPage({ onNewsletter }) {
   return (
     <main id="top" className="story-page">
       <section className="hero-stage relative overflow-hidden">
-        <div className="mx-auto grid w-full max-w-[1280px] gap-12 px-5 py-20 sm:px-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:px-8 lg:py-28 lg:items-center lg:gap-16">
-          <HeroAtmosphere />
-          <div className="relative">
+        <HeroAtmosphere />
+        <div className="relative mx-auto grid w-full max-w-[1280px] gap-12 px-5 py-20 sm:px-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:items-center lg:gap-16 lg:px-8 lg:py-28">
+          <ScrollReveal className="relative">
             <div className="inline-flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.28em] text-textSecondary">
               <img src={kolmoMark} alt="" className="h-5 w-5 opacity-80" />
               <span>Kolmo Research</span>
             </div>
-            <h1 className="mt-7 max-w-[13ch] font-serif-display text-5xl uppercase leading-[0.92] text-textPrimary sm:text-7xl lg:text-[5.7rem]">
-              Field notes for energy risk.
+            <h1 className="mt-7 max-w-[12ch] font-serif-display text-5xl uppercase leading-[0.92] text-textPrimary sm:text-7xl lg:text-[5.7rem]">
+              Research for energy markets.
             </h1>
-            <p className="mt-7 max-w-[38rem] text-base leading-8 text-textSecondary sm:text-lg">
-              Research on oil, gas, freight, products, graph methods, market structure, and the workflows behind Kolmo.
-            </p>
-            <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:flex-wrap">
               <button
                 type="button"
                 onClick={onNewsletter}
@@ -1647,107 +1766,169 @@ function BlogPage({ onNewsletter }) {
               >
                 Subscribe
               </button>
+              <a href="#research-index" className="inline-flex text-sm uppercase tracking-[0.16em] text-textSecondary transition hover:text-white">
+                View research index
+              </a>
               <a href="/" className="inline-flex text-sm uppercase tracking-[0.16em] text-textSecondary transition hover:text-white">
-                Back to Kolmo
+                Kolmo home
               </a>
             </div>
-          </div>
+          </ScrollReveal>
 
-          <div className="relative">
+          <ScrollReveal delay={140} className="relative grid gap-5">
             <KnowledgeGraphVisual />
-          </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {researchRoomStats.map((metric) => (
+                <ResearchRoomMetric key={metric.label} value={metric.value} label={metric.label} />
+              ))}
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       <section className="mx-auto grid w-full max-w-[1280px] gap-8 px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-        <article className="relative overflow-hidden rounded-lg border border-white/10 bg-[rgba(4,7,10,0.84)] p-5 shadow-panel sm:p-7 lg:p-8">
+        <ScrollReveal as="article" className="relative overflow-hidden rounded-lg border border-white/10 bg-[rgba(4,7,10,0.84)] p-5 shadow-panel sm:p-7 lg:p-8">
           <div className="absolute inset-0 bg-[linear-gradient(118deg,transparent_8%,rgba(77,163,255,0.08)_44%,transparent_76%)]" />
-          <div className="relative grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-end">
+          <div className="relative grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
             <div>
               <div className="text-[0.68rem] uppercase tracking-[0.24em] text-[#4da3ff]">{featuredResearchNote.eyebrow}</div>
-              <h2 className="mt-5 max-w-[13ch] font-serif-display text-4xl uppercase leading-[0.94] text-textPrimary sm:text-5xl lg:text-[4.8rem]">
+              <h2 className="mt-5 max-w-[13ch] font-serif-display text-4xl uppercase leading-[0.94] text-textPrimary sm:text-5xl lg:text-[4.6rem]">
                 {featuredResearchNote.title}
               </h2>
             </div>
             <div className="grid gap-7">
               <p className="max-w-2xl text-base leading-8 text-textSecondary sm:text-lg">{featuredResearchNote.dek}</p>
+              <div className="grid gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10 sm:grid-cols-3">
+                {[
+                  ["Owner", featuredResearchNote.owner],
+                  ["Status", featuredResearchNote.meta],
+                  ["Format", featuredResearchNote.cadence],
+                ].map(([label, value]) => (
+                  <div key={label} className="bg-[rgba(4,7,10,0.86)] p-4">
+                    <div className="text-[0.58rem] uppercase tracking-[0.2em] text-textSecondary">{label}</div>
+                    <div className="mt-2 text-sm leading-6 text-textPrimary">{value}</div>
+                  </div>
+                ))}
+              </div>
               <div className="flex flex-wrap gap-2">
                 {blogTopics.map((topic) => (
                   <span
                     key={topic}
-                    className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-[0.62rem] uppercase tracking-[0.16em] text-textSecondary"
+                    className="border border-white/10 bg-white/[0.03] px-3 py-2 text-[0.62rem] uppercase tracking-[0.16em] text-textSecondary"
                   >
                     {topic}
                   </span>
                 ))}
               </div>
-              <div className="text-[0.68rem] uppercase tracking-[0.2em] text-[#d29922]">{featuredResearchNote.meta}</div>
             </div>
           </div>
-        </article>
+        </ScrollReveal>
       </section>
 
       <section className="mx-auto grid w-full max-w-[1280px] gap-12 px-5 py-20 sm:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:px-8 lg:py-28 lg:gap-16">
-        <div>
+        <ScrollReveal>
           <SectionHeading
             eyebrow="Research Tracks"
             title={
               <>
-                WHAT WE
-                <br />
-                WILL PUBLISH
+                <span className="block">WHAT THE{" "}</span>
+                <span className="block">TEAMS PUBLISH</span>
               </>
             }
-            body="The blog is a place for research notes, diagrams, market structure observations, and transparent thinking behind the product."
+            body="The blog is built for research notes, diagrams, market structure observations, and transparent thinking from the people building and using Kolmo."
           />
-        </div>
+        </ScrollReveal>
 
         <div className="divide-y divide-white/10">
           {blogResearchTracks.map((track, index) => (
-            <article key={track.title} className="grid gap-4 py-7 sm:grid-cols-[5rem_1fr]">
+            <ScrollReveal key={track.title} as="article" delay={index * 80} className="grid gap-4 py-7 sm:grid-cols-[5rem_1fr]">
               <div className="text-[0.62rem] uppercase tracking-[0.22em] text-[#d29922]">0{index + 1}</div>
               <div>
-                <h2 className="text-2xl font-medium text-textPrimary">{track.title}</h2>
+                <div className="text-[0.62rem] uppercase tracking-[0.18em] text-textSecondary">{track.kicker}</div>
+                <h2 className="mt-2 text-2xl font-medium text-textPrimary">{track.title}</h2>
                 <p className="mt-3 text-sm leading-7 text-textSecondary sm:text-base sm:leading-8">{track.body}</p>
               </div>
-            </article>
+            </ScrollReveal>
           ))}
         </div>
       </section>
 
-      <section className="bg-[rgba(255,255,255,0.015)]">
+      <section id="research-index" className="bg-[rgba(255,255,255,0.015)]">
         <div className="mx-auto grid w-full max-w-[1280px] gap-10 px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <SectionHeading
-            eyebrow="Publication Queue"
-            title={
-              <>
-                RESEARCH
-                <br />
-                INDEX
-              </>
-            }
-            body="The first notes will live here as soon as we publish. Each entry is organized by market question, method, and desk use."
-          />
+          <ScrollReveal>
+            <SectionHeading
+              eyebrow="Publication Queue"
+              title={
+                <>
+                  <span className="block">RESEARCH{" "}</span>
+                  <span className="block">INDEX</span>
+                </>
+              }
+              body="The first team articles will live here as soon as they publish. Each entry is organized by market question, authoring team, method, and desk use."
+            />
+          </ScrollReveal>
 
           <div className="grid gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10 shadow-panel lg:grid-cols-2">
-            {researchQueue.map((post) => (
-              <article key={post.title} className="bg-[rgba(4,7,10,0.88)] p-5 sm:p-6">
-                <div>
-                  <div className="flex flex-wrap items-center justify-between gap-3 text-[0.62rem] uppercase tracking-[0.2em] text-textSecondary">
-                    <span>{post.type}</span>
-                    <span className="text-[#d29922]">{post.date}</span>
-                  </div>
-                  <h2 className="mt-5 text-2xl font-medium leading-tight text-textPrimary">{post.title}</h2>
-                  <p className="mt-4 text-sm leading-7 text-textSecondary sm:text-base sm:leading-8">{post.body}</p>
-                </div>
-              </article>
+            {researchArticles.map((article, index) => (
+              <ScrollReveal key={article.title} delay={index * 70}>
+                <ResearchArticleCard article={article} />
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
+      <section className="mx-auto grid w-full max-w-[1280px] gap-12 px-5 py-20 sm:px-6 lg:grid-cols-[0.78fr_1.22fr] lg:px-8 lg:py-28 lg:gap-16">
+        <ScrollReveal>
+          <SectionHeading
+            eyebrow="For Research Teams"
+            title={
+              <>
+                <span className="block">A PLACE FOR{" "}</span>
+                <span className="block">TEAM NOTES</span>
+              </>
+            }
+            body="Kolmo Research is structured for analyst bylines, team-authored market maps, quant notes, and product-facing methods essays that can be expanded over time."
+          />
+          <div className="mt-9 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+            {researchRoomStats.map((metric) => (
+              <ResearchRoomMetric key={metric.label} value={metric.value} label={metric.label} />
+            ))}
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal delay={140} className="rounded-lg border border-white/10 bg-[rgba(4,7,10,0.84)] p-5 shadow-panel sm:p-6 lg:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-5 text-[0.64rem] uppercase tracking-[0.22em] text-textSecondary">
+            <span>Publication workflow</span>
+            <span className="text-[#4da3ff]">Ready for articles</span>
+          </div>
+          <div className="divide-y divide-white/10">
+            {researchWorkflow.map((step, index) => (
+              <ResearchWorkflowStep key={step.title} step={step} index={index} />
+            ))}
+          </div>
+          <div className="mt-3 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.06] px-6 py-3 text-sm uppercase tracking-[0.14em] text-textPrimary transition hover:border-white/18 hover:bg-white/[0.09]"
+            >
+              Talk to Kolmo
+            </a>
+            <button
+              type="button"
+              onClick={onNewsletter}
+              className="inline-flex text-sm uppercase tracking-[0.16em] text-textSecondary transition hover:text-white"
+            >
+              Subscribe for releases
+            </button>
+          </div>
+        </ScrollReveal>
+      </section>
+
       <section className="mx-auto w-full max-w-[1280px] px-5 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <div className="grid gap-10 py-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+        <ScrollReveal className="grid gap-10 py-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>
             <div className="text-[0.68rem] uppercase tracking-[0.24em] text-textSecondary">Research updates</div>
             <h2 className="mt-4 max-w-[14ch] font-serif-display text-4xl uppercase leading-[0.95] text-textPrimary sm:text-5xl">
@@ -1766,7 +1947,7 @@ function BlogPage({ onNewsletter }) {
               Subscribe
             </button>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
     </main>
   );
@@ -1837,7 +2018,7 @@ export default function App() {
       return;
     }
 
-    document.title = isBlogPage ? "Kolmo Research | Energy Market Notes" : "Kolmo Labs | AI for Energy Risk";
+    updateDocumentMeta(isBlogPage ? pageMeta.blog : pageMeta.home);
   }, [isBlogPage]);
 
   useEffect(() => {
