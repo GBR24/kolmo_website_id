@@ -81,14 +81,6 @@ a {
     opacity: 0.9;
   }
 
-  .showcase-scroller {
-    scrollbar-width: none;
-  }
-
-  .showcase-scroller::-webkit-scrollbar {
-    display: none;
-  }
-
   .story-page {
     background:
       linear-gradient(118deg, rgba(77, 163, 255, 0.045), transparent 28%, rgba(210, 153, 34, 0.032) 74%, transparent),
@@ -109,7 +101,7 @@ a {
   }
 
   .story-section + .story-section {
-    margin-top: clamp(-3.5rem, -4vw, -2rem);
+    margin-top: clamp(-2rem, -2.5vw, -1rem);
   }
 
   .story-section:not(.hero-stage)::after {
@@ -130,18 +122,18 @@ a {
     z-index: 1;
     width: min(100%, 1280px);
     margin-inline: auto;
-    padding: clamp(8.5rem, 14vw, 14rem) clamp(1.25rem, 3vw, 2rem);
+    padding: clamp(6rem, 9vw, 9rem) clamp(1.25rem, 3vw, 2rem);
   }
 
   .story-section__inner--hero {
     width: min(100%, 1440px);
-    padding-top: clamp(3.5rem, 6vw, 5.5rem);
-    padding-bottom: clamp(6rem, 9vw, 8.5rem);
+    padding-top: clamp(2.75rem, 4.5vw, 4rem);
+    padding-bottom: clamp(4.5rem, 7vw, 6.5rem);
   }
 
   .story-section__inner--compact {
-    padding-top: clamp(6rem, 9vw, 8rem);
-    padding-bottom: clamp(7rem, 10vw, 9rem);
+    padding-top: clamp(4.5rem, 6vw, 6rem);
+    padding-bottom: clamp(5rem, 7vw, 6.5rem);
   }
 
   .scroll-reveal {
@@ -288,7 +280,7 @@ a {
   .hero-brand-core {
     position: relative;
     display: grid;
-    width: clamp(16rem, 25.5vw, 24.5rem);
+    width: clamp(14rem, 21vw, 20rem);
     aspect-ratio: 1;
     place-items: center;
     animation: heroLogoFloat 9s ease-in-out infinite;
@@ -704,7 +696,8 @@ a {
   .hero-brand-core::before,
   .hero-brand-core__trace,
   .hero-brand-core__link,
-  .hero-brand-core__node {
+  .hero-brand-core__node,
+  .prompt-cursor {
     animation: none;
   }
 
@@ -713,6 +706,22 @@ a {
     transform: none;
     transition: none;
   }
+}
+
+@keyframes cursorBlink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.prompt-cursor {
+  display: inline-block;
+  animation: cursorBlink 1s steps(1) infinite;
 }
 
 @keyframes heroDrift {
