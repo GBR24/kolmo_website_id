@@ -88,7 +88,7 @@ export function Hero() {
       <div className="story-section__inner story-section__inner--hero">
         <HeroAtmosphere />
 
-        <div className="relative mx-auto grid w-full max-w-[1280px] gap-10 lg:min-h-[30rem] lg:grid-cols-[minmax(0,0.76fr)_minmax(440px,1.24fr)] lg:items-center lg:gap-16 lg:pt-2">
+        <div className="relative mx-auto grid w-full max-w-[1280px] gap-10 lg:min-h-[34rem] lg:grid-cols-[minmax(0,0.76fr)_minmax(440px,1.24fr)] lg:items-center lg:gap-16 lg:pt-2">
           <ScrollReveal className="w-full min-w-0 max-w-[40rem]">
             <HeroBrandMark />
           </ScrollReveal>

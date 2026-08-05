@@ -127,8 +127,8 @@ a {
 
   .story-section__inner--hero {
     width: min(100%, 1440px);
-    padding-top: clamp(2.75rem, 4.5vw, 4rem);
-    padding-bottom: clamp(4.5rem, 7vw, 6.5rem);
+    padding-top: clamp(3rem, 5vw, 4.5rem);
+    padding-bottom: clamp(5.5rem, 9vw, 8rem);
   }
 
   .story-section__inner--compact {
