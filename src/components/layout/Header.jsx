@@ -75,12 +75,7 @@ export function Header({ isBlogPage }) {
                   </button>
                 )}
                 <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 translate-y-2 border border-white/10 bg-[rgba(4,7,10,0.97)] p-3 opacity-0 shadow-[0_20px_60px_rgba(0,0,0,0.42)] backdrop-blur-xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                  {item.dropdownLabel ? (
-                    <div className="border-b border-white/8 px-3 pb-3 text-[0.58rem] tracking-[0.2em] text-textSecondary">
-                      {item.dropdownLabel}
-                    </div>
-                  ) : null}
-                  <div className="grid gap-1 pt-2">
+                  <div className="grid gap-1">
                     {item.dropdown.map((entry) => (
                       <span key={entry} className="px-3 py-2 text-[0.68rem] tracking-[0.14em] text-textPrimary">
                         {entry}

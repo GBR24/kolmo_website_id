@@ -28,6 +28,6 @@ export const navItems = [
   { label: "Product", href: "#product" },
   { label: "Agents", href: "#agents" },
   { label: "SIM", href: "#world-model" },
-  { label: "Audience", href: "#audience", dropdownLabel: "Built for", dropdown: audienceGroups },
-  { label: "Target", dropdownLabel: "Markets", dropdown: targetMarkets },
+  { label: "Audience", href: "#audience", dropdown: audienceGroups },
+  { label: "Target", dropdown: targetMarkets },
 ];
