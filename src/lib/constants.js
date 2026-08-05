@@ -20,11 +20,14 @@ export const pageMeta = {
   },
 };
 
+export const audienceGroups = ["Physical traders", "Risk teams", "Portfolio managers", "Commodity firms", "Banks", "Hedge funds"];
+
+export const targetMarkets = ["Crude", "Products", "LNG"];
+
 export const navItems = [
   { label: "Product", href: "#product" },
   { label: "Agents", href: "#agents" },
   { label: "SIM", href: "#world-model" },
-  { label: "Audience", href: "#audience" },
+  { label: "Audience", href: "#audience", dropdownLabel: "Built for", dropdown: audienceGroups },
+  { label: "Target", dropdownLabel: "Markets", dropdown: targetMarkets },
 ];
-
-export const audienceGroups = ["Physical traders", "Risk teams", "Portfolio managers", "Commodity firms", "Banks", "Hedge funds"];

@@ -48,11 +48,53 @@ export function Header({ isBlogPage }) {
         </a>
 
         <nav aria-label="Primary" className="hidden items-center gap-7 text-[0.74rem] uppercase tracking-[0.2em] text-[rgba(214,226,240,0.82)] lg:flex">
-          {navItems.map((item) => (
-            <a key={item.label} href={resolveHref(item.href)} className="transition hover:text-white">
-              {item.label}
-            </a>
-          ))}
+          {navItems.map((item) =>
+            item.dropdown ? (
+              <div key={item.label} className="group relative py-2">
+                {item.href ? (
+                  <a
+                    href={resolveHref(item.href)}
+                    aria-haspopup="true"
+                    className="inline-flex items-center gap-1.5 uppercase tracking-[0.2em] transition hover:text-white"
+                  >
+                    {item.label}
+                    <span aria-hidden="true" className="text-[0.58rem]">
+                      ⌄
+                    </span>
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    aria-haspopup="true"
+                    className="inline-flex items-center gap-1.5 uppercase tracking-[0.2em] transition hover:text-white"
+                  >
+                    {item.label}
+                    <span aria-hidden="true" className="text-[0.58rem]">
+                      ⌄
+                    </span>
+                  </button>
+                )}
+                <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 translate-y-2 border border-white/10 bg-[rgba(4,7,10,0.97)] p-3 opacity-0 shadow-[0_20px_60px_rgba(0,0,0,0.42)] backdrop-blur-xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                  {item.dropdownLabel ? (
+                    <div className="border-b border-white/8 px-3 pb-3 text-[0.58rem] tracking-[0.2em] text-textSecondary">
+                      {item.dropdownLabel}
+                    </div>
+                  ) : null}
+                  <div className="grid gap-1 pt-2">
+                    {item.dropdown.map((entry) => (
+                      <span key={entry} className="px-3 py-2 text-[0.68rem] tracking-[0.14em] text-textPrimary">
+                        {entry}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <a key={item.label} href={resolveHref(item.href)} className="transition hover:text-white">
+                {item.label}
+              </a>
+            )
+          )}
         </nav>
 
         <div className="flex items-center gap-3">
@@ -85,14 +127,28 @@ export function Header({ isBlogPage }) {
         <div id="mobile-nav-panel" className="border-t border-white/10 bg-[rgba(4,5,7,0.98)] px-5 py-5 lg:hidden">
           <nav aria-label="Mobile" className="grid gap-1">
             {navItems.map((item) => (
-              <a
-                key={item.label}
-                href={resolveHref(item.href)}
-                onClick={() => setIsMenuOpen(false)}
-                className="rounded px-2 py-3 text-sm uppercase tracking-[0.18em] text-textPrimary transition hover:bg-white/[0.05]"
-              >
-                {item.label}
-              </a>
+              <div key={item.label}>
+                {item.href ? (
+                  <a
+                    href={resolveHref(item.href)}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block rounded px-2 py-3 text-sm uppercase tracking-[0.18em] text-textPrimary transition hover:bg-white/[0.05]"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <div className="px-2 py-3 text-sm uppercase tracking-[0.18em] text-textPrimary">{item.label}</div>
+                )}
+                {item.dropdown ? (
+                  <div className="ml-2 grid gap-0.5 border-l border-white/10 py-1 pl-3">
+                    {item.dropdown.map((entry) => (
+                      <span key={entry} className="py-1 text-[0.72rem] uppercase tracking-[0.14em] text-textSecondary">
+                        {entry}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
             ))}
             <a
               href={STATS_API_URL}
