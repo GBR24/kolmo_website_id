@@ -24,7 +24,7 @@ export const navItems = [
   { label: "Product", href: "#product" },
   { label: "Agents", href: "#agents" },
   { label: "SIM", href: "#world-model" },
-  { label: "Who It's For", href: "#audience" },
+  { label: "Audience", href: "#audience" },
 ];
 
 export const audienceGroups = ["Physical traders", "Risk teams", "Portfolio managers", "Commodity firms", "Banks", "Hedge funds"];
