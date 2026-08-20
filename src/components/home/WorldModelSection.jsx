@@ -80,7 +80,7 @@ export function WorldModelSection() {
               <div className="flex shrink-0 flex-col items-center gap-2 px-2 py-4 lg:w-56 lg:py-0">
                 <div className="w-full rounded-lg border border-[#4da3ff]/45 bg-[rgba(77,163,255,0.08)] px-5 py-6 text-center shadow-[0_0_40px_rgba(77,163,255,0.12)]">
                   <div className="text-[0.6rem] uppercase tracking-[0.2em] text-[#4da3ff]">Energy World Model</div>
-                  <div className="mt-2 text-[0.72rem] leading-5 text-textSecondary">An evolving model of the global energy system — under active development</div>
+                  <div className="mt-2 text-[0.72rem] leading-5 text-textSecondary">An evolving model of the global energy system</div>
                 </div>
               </div>
 
