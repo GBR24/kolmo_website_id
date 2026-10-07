@@ -7,15 +7,15 @@ export const BLOG_PAGE_URL = "https://kolmolabs.com/blog";
 
 export const pageMeta = {
   home: {
-    title: "Kolmo — The AI Operating System for Energy Markets",
+    title: "Kolmo Labs — Simulating the Energy World",
     description:
-      "Kolmo connects market intelligence, portfolio risk, scenario simulation, hedging analysis, and specialist AI agents in one workspace for energy-market teams.",
+      "Simulation environments built for energy desks. Helping traders and analysts test decisions, reduce risk and uncover opportunities—from split-second execution to long-term portfolio strategy.",
     url: HOME_PAGE_URL,
   },
   blog: {
-    title: "Kolmo Research | Energy Market Notes",
+    title: "Kolmo Blog | Posts from the Team",
     description:
-      "Kolmo Research publishes energy market notes from research teams covering oil, gas, freight, products, market structure, and graph methods.",
+      "Future posts, ideas and updates from the Kolmo team.",
     url: BLOG_PAGE_URL,
   },
 };
