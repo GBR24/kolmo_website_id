@@ -1,19 +1,14 @@
 import { useEffect, useState } from "react";
 
 import { getAnalyticsConsent, initGoogleAnalytics, persistAnalyticsConsent } from "./analytics";
-import { NEWSLETTER_DISMISSED_KEY, pageMeta } from "./lib/constants";
+import { pageMeta } from "./lib/constants";
 
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
 import { CookieBanner } from "./components/layout/CookieBanner";
-import { NewsletterModal } from "./components/layout/NewsletterModal";
 
 import { Hero } from "./components/home/Hero";
-import { WorkflowSection } from "./components/home/WorkflowSection";
-import { CapabilitiesSection } from "./components/home/CapabilitiesSection";
-import { AgentsSection } from "./components/home/AgentsSection";
-import { WorldModelSection } from "./components/home/WorldModelSection";
-import { AudienceSection } from "./components/home/AudienceSection";
+import { ThesisSection } from "./components/home/ThesisSection";
 
 import { BlogPage } from "./components/blog/BlogPage";
 
@@ -38,22 +33,16 @@ function updateDocumentMeta(meta) {
 
 function HomePage() {
   return (
-    <main id="top" className="story-page">
+    <main id="top" className="home-page" tabIndex="-1">
       <Hero />
-      <WorkflowSection />
-      <CapabilitiesSection />
-      <AgentsSection />
-      <WorldModelSection />
-      <AudienceSection />
+      <ThesisSection />
     </main>
   );
 }
 
 export default function App() {
-  const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const [analyticsConsent, setAnalyticsConsent] = useState(() => getAnalyticsConsent());
   const [isCookieBannerVisible, setIsCookieBannerVisible] = useState(() => getAnalyticsConsent() === null);
-  const [isMobileNewsletterFallback, setIsMobileNewsletterFallback] = useState(false);
   const currentPath = typeof window === "undefined" ? "/" : window.location.pathname.replace(/\/+$/, "") || "/";
   const isBlogPage = currentPath === "/blog";
 
@@ -71,14 +60,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isNewsletterOpen ? "hidden" : "";
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isNewsletterOpen]);
-
-  useEffect(() => {
     if (analyticsConsent === "granted") {
       initGoogleAnalytics();
     }
@@ -91,76 +72,6 @@ export default function App() {
 
     updateDocumentMeta(isBlogPage ? pageMeta.blog : pageMeta.home);
   }, [isBlogPage]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return undefined;
-    }
-
-    const mediaQuery = window.matchMedia("(max-width: 640px)");
-    const updateMobileNewsletterFallback = (event) => {
-      setIsMobileNewsletterFallback(event.matches);
-    };
-
-    setIsMobileNewsletterFallback(mediaQuery.matches);
-
-    if (typeof mediaQuery.addEventListener === "function") {
-      mediaQuery.addEventListener("change", updateMobileNewsletterFallback);
-
-      return () => mediaQuery.removeEventListener("change", updateMobileNewsletterFallback);
-    }
-
-    mediaQuery.addListener(updateMobileNewsletterFallback);
-
-    return () => mediaQuery.removeListener(updateMobileNewsletterFallback);
-  }, []);
-
-  useEffect(() => {
-    if (typeof document === "undefined" || typeof window === "undefined") {
-      return undefined;
-    }
-
-    const revealNodes = Array.from(document.querySelectorAll(".scroll-reveal"));
-
-    if (!revealNodes.length) {
-      return undefined;
-    }
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
-      revealNodes.forEach((node) => node.classList.add("is-visible"));
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        rootMargin: "0px 0px -12% 0px",
-        threshold: 0.16,
-      }
-    );
-
-    revealNodes.forEach((node) => observer.observe(node));
-
-    return () => observer.disconnect();
-  }, [isBlogPage]);
-
-  const openNewsletter = () => {
-    setIsNewsletterOpen(true);
-  };
-
-  const dismissNewsletter = () => {
-    window.localStorage.setItem(NEWSLETTER_DISMISSED_KEY, "true");
-    setIsNewsletterOpen(false);
-  };
 
   const acceptAnalytics = () => {
     persistAnalyticsConsent("granted");
@@ -179,10 +90,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-ink text-textPrimary">
-      <div className="fixed inset-0 -z-10 bg-vignette" />
-      <div className="fixed inset-0 -z-10 bg-grid bg-[size:88px_88px] opacity-[0.08]" />
-      <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(6,6,6,0.18),rgba(3,3,3,0.86))]" />
+    <div className="kolmo-app">
 
       <a
         href="#top"
@@ -193,15 +101,11 @@ export default function App() {
 
       <Header isBlogPage={isBlogPage} />
 
-      {isBlogPage ? <BlogPage onSubscribe={openNewsletter} /> : <HomePage />}
+      {isBlogPage ? <BlogPage /> : <HomePage />}
 
       <Footer onCookieSettings={openCookieSettings} />
 
       {isCookieBannerVisible ? <CookieBanner onAccept={acceptAnalytics} onDecline={declineAnalytics} /> : null}
-
-      {isNewsletterOpen ? (
-        <NewsletterModal isMobileFallback={isMobileNewsletterFallback} onDismiss={dismissNewsletter} />
-      ) : null}
     </div>
   );
 }
